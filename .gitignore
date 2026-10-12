@@ -1,0 +1,33 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# IDE / Editor configuration
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary analysis / debug artifacts
+page_sample.html
+test_schedule.ics
+schedule_all.ics
+inspect_*.py
+dump_analysis.py
+test_*.py
+analyze_dom.py
+*.log
+debug_*.txt
+lessons_summary*.txt
+modal_*.txt
+modal_*.json
+subgroup_search.txt
+podgruppa_search.txt
