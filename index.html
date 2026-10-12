@@ -261,6 +261,173 @@
       text-decoration: underline;
     }
 
+    .btn-kwgt {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-kwgt:hover {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #c026d3 100%);
+      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .widget-box {
+      background: linear-gradient(145deg, rgba(22, 22, 34, 0.95), rgba(15, 23, 42, 0.85));
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .widget-box::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.25), transparent 70%);
+      pointer-events: none;
+    }
+
+    .widget-box-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .widget-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .widget-tag {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(139, 92, 246, 0.2);
+      color: #c084fc;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .widget-description {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+    /* Live Interactive Mockup */
+    .widget-preview-card {
+      background: #161622;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 10px 24px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(12px);
+    }
+
+    .mockup-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .mockup-pill {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(6, 214, 160, 0.18);
+      color: #06d6a0;
+      letter-spacing: 0.5px;
+    }
+
+    .mockup-time-range {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .mockup-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mockup-loc {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 12px;
+    }
+
+    .mockup-bar {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .mockup-bar-fill {
+      height: 100%;
+      width: 65%;
+      background: linear-gradient(90deg, #4cc9f0, #06d6a0);
+      border-radius: 3px;
+    }
+
+    .mockup-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #06d6a0;
+      font-weight: 600;
+    }
+
+    .kwgt-steps-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+
+    .kwgt-steps {
+      list-style-position: inside;
+      color: var(--text-muted);
+      font-size: 13.5px;
+      line-height: 1.6;
+      padding-left: 0;
+    }
+
+    .kwgt-steps li {
+      margin-bottom: 6px;
+    }
+
+    .kwgt-steps li strong {
+      color: var(--text);
+    }
+
     @media (max-width: 480px) {
       .container {
         padding: 24px 20px;
@@ -310,6 +477,50 @@
       <button class="copy-btn" id="copy-btn" onclick="copyIcsUrl()">Копировать</button>
     </div>
 
+    <div class="widget-box">
+      <div class="widget-box-header">
+        <div class="widget-title">
+          <span>📱 Виджет KWGT для рабочего стола (4x2)</span>
+        </div>
+        <span class="widget-tag">Эксклюзив Android</span>
+      </div>
+      <p class="widget-description">
+        Премиальный полупрозрачный виджет в стиле Glassmorphism с умным переключателем состояний: отслеживает текущую пару, живой прогресс до звонка, перемены и автоматически включает режим 🍺 отдыха вечером и в выходные.
+      </p>
+
+      <div class="widget-preview-card">
+        <div class="mockup-top">
+          <span class="mockup-pill">● ИДЁТ ЗАНЯТИЕ</span>
+          <span class="mockup-time-range">10:40 – 12:15</span>
+        </div>
+        <div class="mockup-title">🟣 [ЛАБ] Разработка мобильных приложений</div>
+        <div class="mockup-loc">Радиотехнический корпус, ауд. 310</div>
+        <div class="mockup-bar">
+          <div class="mockup-bar-fill"></div>
+        </div>
+        <div class="mockup-footer">
+          <span>Осталось: 32 мин</span>
+          <span>65% пары</span>
+        </div>
+      </div>
+
+      <a id="btn-kwgt" href="schedule_widget.kwgt" download class="btn btn-kwgt">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Скачать виджет KWGT (.kwgt)
+      </a>
+
+      <div class="kwgt-steps-title">Быстрая установка в 3 шага:</div>
+      <ol class="kwgt-steps">
+        <li><strong>Установите KWGT:</strong> Загрузите <a href="https://play.google.com/store/apps/details?id=org.kustom.widget" target="_blank" rel="noopener" style="color: var(--accent);">KWGT Kustom Widget Maker</a> (и KWGT Pro) из Google Play.</li>
+        <li><strong>Импортируйте пресет:</strong> Скачайте файл <code>schedule_widget.kwgt</code> по кнопке выше и откройте его через KWGT (или скопируйте в папку <code>Kustom/widgets</code>).</li>
+        <li><strong>Выдайте доступ к календарю:</strong> Разместите на рабочем столе виджет 4x2, выберите пресет и в настройках Android предоставьте KWGT разрешение на чтение Календаря.</li>
+      </ol>
+    </div>
+
     <div class="info-grid">
       <div class="info-card">
         <div class="label">Часовой пояс</div>
@@ -355,6 +566,13 @@
     // Google calendar subscribe link
     const googleUrl = 'https://calendar.google.com/calendar/render?cid=' + encodeURIComponent(icsPath);
     document.getElementById('btn-google').href = googleUrl;
+
+    // KWGT widget direct link
+    const kwgtPath = new URL('schedule_widget.kwgt', window.location.href).href;
+    const btnKwgt = document.getElementById('btn-kwgt');
+    if (btnKwgt) {
+      btnKwgt.href = kwgtPath;
+    }
 
     function copyIcsUrl() {
       navigator.clipboard.writeText(icsPath).then(() => {
