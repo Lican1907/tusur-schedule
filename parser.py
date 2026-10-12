@@ -368,13 +368,28 @@ def parse_week_events(html: str, tz: pytz.BaseTzInfo) -> List[Event]:
 
                 description = "\n".join(desc_parts)
 
-                # Lesson times
-                try:
-                    s_h, s_m = map(int, start_time_str.split(":"))
-                    e_h, e_m = map(int, end_time_str.split(":"))
-                except ValueError:
-                    s_h, s_m = map(int, BELL_SCHEDULE[pair_num][0].split(":"))
-                    e_h, e_m = map(int, BELL_SCHEDULE[pair_num][1].split(":"))
+                # Check for shifted start time (e.g. badge "с 12:30" or modal note)
+                shift_search = f"{str(l_div)} {modal_data.get('Комментарий', '')} {modal_data.get('Подгруппа', '')} {subgroup}"
+                m_shift = re.search(r"с\s*(\d{1,2})[:.](\d{2})", shift_search, re.IGNORECASE)
+
+                if (pair_num == 3 and "12:30" in shift_search) or (m_shift and (pair_num == 3 or "12:30" in shift_search)):
+                    s_h, s_m = 12, 30
+                    e_h, e_m = 14, 5  # Standard duration: 1 hour 35 minutes (ends at 14:05)
+                elif m_shift:
+                    s_h = int(m_shift.group(1))
+                    s_m = int(m_shift.group(2))
+                    start_mins = s_h * 60 + s_m
+                    end_mins = start_mins + 95  # Standard lesson duration: 95 minutes
+                    e_h = (end_mins // 60) % 24
+                    e_m = end_mins % 60
+                else:
+                    # Standard bell call times
+                    try:
+                        s_h, s_m = map(int, start_time_str.split(":"))
+                        e_h, e_m = map(int, end_time_str.split(":"))
+                    except ValueError:
+                        s_h, s_m = map(int, BELL_SCHEDULE[pair_num][0].split(":"))
+                        e_h, e_m = map(int, BELL_SCHEDULE[pair_num][1].split(":"))
 
                 dt_start = tz.localize(datetime(day_date.year, day_date.month, day_date.day, s_h, s_m))
                 dt_end = tz.localize(datetime(day_date.year, day_date.month, day_date.day, e_h, e_m))
@@ -448,15 +463,14 @@ def build_calendar(events: List[Event], group_name: str = "426топ-4") -> Cale
             lessons_by_day[ev_date].append(ev)
 
     tz = pytz.timezone(TIMEZONE_STR)
+    today = datetime.now(tz).date()
     all_events: List[Event] = list(events)
 
-    for day_date, day_lessons in sorted(lessons_by_day.items()):
-        # Exclude Sundays (weekday 6) and days without lessons
-        if day_date.weekday() == 6 or not day_lessons:
-            continue
-
-        # Find the latest end time among all lessons of this day
-        latest_end_dt = max(ev.get("dtend").dt for ev in day_lessons)
+    # Restrict beer event strictly to today only
+    today_lessons = lessons_by_day.get(today, [])
+    if today_lessons and today.weekday() != 6:
+        # Latest end time among today's lessons (accounting for any shifted times)
+        latest_end_dt = max(ev.get("dtend").dt for ev in today_lessons)
 
         beer_ev = Event()
         beer_ev.add("summary", "🍺 Пить пиво дозволено")
@@ -464,7 +478,7 @@ def build_calendar(events: List[Event], group_name: str = "426топ-4") -> Cale
         beer_ev.add("dtend", latest_end_dt + timedelta(hours=2))
         beer_ev.add("location", "Свобода")
         beer_ev.add("description", "Все пары на сегодня закончились. Время заслуженного отдыха.")
-        beer_ev.add("uid", f"beer_{day_date.strftime('%Y%m%d')}@tusur")
+        beer_ev.add("uid", f"beer_{today.strftime('%Y%m%d')}@tusur")
         beer_ev.add("dtstamp", datetime.now(tz))
 
         # Add embedded VALARM notification
@@ -475,6 +489,9 @@ def build_calendar(events: List[Event], group_name: str = "426топ-4") -> Cale
         beer_ev.add_component(alarm)
 
         all_events.append(beer_ev)
+        logger.info("Added beer event for today (%s) with start time %s", today, latest_end_dt)
+    else:
+        logger.info("No beer event created for today (%s): no pairs or weekend", today)
 
     # De-duplicate events by UID
     seen_uids = set()
