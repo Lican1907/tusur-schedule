@@ -11,11 +11,12 @@ import os
 import re
 import sys
 import time
+from collections import defaultdict
 from datetime import date, datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 
 from bs4 import BeautifulSoup
-from icalendar import Calendar, Event, Timezone, TimezoneStandard
+from icalendar import Alarm, Calendar, Event, Timezone, TimezoneStandard
 import pytz
 import requests
 from requests.adapters import HTTPAdapter
@@ -154,6 +155,95 @@ def determine_week_start(soup: BeautifulSoup, modals: Dict[str, Dict[str, str]])
     return None
 
 
+def format_lesson_type(lesson_type: str) -> str:
+    """Formats lesson type strictly with specified emoji and short code."""
+    lt = lesson_type.strip().lower()
+    if not lt:
+        return ""
+    if "лек" in lt:
+        return "🟢 [ЛЕК]"
+    if "прак" in lt:
+        return "🔵 [ПРАК]"
+    if "лаб" in lt:
+        return "🟣 [ЛАБ]"
+    if "сам" in lt or "срс" in lt:
+        return "⚪ [СРС]"
+    if "курс" in lt:
+        return "🌸 [КУРС]"
+    if "зач" in lt:
+        return "🟡 [ЗАЧ]"
+    if "экз" in lt:
+        return "🔴 [ЭКЗ]"
+    return f"[{lesson_type.strip()}]"
+
+
+def shorten_subject(name: str) -> str:
+    """Case-insensitive abbreviation of subject names according to rules."""
+    n_lower = name.strip().lower()
+    if "проектирование индивидуальной траектории" in n_lower or "питр" in n_lower:
+        return "ПИТР"
+    if "основы российской государственности" in n_lower or n_lower == "орг":
+        return "ОРГ"
+    if "история россии" in n_lower:
+        return "история"
+    if "иностранный язык" in n_lower:
+        return "английский"
+    if "физическая культура" in n_lower or "фкис" in n_lower or "физкультура" in n_lower:
+        return "физ-ра"
+    if "дискретная математика" in n_lower or n_lower == "дм":
+        return "дискретка"
+    return name.strip()
+
+
+def format_location(raw_loc: str, short_aud: str = "") -> str:
+    """Formats location strictly as '<КОРПУС> <НОМЕР_АУДИТОРИИ>'."""
+    combined = f"{raw_loc} {short_aud}".strip().lower()
+    if not combined:
+        return ""
+
+    building = ""
+    if (
+        "главный корпус" in combined
+        or "пр. ленина, 40" in combined
+        or "ленина, 40" in combined
+        or re.search(r"\bгк\b", combined)
+    ):
+        building = "ГК"
+    elif (
+        "радиотехнический корпус" in combined
+        or "ул. вершинина, 47" in combined
+        or "вершинина, 47" in combined
+        or re.search(r"\bрк\b", combined)
+    ):
+        building = "РК"
+    elif (
+        "корпус фэт" in combined
+        or "фэт" in combined
+        or "красноармейская, 146" in combined
+        or "вершинина, 74" in combined
+        or re.search(r"\bф\b", combined)
+    ):
+        building = "ФЭТ"
+
+    room = ""
+    # Extract auditorium number e.g. "ауд. 310" or "ауд 310" or "119а"
+    m = re.search(r"ауд\.?\s*([0-9]+[а-яёa-z]?)", combined, re.IGNORECASE)
+    if m:
+        room = m.group(1).upper()
+    else:
+        m2 = re.search(r"(?:гк|рк|фэт|ф)?\s*([0-9]{3}[а-яёa-z]?)", combined, re.IGNORECASE)
+        if m2:
+            room = m2.group(1).upper()
+
+    if building and room:
+        return f"{building} {room}"
+    if building:
+        return building
+    if room:
+        return room
+    return raw_loc.strip()
+
+
 def parse_week_events(html: str, tz: pytz.BaseTzInfo) -> List[Event]:
     """Parses lessons from a single week HTML page and returns list of Event objects."""
     soup = BeautifulSoup(html, "html.parser")
@@ -233,7 +323,7 @@ def parse_week_events(html: str, tz: pytz.BaseTzInfo) -> List[Event]:
                 tooltip_i = aud_span.find("i", class_="js-tooltip") if aud_span else None
                 full_aud = tooltip_i.get("title") if tooltip_i and tooltip_i.get("title") else ""
                 short_aud = modal_data.get("Место проведения") or (aud_span.get_text(strip=True) if aud_span else "")
-                location = full_aud if full_aud else short_aud
+                location = format_location(full_aud, short_aud)
 
                 # Subgroup / comments / notes
                 note_span = l_div.find("span", class_="note")
@@ -252,19 +342,23 @@ def parse_week_events(html: str, tz: pytz.BaseTzInfo) -> List[Event]:
                 # Additional groups
                 groups = modal_data.get("Совместно с группами") or modal_data.get("Группы") or ""
 
-                # SUMMARY (предмет + тип)
-                summary = f"{disc_name} ({lesson_type})" if lesson_type else disc_name
+                # SUMMARY: <МАРКЕР_И_ТИП> <СОКРАЩЕННЫЙ_ПРЕДМЕТ>
+                type_marker = format_lesson_type(lesson_type)
+                short_subject = shorten_subject(disc_name)
+                summary = f"{type_marker} {short_subject}".strip() if type_marker else short_subject
 
-                # DESCRIPTION (преподаватель, подгруппа и детали)
+                # DESCRIPTION: полные данные без сокращений
                 desc_parts = []
+                if disc_name:
+                    desc_parts.append(f"Предмет: {disc_name}")
                 if lesson_type:
                     desc_parts.append(f"Вид: {lesson_type}")
                 if teacher:
                     desc_parts.append(f"Преподаватель: {teacher}")
                 if subgroup:
                     desc_parts.append(f"Подгруппа: {subgroup}")
-                if location and location != short_aud:
-                    desc_parts.append(f"Аудитория: {short_aud} ({location})")
+                if full_aud:
+                    desc_parts.append(f"Аудитория: {short_aud} ({full_aud})" if short_aud and short_aud != full_aud else f"Аудитория: {full_aud}")
                 elif short_aud:
                     desc_parts.append(f"Аудитория: {short_aud}")
                 if groups:
@@ -320,7 +414,7 @@ def discover_weeks(html: str, base_url: str) -> List[str]:
 
 
 def build_calendar(events: List[Event], group_name: str = "426топ-4") -> Calendar:
-    """Builds a complete RFC 5545 Calendar with VTIMEZONE and VEVENTs."""
+    """Builds a complete RFC 5545 Calendar with VTIMEZONE, VEVENTs, and beer time events."""
     cal = Calendar()
     cal.add("prodid", "-//TUSUR Timetable Parser//timetable.tusur.ru//RU")
     cal.add("version", "2.0")
@@ -341,9 +435,50 @@ def build_calendar(events: List[Event], group_name: str = "426топ-4") -> Cale
     tz_comp.add_component(tz_std)
     cal.add_component(tz_comp)
 
+    # Group lesson events by date to create dynamic beer events
+    lessons_by_day: Dict[date, List[Event]] = defaultdict(list)
+    for ev in events:
+        uid = str(ev.get("uid", ""))
+        if uid.startswith("beer_"):
+            continue
+        dtstart = ev.get("dtstart")
+        if dtstart and hasattr(dtstart, "dt"):
+            d = dtstart.dt
+            ev_date = d.date() if isinstance(d, datetime) else d
+            lessons_by_day[ev_date].append(ev)
+
+    tz = pytz.timezone(TIMEZONE_STR)
+    all_events: List[Event] = list(events)
+
+    for day_date, day_lessons in sorted(lessons_by_day.items()):
+        # Exclude Sundays (weekday 6) and days without lessons
+        if day_date.weekday() == 6 or not day_lessons:
+            continue
+
+        # Find the latest end time among all lessons of this day
+        latest_end_dt = max(ev.get("dtend").dt for ev in day_lessons)
+
+        beer_ev = Event()
+        beer_ev.add("summary", "🍺 Пить пиво дозволено")
+        beer_ev.add("dtstart", latest_end_dt)
+        beer_ev.add("dtend", latest_end_dt + timedelta(hours=2))
+        beer_ev.add("location", "Свобода")
+        beer_ev.add("description", "Все пары на сегодня закончились. Время заслуженного отдыха.")
+        beer_ev.add("uid", f"beer_{day_date.strftime('%Y%m%d')}@tusur")
+        beer_ev.add("dtstamp", datetime.now(tz))
+
+        # Add embedded VALARM notification
+        alarm = Alarm()
+        alarm.add("action", "DISPLAY")
+        alarm.add("description", "🍺 Пить пиво дозволено!")
+        alarm.add("trigger", timedelta(minutes=0))
+        beer_ev.add_component(alarm)
+
+        all_events.append(beer_ev)
+
     # De-duplicate events by UID
     seen_uids = set()
-    for ev in events:
+    for ev in all_events:
         uid = str(ev.get("uid"))
         if uid not in seen_uids:
             seen_uids.add(uid)
