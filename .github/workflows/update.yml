@@ -9,7 +9,7 @@ on:
       all_weeks:
         description: 'Parse all weeks of the semester (--all-weeks)'
         type: boolean
-        default: false
+        default: true
 
 permissions:
   contents: write
@@ -34,10 +34,10 @@ jobs:
 
       - name: Run parser
         run: |
-          if [ "${{ inputs.all_weeks }}" = "true" ]; then
-            python parser.py --all-weeks
-          else
+          if [ "${{ inputs.all_weeks }}" = "false" ]; then
             python parser.py
+          else
+            python parser.py --all-weeks
           fi
 
       - name: Verify schedule.ics artifact

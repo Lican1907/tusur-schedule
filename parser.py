@@ -365,18 +365,30 @@ def parse_schedule(url: str = DEFAULT_URL, all_weeks: bool = False) -> Calendar:
         if all_weeks:
             week_urls = discover_weeks(main_html, url)
             logger.info("Discovered %d weeks in carousel for full semester parsing", len(week_urls))
+
+            # Identify the currently viewed week's URL to avoid redundant fetching
+            soup_main = BeautifulSoup(main_html, "html.parser")
+            active_tile = soup_main.find("li", class_=lambda c: c and "tile" in c.split() and ("current" in c.split() or "current-week" in c.split()))
+            active_href = ""
+            if active_tile and active_tile.find("a"):
+                active_href = active_tile.find("a").get("href", "")
+
             for idx, w_url in enumerate(week_urls, start=1):
-                # Skip if it is the same URL as the main page
-                if w_url == url:
+                # Skip if already fetched as main page
+                if w_url == url or (active_href and w_url.endswith(active_href)):
+                    logger.info("Skipping already fetched current week (%d/%d): %s", idx, len(week_urls), w_url)
                     continue
+
                 try:
-                    time.sleep(0.3)  # Polite crawling delay
+                    time.sleep(0.3)  # Polite crawling delay between requests
                     logger.info("Processing week %d/%d: %s", idx, len(week_urls), w_url)
                     w_html = fetch_page(w_url, session=session)
                     w_events = parse_week_events(w_html, tz)
+                    if not w_events:
+                        logger.info("No lessons found for week %s (vacation or session)", w_url)
                     events.extend(w_events)
                 except Exception as e:
-                    logger.warning("Failed to fetch/parse week %s: %s", w_url, e)
+                    logger.warning("Failed to fetch/parse week %s: %s (skipping and continuing)", w_url, e)
 
         # Extract group name from title if possible
         soup = BeautifulSoup(main_html, "html.parser")
