@@ -223,6 +223,22 @@
       color: var(--text);
     }
 
+    .phone-hint {
+      display: none;
+      background: #161b22;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .phone-hint.show {
+      display: block;
+    }
+
     .instructions {
       border-top: 1px solid var(--border);
       padding-top: 24px;
@@ -305,6 +321,10 @@
       </a>
     </div>
 
+    <div class="phone-hint" id="phone-hint">
+      Приложение Google Календарь не умеет подписываться по ссылке. Откройте эту страницу в Safari или Chrome (не во встроенном браузере мессенджера) и включите версию для компьютера: Safari — «аА» → «Запрос настольного веб-сайта», Chrome на iPhone — «...» → «Запросить полную версию», Chrome на Android — «⋮» → «Версия для ПК». Затем нажмите кнопку Google ещё раз — живой календарь сразу появится в приложении (если скрыт, включите его в боковом меню и настройках синхронизации приложения).
+    </div>
+
     <div class="url-box">
       <span class="url-text" id="ics-url">Загрузка ссылки...</span>
       <button class="copy-btn" id="copy-btn" onclick="copyIcsUrl()">Копировать</button>
@@ -333,7 +353,7 @@
       <h2>Как подключить подписку:</h2>
       <ol>
         <li><strong>iPhone / iPad / Mac:</strong> Нажмите «Подписаться в Apple Calendar» или откройте Настройки → Календарь → Учётные записи → Новая учётная запись → Подписные календари и вставьте ссылку.</li>
-        <li><strong>Google Календарь:</strong> Нажмите кнопку «Добавить в Google Календарь» выше, либо перейдите на <a href="https://calendar.google.com" target="_blank" style="color: var(--accent);">calendar.google.com</a>, нажмите «+» рядом с «Другие календари» → «Добавить по URL» и вставьте ссылку.</li>
+        <li><strong>Google Календарь:</strong> Нажмите кнопку «Добавить в Google Календарь» выше (подключает живой календарь без задержки обновлений). На телефоне приложение так не умеет: откройте страницу в Safari или Chrome в режиме «Запрос настольного веб-сайта» («Версия для ПК») и нажмите кнопку ещё раз — календарь потом появится в приложении сам. Либо на компьютере перейдите на <a href="https://calendar.google.com" target="_blank" style="color: var(--accent);">calendar.google.com</a> → «+» рядом с «Другие календари» → «Добавить по URL» и вставьте ссылку.</li>
         <li><strong>Яндекс.Календарь:</strong> Откройте Настройки календаря → «Импорт» → «Подписка на календарь» → вставьте ссылку на .ics.</li>
       </ol>
     </div>
@@ -352,9 +372,21 @@
     const webcalUrl = icsPath.replace(/^https?:\/\//i, 'webcal://');
     document.getElementById('btn-apple').href = webcalUrl;
 
-    // Google calendar subscribe link
-    const googleUrl = 'https://calendar.google.com/calendar/render?cid=' + encodeURIComponent(icsPath);
-    document.getElementById('btn-google').href = googleUrl;
+    // Google calendar subscribe link (прямой GOOGLE_CALENDAR_ID или fallback на webcalUrl)
+    const gcalId = 'e0e2d3bf411a3c6f6695baf5d85f76f18cc968d95cf71dd5fefcd951c10d91be@group.calendar.google.com';
+    const targetCid = (gcalId && !gcalId.startsWith('__')) ? gcalId : webcalUrl;
+    const googleUrl = 'https://calendar.google.com/calendar/render?cid=' + encodeURIComponent(targetCid);
+    const btnGoogle = document.getElementById('btn-google');
+    btnGoogle.href = googleUrl;
+
+    // На телефоне Google открывает приложение и игнорирует cid: вместо этого показываем подсказку
+    // (iPhone в режиме настольного сайта и iPad сообщают Mac, поэтому идут по обычной ссылке)
+    const isPhone = /iPhone|iPod|Android/i.test(navigator.userAgent);
+    btnGoogle.addEventListener('click', (e) => {
+      if (!isPhone) return;
+      e.preventDefault();
+      document.getElementById('phone-hint').classList.add('show');
+    });
 
     function copyIcsUrl() {
       navigator.clipboard.writeText(icsPath).then(() => {
