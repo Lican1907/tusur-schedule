@@ -2,8 +2,8 @@ name: Update TUSUR Schedule
 
 on:
   schedule:
-    # Runs daily at 21:00 UTC (which is 04:00 Tomsk time, Asia/Tomsk UTC+7)
-    - cron: '0 21 * * *'
+    # Runs daily at 15:00 UTC (which is 22:00 Tomsk time, Asia/Tomsk UTC+7)
+    - cron: '0 15 * * *'
   workflow_dispatch:
     inputs:
       all_weeks:
