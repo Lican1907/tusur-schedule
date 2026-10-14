@@ -1007,7 +1007,7 @@ def build_beer_event(
     tz: ZoneInfo = TIMEZONE,
 ) -> Optional[Event]:
     """
-    Creates a VEVENT '🍺 Пить пиво дозволено' with VALARM strictly for the current day
+    Creates a VEVENT '🍺 Можно пить пиво!' with VALARM strictly for the current day
     (target_date == today), provided there were lessons on that day.
     """
     today = datetime.now(tz).date()
