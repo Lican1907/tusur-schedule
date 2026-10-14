@@ -372,10 +372,16 @@
     const webcalUrl = icsPath.replace(/^https?:\/\//i, 'webcal://');
     document.getElementById('btn-apple').href = webcalUrl;
 
-    // Google calendar subscribe link (прямой GOOGLE_CALENDAR_ID или fallback на webcalUrl)
-    const gcalId = '__GOOGLE_CALENDAR_ID__';
-    const targetCid = (gcalId && !gcalId.startsWith('__')) ? gcalId : webcalUrl;
-    const googleUrl = 'https://calendar.google.com/calendar/render?cid=' + encodeURIComponent(targetCid);
+    // Google calendar subscribe link (прямой GOOGLE_CALENDAR_ID в Base64 или fallback на webcalUrl)
+    const gcalId = '__GOOGLE_CALENDAR_ID__'.trim();
+    let googleUrl;
+    if (gcalId && !gcalId.startsWith('__')) {
+      // Для нативного Google Calendar ID параметр cid должен быть закодирован в Base64 без '='
+      const base64Cid = btoa(gcalId).replace(/=+$/, '');
+      googleUrl = 'https://calendar.google.com/calendar/u/0/r?cid=' + encodeURIComponent(base64Cid);
+    } else {
+      googleUrl = 'https://calendar.google.com/calendar/render?cid=' + encodeURIComponent(webcalUrl);
+    }
     const btnGoogle = document.getElementById('btn-google');
     btnGoogle.href = googleUrl;
 
