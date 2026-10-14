@@ -54,26 +54,26 @@ BELL_SCHEDULE: Dict[int, Tuple[str, str]] = {
 
 # Lesson types mapping to colored emoji tags
 TYPE_MAPPING: Dict[str, str] = {
-    "лек": "🟢 [ЛЕК]",
-    "лекция": "🟢 [ЛЕК]",
-    "прак": "🔵 [ПРАК]",
-    "практика": "🔵 [ПРАК]",
-    "лаб": "🟣 [ЛАБ]",
-    "лабораторная": "🟣 [ЛАБ]",
-    "лабораторная работа": "🟣 [ЛАБ]",
-    "срс": "⚪ [СРС]",
-    "сам": "⚪ [СРС]",
-    "самостоятельная работа": "⚪ [СРС]",
-    "курс": "🌸 [КУРС]",
-    "курсовая": "🌸 [КУРС]",
-    "курсовое проектирование": "🌸 [КУРС]",
-    "зач": "🟡 [ЗАЧ]",
-    "зачет": "🟡 [ЗАЧ]",
-    "зачёт": "🟡 [ЗАЧ]",
-    "диф. зачет": "🟡 [ЗАЧ]",
-    "диф.зачет": "🟡 [ЗАЧ]",
-    "экз": "🔴 [ЭКЗ]",
-    "экзамен": "🔴 [ЭКЗ]",
+    "лек": "🟢 ЛЕК",
+    "лекция": "🟢 ЛЕК",
+    "прак": "🔵 ПРАК",
+    "практика": "🔵 ПРАК",
+    "лаб": "🟣 ЛАБ",
+    "лабораторная": "🟣 ЛАБ",
+    "лабораторная работа": "🟣 ЛАБ",
+    "срс": "⚪ СРС",
+    "сам": "⚪ СРС",
+    "самостоятельная работа": "⚪ СРС",
+    "курс": "🌸 КУРС",
+    "курсовая": "🌸 КУРС",
+    "курсовое проектирование": "🌸 КУРС",
+    "зач": "🟡 ЗАЧ",
+    "зачет": "🟡 ЗАЧ",
+    "зачёт": "🟡 ЗАЧ",
+    "диф. зачет": "🟡 ЗАЧ",
+    "диф.зачет": "🟡 ЗАЧ",
+    "экз": "🔴 ЭКЗ",
+    "экзамен": "🔴 ЭКЗ",
 }
 
 # Abbreviations for disciplines
@@ -257,10 +257,10 @@ def format_event_data(
     short_aud: str = "",
 ) -> Tuple[str, str]:
     """
-    Formats short SUMMARY and clean LOCATION for an event.
+    Formats compact SUMMARY and clean LOCATION with a pin for an event.
     Returns: (summary, clean_location)
-    - summary: '[MARKER] ShortSubject' or 'ShortSubject'
-    - location: 'BUILDING ROOM', 'BUILDING', 'ROOM', or clean string without 'ауд.'
+    - summary: '<EMOJI> <TYPE> • <Subject>' or '<Subject>'
+    - location: '📍 <BUILDING> <ROOM>', '📍 <BUILDING>', '📍 <ROOM>', or ''
     """
     # 1. Lesson type marker
     lt = lesson_type.strip().lower()
@@ -271,7 +271,7 @@ def format_event_data(
                 type_marker = marker
                 break
         if not type_marker:
-            type_marker = f"[{lesson_type.strip()}]"
+            type_marker = lesson_type.strip()
 
     # 2. Short subject name
     disc_clean = discipline_name.strip()
@@ -282,7 +282,12 @@ def format_event_data(
             short_subject = abbr
             break
 
-    summary = f"{type_marker} {short_subject}".strip() if type_marker else short_subject
+    if type_marker and short_subject:
+        summary = f"{type_marker} • {short_subject}"
+    elif type_marker:
+        summary = type_marker
+    else:
+        summary = short_subject
 
     # 3. Clean location
     combined = f"{raw_location} {short_aud}".strip().lower()
@@ -313,6 +318,11 @@ def format_event_data(
         clean = re.sub(r"\bауд\.?\s*", "", raw_location, flags=re.IGNORECASE).strip()
         clean = re.sub(r"^[,\.\s]+|[,\.\s]+$", "", clean)
         clean_location = clean or short_aud.strip()
+
+    # Prepend pin 📍 if location is present
+    if clean_location:
+        if not clean_location.startswith("📍"):
+            clean_location = f"📍 {clean_location}"
 
     return summary, clean_location
 
@@ -516,7 +526,7 @@ def build_beer_event(
     tz: ZoneInfo = TIMEZONE,
 ) -> Optional[Event]:
     """
-    Creates a VEVENT '🍺 Пить пиво дозволено' with VALARM strictly for the current day
+    Creates a VEVENT '🍺 Можно пить пиво!' with VALARM strictly for the current day
     (target_date == today), provided there were lessons on that day.
     """
     today = datetime.now(tz).date()
@@ -540,17 +550,17 @@ def build_beer_event(
     latest_end_dt = max(end_times)
 
     beer_ev = Event()
-    beer_ev.add("summary", "🍺 Пить пиво дозволено")
+    beer_ev.add("summary", "🍺 Можно пить пиво!")
     beer_ev.add("dtstart", latest_end_dt)
     beer_ev.add("dtend", latest_end_dt + timedelta(hours=2))
-    beer_ev.add("location", "Свобода")
+    beer_ev.add("location", "🎉 Свобода")
     beer_ev.add("description", "Все пары на сегодня закончились. Время заслуженного отдыха.")
     beer_ev.add("uid", f"beer_{target_date.strftime('%Y%m%d')}@tusur")
     beer_ev.add("dtstamp", datetime.now(tz))
 
     alarm = Alarm()
     alarm.add("action", "DISPLAY")
-    alarm.add("description", "🍺 Пить пиво дозволено!")
+    alarm.add("description", "🍺 Можно пить пиво!")
     alarm.add("trigger", timedelta(minutes=0))
     beer_ev.add_component(alarm)
 
