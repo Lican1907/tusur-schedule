@@ -10,7 +10,7 @@ import logging
 import os
 import sys
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 from zoneinfo import ZoneInfo
 
 from google.oauth2 import service_account
@@ -194,7 +194,7 @@ def sync_calendar(
     Synchronizes all events from an icalendar Calendar object to Google Calendar.
     Performs idempotent upsert matching by iCalUID / tusur_uid.
     """
-    stats = {"created": 0, "updated": 0, "unchanged": 0, "failed": 0}
+    stats = {"created": 0, "updated": 0, "unchanged": 0, "deleted": 0, "failed": 0}
 
     if service is None or calendar_id is None:
         service, calendar_id = get_calendar_client()
@@ -232,8 +232,10 @@ def sync_calendar(
     # Fetch existing events from Google Calendar in the date window
     existing_events_by_uid: Dict[str, Dict[str, Any]] = {}
     try:
-        # Buffer range by 1 day
-        time_min = (min_date - timedelta(days=1)).isoformat() if min_date else None
+        # Buffer range by 1 day and ensure we look back at least 30 days to catch past beer events
+        lookback_limit = datetime.now(tz) - timedelta(days=30)
+        start_bound = min(min_date - timedelta(days=1), lookback_limit) if min_date else lookback_limit
+        time_min = start_bound.isoformat()
         time_max = (max_date + timedelta(days=1)).isoformat() if max_date else None
 
         page_token = None
@@ -264,6 +266,49 @@ def sync_calendar(
         logger.info("Retrieved %d existing events from Google Calendar in target date window", len(existing_events_by_uid))
     except Exception as e:
         logger.error("Failed to query existing Google Calendar events: %s", e)
+
+    # Clean up past beer events from Google Calendar (< today)
+    today_date = datetime.now(tz).date()
+    seen_deleted_ids: Set[str] = set()
+    for uid_key, item in list(existing_events_by_uid.items()):
+        item_id = item.get("id")
+        if not item_id or item_id in seen_deleted_ids:
+            continue
+
+        item_summary = item.get("summary", "")
+        item_uid = item.get("iCalUID", "")
+        private_props = item.get("extendedProperties", {}).get("private", {})
+        tusur_uid = private_props.get("tusur_uid", "")
+
+        is_beer = (
+            item_uid.startswith("beer_")
+            or tusur_uid.startswith("beer_")
+            or "🍺" in item_summary
+            or "пить пиво" in item_summary.lower()
+        )
+        if not is_beer:
+            continue
+
+        item_start_str = item.get("start", {}).get("dateTime") or item.get("start", {}).get("date")
+        if not item_start_str:
+            continue
+        try:
+            if "T" in item_start_str:
+                item_date = datetime.fromisoformat(item_start_str).date()
+            else:
+                item_date = datetime.strptime(item_start_str[:10], "%Y-%m-%d").date()
+        except Exception:
+            continue
+
+        if item_date < today_date:
+            try:
+                service.events().delete(calendarId=calendar_id, eventId=item_id).execute()
+                stats["deleted"] += 1
+                seen_deleted_ids.add(item_id)
+                logger.info("Deleted past beer event from %s: '%s' (id: %s)", item_date, item_summary, item_id)
+                existing_events_by_uid.pop(uid_key, None)
+            except Exception as e:
+                logger.warning("Failed to delete past beer event %s: %s", item_id, e)
 
     # Process each event: insert or update
     for payload in events_to_sync:
@@ -319,9 +364,10 @@ def sync_calendar(
                 stats["failed"] += 1
 
     logger.info(
-        "Google Calendar Sync Summary: Created=%d, Updated=%d, Unchanged=%d, Failed=%d",
+        "Google Calendar Sync Summary: Created=%d, Updated=%d, Deleted=%d, Unchanged=%d, Failed=%d",
         stats["created"],
         stats["updated"],
+        stats["deleted"],
         stats["unchanged"],
         stats["failed"],
     )

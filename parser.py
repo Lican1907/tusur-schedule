@@ -132,26 +132,32 @@ COLOR_ID_MAPPING: Dict[str, str] = {
 
 # Abbreviations for disciplines
 SUBJECT_SHORT_NAMES: Dict[str, str] = {
-    "дискретная математика": "дискретка",
-    "дм": "дискретка",
+    "основы искусственного интеллекта": "ОИИ",
+    "основы искуственного интеллекта": "ОИИ",
+    "искусственный интеллект": "ОИИ",
+    "искуственный интеллект": "ОИИ",
+    "оии": "ОИИ",
+    "дискретная математика": "Дискретка",
+    "дм": "Дискретка",
     "основы российской государственности": "ОРГ",
     "орг": "ОРГ",
     "проектирование индивидуальной траектории развития": "ПИТР",
     "проектирование индивидуальной траектории": "ПИТР",
     "питр": "ПИТР",
-    "иностранный язык": "английский",
-    "английский язык": "английский",
-    "английский": "английский",
-    "физическая культура и спорт": "физ-ра",
-    "физическая культура": "физ-ра",
-    "физкультура и спорт": "физ-ра",
-    "физкультура": "физ-ра",
-    "фкис": "физ-ра",
-    "элективные дисциплины по физической культуре и спорту": "физ-ра",
-    "элективные дисциплины по физической культуре": "физ-ра",
-    "элективные дисциплины по фкис": "физ-ра",
-    "история россии": "история",
-    "история": "история",
+    "питрвсит": "ПИТР",
+    "иностранный язык": "Английский",
+    "английский язык": "Английский",
+    "английский": "Английский",
+    "физическая культура и спорт": "Физ-ра",
+    "физическая культура": "Физ-ра",
+    "физкультура и спорт": "Физ-ра",
+    "физкультура": "Физ-ра",
+    "фкис": "Физ-ра",
+    "элективные дисциплины по физической культуре и спорту": "Физ-ра",
+    "элективные дисциплины по физической культуре": "Физ-ра",
+    "элективные дисциплины по фкис": "Физ-ра",
+    "история россии": "История",
+    "история": "История",
 }
 
 # University campus buildings mapping
@@ -438,14 +444,22 @@ def discover_weeks(html: str, base_url: str) -> List[str]:
 # ---------------------------------------------------------------------------
 # Data Formatting
 # ---------------------------------------------------------------------------
+def capitalize_first(text: str) -> str:
+    """Capitalizes the first character of text while preserving the rest."""
+    s = text.strip()
+    if not s:
+        return ""
+    return s[0].upper() + s[1:]
+
+
 def shorten_subject(discipline_name: str) -> str:
-    """Abbreviates discipline name according to standard TUSUR abbreviations."""
+    """Abbreviates discipline name according to standard TUSUR abbreviations, capitalized."""
     disc_clean = discipline_name.strip()
     n_lower = disc_clean.lower()
     for key, abbr in SUBJECT_SHORT_NAMES.items():
         if key in n_lower or n_lower == key:
-            return abbr
-    return disc_clean
+            return capitalize_first(abbr)
+    return capitalize_first(disc_clean)
 
 
 def format_event_data(
@@ -1025,7 +1039,7 @@ def build_beer_event(
     latest_end_dt = max(end_times)
 
     beer_ev = Event()
-    beer_ev.add("summary", "🍺 Пить пиво дозволено")
+    beer_ev.add("summary", "🍺 Можно пить пиво!")
     beer_ev.add("dtstart", latest_end_dt)
     beer_ev.add("dtend", latest_end_dt + timedelta(hours=2))
     beer_ev.add("location", "🎉 Свобода")
@@ -1036,7 +1050,7 @@ def build_beer_event(
 
     alarm = Alarm()
     alarm.add("action", "DISPLAY")
-    alarm.add("description", "🍺 Пить пиво дозволено!")
+    alarm.add("description", "🍺 Можно пить пиво!")
     alarm.add("trigger", timedelta(minutes=0))
     beer_ev.add_component(alarm)
 
