@@ -33,3 +33,9 @@ modal_*.txt
 modal_*.json
 subgroup_search.txt
 podgruppa_search.txt
+
+# Credentials and Environment files
+service_account.json
+.env
+.env.*
+.env.local

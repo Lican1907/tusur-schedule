@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """
-TUSUR Schedule to iCalendar (.ics) Parser
-Fetches timetable from timetable.tusur.ru, parses lessons, and exports valid RFC 5545 iCalendar.
+TUSUR Schedule to iCalendar (.ics) Parser and Google Calendar Synchronizer
+Fetches timetable from timetable.tusur.ru, parses lessons, applies teacher overrides,
+and exports valid RFC 5545 iCalendar with native Google Calendar colorId support.
 Timezone: Asia/Tomsk (UTC+7)
 """
 
 import argparse
+import json
 import logging
 import os
 import re
@@ -13,7 +15,7 @@ import sys
 import time
 from collections import defaultdict
 from datetime import date, datetime, timedelta
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 from zoneinfo import ZoneInfo
 
 from bs4 import BeautifulSoup, Tag
@@ -40,6 +42,7 @@ TIMEZONE = ZoneInfo(TIMEZONE_STR)
 
 DEFAULT_URL = "https://timetable.tusur.ru/faculties/fsu/groups/426top-4"
 OUTPUT_FILE = "schedule.ics"
+OVERRIDES_FILE = "overrides.json"
 
 # Bell schedule of TUSUR (Томский государственный университет систем управления и радиоэлектроники)
 BELL_SCHEDULE: Dict[int, Tuple[str, str]] = {
@@ -52,28 +55,41 @@ BELL_SCHEDULE: Dict[int, Tuple[str, str]] = {
     7: ("20:15", "21:50"),
 }
 
-# Lesson types mapping to colored emoji tags
+# Lesson types mapping to compact clean codes (no circle emojis in summary)
 TYPE_MAPPING: Dict[str, str] = {
-    "лек": "🟢 ЛЕК",
-    "лекция": "🟢 ЛЕК",
-    "прак": "🔵 ПРАК",
-    "практика": "🔵 ПРАК",
-    "лаб": "🟣 ЛАБ",
-    "лабораторная": "🟣 ЛАБ",
-    "лабораторная работа": "🟣 ЛАБ",
-    "срс": "⚪ СРС",
-    "сам": "⚪ СРС",
-    "самостоятельная работа": "⚪ СРС",
-    "курс": "🌸 КУРС",
-    "курсовая": "🌸 КУРС",
-    "курсовое проектирование": "🌸 КУРС",
-    "зач": "🟡 ЗАЧ",
-    "зачет": "🟡 ЗАЧ",
-    "зачёт": "🟡 ЗАЧ",
-    "диф. зачет": "🟡 ЗАЧ",
-    "диф.зачет": "🟡 ЗАЧ",
-    "экз": "🔴 ЭКЗ",
-    "экзамен": "🔴 ЭКЗ",
+    "лек": "[ЛЕК]",
+    "лекция": "[ЛЕК]",
+    "прак": "[ПРАК]",
+    "практика": "[ПРАК]",
+    "лаб": "[ЛАБ]",
+    "лабораторная": "[ЛАБ]",
+    "лабораторная работа": "[ЛАБ]",
+    "срс": "[СРС]",
+    "сам": "[СРС]",
+    "самостоятельная работа": "[СРС]",
+    "курс": "[КУРС]",
+    "курсовая": "[КУРС]",
+    "курсовое проектирование": "[КУРС]",
+    "зач": "[ЗАЧ]",
+    "зачет": "[ЗАЧ]",
+    "зачёт": "[ЗАЧ]",
+    "диф. зачет": "[ЗАЧ]",
+    "диф.зачет": "[ЗАЧ]",
+    "экз": "[ЭКЗ]",
+    "экзамен": "[ЭКЗ]",
+}
+
+# Google Calendar API colorId mapping
+COLOR_ID_MAPPING: Dict[str, str] = {
+    "ЛЕК": "10",       # Basil / Green
+    "ПРАК": "9",        # Blueberry / Blue
+    "ЛАБ": "3",         # Grape / Purple
+    "СРС": "8",         # Graphite / Dark Grey
+    "КУРС": "4",        # Flamingo / Pink
+    "ЗАЧ": "5",         # Banana / Yellow
+    "ЭКЗ": "11",        # Tomato / Red
+    "CANCELLED": "8",   # Graphite / Grey (subdued for cancelled classes)
+    "BEER": "5",        # Banana / Amber (leisure event)
 }
 
 # Abbreviations for disciplines
@@ -126,6 +142,29 @@ DEFAULT_HEADERS: Dict[str, str] = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
     "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
 }
+
+
+# ---------------------------------------------------------------------------
+# Color Helpers
+# ---------------------------------------------------------------------------
+def get_color_id_for_type(lesson_type: str) -> str:
+    """Returns Google Calendar colorId for a lesson type or code."""
+    lt = lesson_type.strip().lower()
+    if "лек" in lt:
+        return COLOR_ID_MAPPING["ЛЕК"]       # "10" (Basil / Green)
+    if "прак" in lt:
+        return COLOR_ID_MAPPING["ПРАК"]      # "9" (Blueberry / Blue)
+    if "лаб" in lt:
+        return COLOR_ID_MAPPING["ЛАБ"]       # "3" (Grape / Purple)
+    if "сам" in lt or "срс" in lt:
+        return COLOR_ID_MAPPING["СРС"]       # "8" (Graphite / Dark Grey)
+    if "курс" in lt:
+        return COLOR_ID_MAPPING["КУРС"]      # "4" (Flamingo / Pink)
+    if "зач" in lt:
+        return COLOR_ID_MAPPING["ЗАЧ"]       # "5" (Banana / Yellow)
+    if "экз" in lt:
+        return COLOR_ID_MAPPING["ЭКЗ"]       # "11" (Tomato / Red)
+    return "10"
 
 
 # ---------------------------------------------------------------------------
@@ -250,6 +289,16 @@ def discover_weeks(html: str, base_url: str) -> List[str]:
 # ---------------------------------------------------------------------------
 # Data Formatting
 # ---------------------------------------------------------------------------
+def shorten_subject(discipline_name: str) -> str:
+    """Abbreviates discipline name according to standard TUSUR abbreviations."""
+    disc_clean = discipline_name.strip()
+    n_lower = disc_clean.lower()
+    for key, abbr in SUBJECT_SHORT_NAMES.items():
+        if key in n_lower or n_lower == key:
+            return abbr
+    return disc_clean
+
+
 def format_event_data(
     discipline_name: str,
     lesson_type: str,
@@ -257,10 +306,10 @@ def format_event_data(
     short_aud: str = "",
 ) -> Tuple[str, str]:
     """
-    Formats compact SUMMARY and clean LOCATION with a pin for an event.
+    Formats clean SUMMARY and LOCATION with a pin for a standard lesson event.
     Returns: (summary, clean_location)
-    - summary: '<EMOJI> <TYPE> • <Subject>' or '<Subject>'
-    - location: '📍 <BUILDING> <ROOM>', '📍 <BUILDING>', '📍 <ROOM>', or ''
+    - summary: '[TYPE] Subject' (e.g. '[ЛЕК] Математика', '[ПРАК] физ-ра')
+    - location: '📍 BUILDING ROOM', '📍 BUILDING', '📍 ROOM', or clean string with pin
     """
     # 1. Lesson type marker
     lt = lesson_type.strip().lower()
@@ -271,19 +320,14 @@ def format_event_data(
                 type_marker = marker
                 break
         if not type_marker:
-            type_marker = lesson_type.strip()
+            clean_t = re.sub(r"[\[\]\s]", "", lesson_type).upper()
+            type_marker = f"[{clean_t}]" if clean_t else ""
 
     # 2. Short subject name
-    disc_clean = discipline_name.strip()
-    n_lower = disc_clean.lower()
-    short_subject = disc_clean
-    for key, abbr in SUBJECT_SHORT_NAMES.items():
-        if key in n_lower or n_lower == key:
-            short_subject = abbr
-            break
+    short_subject = shorten_subject(discipline_name)
 
     if type_marker and short_subject:
-        summary = f"{type_marker} • {short_subject}"
+        summary = f"{type_marker} {short_subject}"
     elif type_marker:
         summary = type_marker
     else:
@@ -456,6 +500,9 @@ def parse_cell(
         event.add("dtend", dt_end)
         event.add("dtstamp", datetime.now(tz))
 
+        color_id = get_color_id_for_type(lesson_type or cell_kind)
+        event.add("x-color-id", color_id)
+
         day_num = day_date.weekday() + 1
         uid_id = lesson_id if lesson_id else f"{pair_num}-{day_num}"
         event.add("uid", f"tusur-{uid_id}-{day_date.strftime('%Y%m%d')}@timetable.tusur.ru")
@@ -518,6 +565,203 @@ def parse_week_events(html: str, tz: ZoneInfo = TIMEZONE) -> List[Event]:
 
 
 # ---------------------------------------------------------------------------
+# Overrides System
+# ---------------------------------------------------------------------------
+def load_overrides(filepath: str = OVERRIDES_FILE) -> List[Dict[str, Any]]:
+    """Loads schedule overrides from JSON file if present."""
+    if not os.path.exists(filepath):
+        return []
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            if isinstance(data, list):
+                return data
+            logger.warning("Overrides file %s is not a list, skipping overrides", filepath)
+            return []
+    except Exception as e:
+        logger.error("Failed to read overrides from %s: %s", filepath, e)
+        return []
+
+
+def apply_overrides(
+    events: List[Event],
+    overrides: List[Dict[str, Any]],
+    tz: ZoneInfo = TIMEZONE,
+) -> List[Event]:
+    """
+    Applies manual teacher overrides from overrides.json to events:
+    - 'cancel': changes summary to '❌ ОТМЕНА <Предмет>', sets colorId='8', marks cancelled
+    - 'set': replaces or adds lesson with '⚡ [<ТИП>] <Предмет>', sets colorId and location
+    """
+    if not overrides:
+        return events
+
+    result_events: List[Event] = list(events)
+
+    for ov in overrides:
+        ov_id = ov.get("id", "unknown")
+        date_str = ov.get("date")
+        if not date_str:
+            continue
+        try:
+            target_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            logger.warning("Invalid date format in override %s: %s", ov_id, date_str)
+            continue
+
+        action = ov.get("action", "").lower().strip()
+        time_start = ov.get("time_start")  # e.g. "10:40" or None
+        ov_type = ov.get("type", "").strip().upper()  # e.g. "ЛЕК", "ПРАК"
+        ov_subject = ov.get("subject", "").strip()  # e.g. "Дискретка", "Математика"
+        cap_subject = ov_subject[0].upper() + ov_subject[1:] if ov_subject else ""
+        comment = ov.get("comment", "").strip()
+        keep_orig_loc = bool(ov.get("keep_original_location", False))
+        ov_loc = ov.get("location")
+
+        if action == "cancel":
+            matched = False
+            for ev in result_events:
+                dtstart_prop = ev.get("dtstart")
+                if not dtstart_prop or not hasattr(dtstart_prop, "dt"):
+                    continue
+                ev_dt = dtstart_prop.dt
+                ev_date = ev_dt.date() if isinstance(ev_dt, datetime) else ev_dt
+                if ev_date != target_date:
+                    continue
+
+                if time_start and isinstance(ev_dt, datetime):
+                    if ev_dt.strftime("%H:%M") != time_start:
+                        continue
+
+                ev_summary = str(ev.get("summary", ""))
+                ev_desc = str(ev.get("description", ""))
+
+                # Check subject match (case-insensitive substring)
+                subj_match = False
+                if ov_subject:
+                    subj_lower = ov_subject.lower()
+                    if subj_lower in ev_summary.lower() or subj_lower in ev_desc.lower():
+                        subj_match = True
+                    elif shorten_subject(ev_summary).lower() == subj_lower:
+                        subj_match = True
+                else:
+                    subj_match = True
+
+                # Check type match if specified
+                type_match = True
+                if ov_type:
+                    type_clean = re.sub(r"[\[\]\s]", "", ov_type).lower()
+                    type_match = type_clean in ev_summary.lower() or type_clean in ev_desc.lower()
+
+                if subj_match and type_match:
+                    matched = True
+                    # Update summary strictly to: ❌ ОТМЕНА <Предмет с заглавной буквы>
+                    del ev["summary"]
+                    ev.add("summary", f"❌ ОТМЕНА {cap_subject}")
+
+                    # Update colorId to "8" (Graphite / Grey)
+                    if "x-color-id" in ev:
+                        del ev["x-color-id"]
+                    ev.add("x-color-id", "8")
+                    ev.add("x-status", "CANCELLED")
+
+                    # Prepend comment to description
+                    prefix = f"❌ Занятие отменено преподавателем: {comment}" if comment else "❌ Занятие отменено преподавателем"
+                    old_desc = str(ev.get("description", ""))
+                    del ev["description"]
+                    ev.add("description", f"{prefix}\n{old_desc}".strip())
+
+                    logger.info("Override %s: Cancelled '%s' on %s", ov_id, cap_subject, target_date)
+
+            if not matched:
+                logger.warning("Override %s: No matching lesson found to cancel on %s for %s %s", ov_id, target_date, ov_type, ov_subject)
+
+        elif action == "set":
+            matched_ev = None
+            if time_start:
+                for ev in result_events:
+                    dtstart_prop = ev.get("dtstart")
+                    if not dtstart_prop or not hasattr(dtstart_prop, "dt"):
+                        continue
+                    ev_dt = dtstart_prop.dt
+                    ev_date = ev_dt.date() if isinstance(ev_dt, datetime) else ev_dt
+                    if ev_date == target_date and isinstance(ev_dt, datetime):
+                        if ev_dt.strftime("%H:%M") == time_start:
+                            matched_ev = ev
+                            break
+
+            if matched_ev is not None:
+                # Existing event modified/replaced
+                old_loc = str(matched_ev.get("location", ""))
+                if keep_orig_loc and old_loc:
+                    loc = old_loc
+                elif ov_loc:
+                    loc = f"📍 {ov_loc}" if not ov_loc.startswith("📍") else ov_loc
+                else:
+                    loc = old_loc
+
+                del matched_ev["summary"]
+                matched_ev.add("summary", f"⚡ [{ov_type}] {cap_subject}")
+
+                if "location" in matched_ev:
+                    del matched_ev["location"]
+                if loc:
+                    matched_ev.add("location", loc)
+
+                color_id = COLOR_ID_MAPPING.get(ov_type, "10")
+                if "x-color-id" in matched_ev:
+                    del matched_ev["x-color-id"]
+                matched_ev.add("x-color-id", color_id)
+
+                prefix = f"⚡ Изменение в расписании от преподавателя: {comment}" if comment else "⚡ Изменение в расписании от преподавателя"
+                old_desc = str(matched_ev.get("description", ""))
+                del matched_ev["description"]
+                matched_ev.add("description", f"{prefix}\n{old_desc}".strip())
+
+                logger.info("Override %s: Replaced event at %s %s with '⚡ [%s] %s'", ov_id, target_date, time_start, ov_type, cap_subject)
+            else:
+                # Add as new event
+                if not time_start:
+                    logger.warning("Override %s: Cannot add new lesson without time_start on %s", ov_id, target_date)
+                    continue
+
+                s_h, s_m = map(int, time_start.split(":"))
+                # End time determination from bell schedule or +95m
+                e_h, e_m = None, None
+                for p_num, (s_str, e_str) in BELL_SCHEDULE.items():
+                    if s_str == time_start:
+                        e_h, e_m = map(int, e_str.split(":"))
+                        break
+                if e_h is None:
+                    end_mins = s_h * 60 + s_m + 95
+                    e_h = (end_mins // 60) % 24
+                    e_m = end_mins % 60
+
+                dt_start = datetime(target_date.year, target_date.month, target_date.day, s_h, s_m, tzinfo=tz)
+                dt_end = datetime(target_date.year, target_date.month, target_date.day, e_h, e_m, tzinfo=tz)
+
+                new_ev = Event()
+                new_ev.add("summary", f"⚡ [{ov_type}] {cap_subject}")
+                desc = f"⚡ Изменение в расписании от преподавателя: {comment}" if comment else "⚡ Изменение в расписании от преподавателя"
+                new_ev.add("description", desc)
+                if ov_loc:
+                    loc = f"📍 {ov_loc}" if not ov_loc.startswith("📍") else ov_loc
+                    new_ev.add("location", loc)
+
+                new_ev.add("dtstart", dt_start)
+                new_ev.add("dtend", dt_end)
+                new_ev.add("dtstamp", datetime.now(tz))
+                color_id = COLOR_ID_MAPPING.get(ov_type, "10")
+                new_ev.add("x-color-id", color_id)
+                new_ev.add("uid", f"tusur-override-{ov_id}-{target_date.strftime('%Y%m%d')}@{TIMEZONE_STR}")
+
+                result_events.append(new_ev)
+                logger.info("Override %s: Created new event on %s at %s: '⚡ [%s] %s'", ov_id, target_date, time_start, ov_type, cap_subject)
+
+    return result_events
+
+
+# ---------------------------------------------------------------------------
 # Beer Event Builder
 # ---------------------------------------------------------------------------
 def build_beer_event(
@@ -526,18 +770,26 @@ def build_beer_event(
     tz: ZoneInfo = TIMEZONE,
 ) -> Optional[Event]:
     """
-    Creates a VEVENT '🍺 Можно пить пиво!' with VALARM strictly for the current day
+    Creates a VEVENT '🍺 Пить пиво дозволено' with VALARM strictly for the current day
     (target_date == today), provided there were lessons on that day.
     """
     today = datetime.now(tz).date()
     if target_date != today:
         return None
-    if not lessons_today:
+
+    # Filter out cancelled lessons for beer time calculation!
+    active_lessons = [
+        ev for ev in lessons_today
+        if not str(ev.get("summary", "")).startswith("❌")
+        and str(ev.get("x-status", "")).upper() != "CANCELLED"
+    ]
+
+    if not active_lessons:
         return None
 
-    # Latest end time among today's lessons
+    # Latest end time among active today's lessons
     end_times: List[datetime] = []
-    for ev in lessons_today:
+    for ev in active_lessons:
         dtend_prop = ev.get("dtend")
         if dtend_prop and hasattr(dtend_prop, "dt"):
             dt = dtend_prop.dt
@@ -550,17 +802,18 @@ def build_beer_event(
     latest_end_dt = max(end_times)
 
     beer_ev = Event()
-    beer_ev.add("summary", "🍺 Можно пить пиво!")
+    beer_ev.add("summary", "🍺 Пить пиво дозволено")
     beer_ev.add("dtstart", latest_end_dt)
     beer_ev.add("dtend", latest_end_dt + timedelta(hours=2))
     beer_ev.add("location", "🎉 Свобода")
     beer_ev.add("description", "Все пары на сегодня закончились. Время заслуженного отдыха.")
     beer_ev.add("uid", f"beer_{target_date.strftime('%Y%m%d')}@tusur")
     beer_ev.add("dtstamp", datetime.now(tz))
+    beer_ev.add("x-color-id", "5")  # Banana / Amber
 
     alarm = Alarm()
     alarm.add("action", "DISPLAY")
-    alarm.add("description", "🍺 Можно пить пиво!")
+    alarm.add("description", "🍺 Пить пиво дозволено!")
     alarm.add("trigger", timedelta(minutes=0))
     beer_ev.add_component(alarm)
 
@@ -596,7 +849,7 @@ def build_calendar(
     tz_comp.add_component(tz_std)
     cal.add_component(tz_comp)
 
-    # Group lesson events by date to check for today's lessons
+    # Group lesson events by date to check for today's lessons (excluding beer events)
     lessons_by_day: Dict[date, List[Event]] = defaultdict(list)
     for ev in events:
         uid = str(ev.get("uid", ""))
@@ -611,14 +864,14 @@ def build_calendar(
     today = datetime.now(tz).date()
     all_events: List[Event] = list(events)
 
-    # Add beer event strictly for today if there were lessons
+    # Add beer event strictly for today if there were active lessons
     today_lessons = lessons_by_day.get(today, [])
     beer_ev = build_beer_event(target_date=today, lessons_today=today_lessons, tz=tz)
     if beer_ev:
         all_events.append(beer_ev)
         logger.info("Added beer event for today (%s)", today)
     else:
-        logger.info("No beer event created for today (%s): no lessons today or weekend", today)
+        logger.info("No beer event created for today (%s): no active lessons today or weekend", today)
 
     # De-duplicate events by UID
     seen_uids: Set[str] = set()
@@ -638,7 +891,7 @@ def parse_semester(
 ) -> Calendar:
     """
     Main parsing orchestrator. Aggregates schedule events across the semester
-    (or single week), deduplicates by UID, and returns a populated Calendar object.
+    (or single week), applies overrides, deduplicates by UID, and returns Calendar.
     """
     session = create_http_session()
 
@@ -685,6 +938,12 @@ def parse_semester(
             if m:
                 group_name = m.group(1)
 
+        # Apply teacher overrides if present
+        overrides = load_overrides()
+        if overrides:
+            logger.info("Applying %d schedule overrides from %s", len(overrides), OVERRIDES_FILE)
+            events = apply_overrides(events, overrides, tz=tz)
+
         cal = build_calendar(events, group_name=group_name, tz=tz)
         return cal
     finally:
@@ -699,7 +958,7 @@ parse_schedule = parse_semester
 # CLI Entrypoint
 # ---------------------------------------------------------------------------
 def main() -> None:
-    """CLI entrypoint with argument parsing."""
+    """CLI entrypoint with argument parsing and optional Google Calendar sync."""
     parser = argparse.ArgumentParser(description="Parse TUSUR group schedule into iCalendar (.ics)")
     parser.add_argument(
         "--url",
@@ -734,6 +993,16 @@ def main() -> None:
 
         event_count = len([c for c in cal.walk("vevent")])
         logger.info("SUCCESS: Wrote %d events to %s", event_count, args.output)
+
+        # Automatically synchronize to Google Calendar if configured
+        try:
+            from gcal_sync import sync_calendar_if_configured
+            sync_calendar_if_configured(cal)
+        except ImportError:
+            logger.debug("gcal_sync module not loaded or dependencies missing")
+        except Exception as e:
+            logger.warning("Google Calendar sync encountered an issue: %s", e)
+
         sys.exit(0)
     except Exception as e:
         logger.exception("FATAL: Failed to parse schedule: %s", e)

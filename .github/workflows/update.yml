@@ -33,6 +33,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run parser
+        env:
+          GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
+          GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.all_weeks }}" = "false" ]; then
             python parser.py

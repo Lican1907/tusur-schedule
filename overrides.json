@@ -1,0 +1,46 @@
+[
+  {
+    "id": "ov-20261014-math-lek",
+    "date": "2026-10-14",
+    "action": "set",
+    "time_start": "10:40",
+    "type": "ЛЕК",
+    "subject": "Математика",
+    "location": null,
+    "keep_original_location": true,
+    "comment": "Замена: вместо практики лекция по математике (аудитории по расписанию)"
+  },
+  {
+    "id": "ov-20261015-disc-lek",
+    "date": "2026-10-15",
+    "action": "set",
+    "time_start": "10:40",
+    "type": "ЛЕК",
+    "subject": "Дискретка",
+    "location": null,
+    "keep_original_location": true,
+    "comment": "Замена: лекция по дискретной математике (аудитории по расписанию)"
+  },
+  {
+    "id": "ov-20261014-disc-cancel",
+    "date": "2026-10-14",
+    "action": "cancel",
+    "time_start": null,
+    "type": "ПРАК",
+    "subject": "Дискретка",
+    "location": null,
+    "keep_original_location": false,
+    "comment": "Практика по дискретной математике отменена преподавателем"
+  },
+  {
+    "id": "ov-20261015-disc-cancel",
+    "date": "2026-10-15",
+    "action": "cancel",
+    "time_start": null,
+    "type": "ПРАК",
+    "subject": "Дискретка",
+    "location": null,
+    "keep_original_location": false,
+    "comment": "Практика по дискретной математике отменена преподавателем"
+  }
+]
