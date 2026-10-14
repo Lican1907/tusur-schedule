@@ -40,33 +40,24 @@ jobs:
             python parser.py --all-weeks
           fi
 
-      - name: Build KWGT widget preset
-        run: |
-          python build_kwgt.py
-
-      - name: Verify artifacts
+      - name: Verify schedule.ics artifact
         run: |
           if [ ! -f schedule.ics ]; then
             echo "Error: schedule.ics was not generated!"
             exit 1
           fi
-          if [ ! -f schedule_widget.kwgt ]; then
-            echo "Error: schedule_widget.kwgt was not generated!"
-            exit 1
-          fi
           echo "schedule.ics size: $(wc -c < schedule.ics) bytes"
-          echo "schedule_widget.kwgt size: $(wc -c < schedule_widget.kwgt) bytes"
           head -n 20 schedule.ics
 
-      - name: Commit and push artifacts to main
+      - name: Commit and push schedule.ics to main
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add schedule.ics schedule_widget.kwgt
+          git add schedule.ics
           if git diff --staged --quiet; then
-            echo "No changes to artifacts"
+            echo "No changes to schedule.ics"
           else
-            git commit -m "Auto-update schedule.ics and schedule_widget.kwgt [skip ci]"
+            git commit -m "Auto-update schedule.ics [skip ci]"
             git push origin main
           fi
 
@@ -74,9 +65,6 @@ jobs:
         run: |
           mkdir -p public
           cp schedule.ics public/
-          if [ -f schedule_widget.kwgt ]; then
-            cp schedule_widget.kwgt public/
-          fi
           if [ -f index.html ]; then
             cp index.html public/
           fi
