@@ -20,6 +20,7 @@ __pycache__/
 page_sample.html
 # Generated calendar artifacts
 schedule.ics
+schedule*.ics
 test_schedule.ics
 schedule_all.ics
 inspect_*.py

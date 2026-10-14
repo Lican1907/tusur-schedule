@@ -46,13 +46,15 @@ jobs:
             python parser.py --all-weeks
           fi
 
-      - name: Verify schedule.ics artifact
+      - name: Verify schedule artifacts
         run: |
-          if [ ! -f schedule.ics ]; then
-            echo "Error: schedule.ics was not generated!"
-            exit 1
-          fi
-          echo "schedule.ics size: $(wc -c < schedule.ics) bytes"
+          for f in schedule.ics schedule-426top-4.ics schedule-426top-1.ics schedule-426top-2.ics schedule-426-3.ics; do
+            if [ ! -f "$f" ]; then
+              echo "Error: $f was not generated!"
+              exit 1
+            fi
+            echo "$f size: $(wc -c < "$f") bytes"
+          done
           head -n 20 schedule.ics
 
       - name: Inject GOOGLE_CALENDAR_ID into index.html for Pages
@@ -66,7 +68,7 @@ jobs:
       - name: Prepare GitHub Pages directory
         run: |
           mkdir -p public
-          cp schedule.ics public/
+          cp schedule*.ics public/
           if [ -f index.html ]; then
             cp index.html public/
           fi

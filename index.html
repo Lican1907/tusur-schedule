@@ -91,7 +91,81 @@
       color: var(--text-muted);
       font-size: 15px;
       line-height: 1.5;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
+    }
+
+    .group-selector-box {
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .group-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .select-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .group-select {
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: #161b22;
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      padding: 13px 44px 13px 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .group-select:hover {
+      border-color: #8b949e;
+      background: #1c2128;
+    }
+
+    .group-select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.25);
+    }
+
+    .group-select option {
+      background: #161b22;
+      color: var(--text);
+      padding: 12px;
+    }
+
+    .select-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      transition: color 0.2s ease;
+    }
+
+    .select-wrapper:focus-within .select-icon {
+      color: var(--accent);
     }
 
     .actions {
@@ -290,11 +364,36 @@
 <body>
   <div class="container">
     <div class="badge">Автообновление через GitHub Actions</div>
-    <h1>Расписание группы 426топ-4</h1>
+    <h1 id="page-title">Расписание группы 426топ-4</h1>
     <p class="subtitle">
       Факультет систем управления (ФСУ) ТУСУР.<br>
       Подписка в формате iCalendar (.ics) для календаря на телефоне и компьютере.
     </p>
+
+    <div class="group-selector-box">
+      <label for="group-select" class="group-label">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        Учебная группа:
+      </label>
+      <div class="select-wrapper">
+        <select id="group-select" class="group-select" aria-label="Выберите учебную группу" onchange="switchGroup(this.value)">
+          <option value="426top-4">426топ-4 (ФСУ)</option>
+          <option value="426top-1">426топ-1 (ФСУ)</option>
+          <option value="426top-2">426топ-2 (ФСУ)</option>
+          <option value="426-3">426-3 (ФСУ)</option>
+        </select>
+        <div class="select-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      </div>
+    </div>
 
     <div class="actions">
       <a id="btn-apple" href="#" class="btn btn-primary">
@@ -311,13 +410,13 @@
         Добавить в Google Календарь
       </a>
 
-      <a id="btn-download" href="schedule.ics" download class="btn btn-secondary">
+      <a id="btn-download" href="schedule.ics" download="schedule.ics" class="btn btn-secondary">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
           <polyline points="7 10 12 15 17 10"></polyline>
           <line x1="12" y1="15" x2="12" y2="3"></line>
         </svg>
-        Скачать файл schedule.ics
+        <span id="btn-download-text">Скачать файл schedule.ics</span>
       </a>
     </div>
 
@@ -341,20 +440,20 @@
       </div>
       <div class="info-card">
         <div class="label">Группа</div>
-        <div class="value">426топ-4</div>
+        <div class="value" id="card-group">426топ-4</div>
       </div>
       <div class="info-card">
         <div class="label">Источник</div>
-        <div class="value">timetable.tusur.ru</div>
+        <div class="value"><a id="card-source" href="https://timetable.tusur.ru/faculties/fsu/groups/426top-4" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: none;">timetable.tusur.ru</a></div>
       </div>
     </div>
 
     <div class="instructions">
       <h2>Как подключить подписку:</h2>
       <ol>
-        <li><strong>iPhone / iPad / Mac:</strong> Нажмите «Подписаться в Apple Calendar» или откройте Настройки → Календарь → Учётные записи → Новая учётная запись → Подписные календари и вставьте ссылку.</li>
-        <li><strong>Google Календарь:</strong> Нажмите кнопку «Добавить в Google Календарь» выше (подключает живой календарь без задержки обновлений). На телефоне приложение так не умеет: откройте страницу в Safari или Chrome в режиме «Запрос настольного веб-сайта» («Версия для ПК») и нажмите кнопку ещё раз — календарь потом появится в приложении сам. Либо на компьютере перейдите на <a href="https://calendar.google.com" target="_blank" style="color: var(--accent);">calendar.google.com</a> → «+» рядом с «Другие календари» → «Добавить по URL» и вставьте ссылку.</li>
-        <li><strong>Яндекс.Календарь:</strong> Откройте Настройки календаря → «Импорт» → «Подписка на календарь» → вставьте ссылку на .ics.</li>
+        <li><strong>iPhone / iPad / Mac:</strong> Выберите нужную группу выше и нажмите «Подписаться в Apple Calendar» или откройте Настройки → Календарь → Учётные записи → Новая учётная запись → Подписные календари и вставьте ссылку.</li>
+        <li><strong>Google Календарь:</strong> Выберите группу выше и нажмите кнопку «Добавить в Google Календарь» (для группы 426топ-4 подключает прямой календарь без задержки обновлений; для остальных групп — стандартную подписку по URL). На телефоне приложение так не умеет: откройте страницу в Safari или Chrome в режиме «Запрос настольного веб-сайта» («Версия для ПК») и нажмите кнопку ещё раз. Либо на компьютере перейдите на <a href="https://calendar.google.com" target="_blank" style="color: var(--accent);">calendar.google.com</a> → «+» рядом с «Другие календари» → «Добавить по URL» и вставьте ссылку.</li>
+        <li><strong>Яндекс.Календарь:</strong> Откройте Настройки календаря → «Импорт» → «Подписка на календарь» → вставьте скопированную ссылку на .ics.</li>
       </ol>
     </div>
   </div>
@@ -364,38 +463,134 @@
   </footer>
 
   <script>
-    const icsPath = new URL('schedule.ics', window.location.href).href;
-    const urlText = document.getElementById('ics-url');
-    urlText.textContent = icsPath;
+    const GROUPS_DATA = {
+      '426top-4': {
+        name: '426топ-4',
+        file: 'schedule.ics',
+        gcalId: '__GOOGLE_CALENDAR_ID__'.trim(),
+        sourceUrl: 'https://timetable.tusur.ru/faculties/fsu/groups/426top-4'
+      },
+      '426top-1': {
+        name: '426топ-1',
+        file: 'schedule-426top-1.ics',
+        gcalId: '',
+        sourceUrl: 'https://timetable.tusur.ru/faculties/fsu/groups/426top-1'
+      },
+      '426top-2': {
+        name: '426топ-2',
+        file: 'schedule-426top-2.ics',
+        gcalId: '',
+        sourceUrl: 'https://timetable.tusur.ru/faculties/fsu/groups/426top-2'
+      },
+      '426-3': {
+        name: '426-3',
+        file: 'schedule-426-3.ics',
+        gcalId: '',
+        sourceUrl: 'https://timetable.tusur.ru/faculties/fsu/groups/426-3'
+      }
+    };
 
-    // Apple calendar webcal protocol
-    const webcalUrl = icsPath.replace(/^https?:\/\//i, 'webcal://');
-    document.getElementById('btn-apple').href = webcalUrl;
+    let currentGroup = '426top-4';
+    let currentIcsUrl = '';
 
-    // Google calendar subscribe link (прямой GOOGLE_CALENDAR_ID в Base64 или fallback на webcalUrl)
-    const gcalId = '__GOOGLE_CALENDAR_ID__'.trim();
-    let googleUrl;
-    if (gcalId && !gcalId.startsWith('__')) {
-      // Для нативного Google Calendar ID параметр cid должен быть закодирован в Base64 без '='
-      const base64Cid = btoa(gcalId).replace(/=+$/, '');
-      googleUrl = 'https://calendar.google.com/calendar/u/0/r?cid=' + encodeURIComponent(base64Cid);
-    } else {
-      googleUrl = 'https://calendar.google.com/calendar/render?cid=' + encodeURIComponent(webcalUrl);
+    function switchGroup(groupId, updateHistory = true) {
+      if (!GROUPS_DATA[groupId]) groupId = '426top-4';
+      currentGroup = groupId;
+      const group = GROUPS_DATA[groupId];
+
+      // Update select element value
+      const selectEl = document.getElementById('group-select');
+      if (selectEl && selectEl.value !== groupId) {
+        selectEl.value = groupId;
+      }
+
+      // Update header and document title
+      document.title = `Расписание ТУСУР ${group.name} | iCalendar (.ics)`;
+      const titleEl = document.getElementById('page-title');
+      if (titleEl) titleEl.textContent = `Расписание группы ${group.name}`;
+
+      // Update info-card
+      const cardGroup = document.getElementById('card-group');
+      if (cardGroup) cardGroup.textContent = group.name;
+
+      const cardSource = document.getElementById('card-source');
+      if (cardSource) cardSource.href = group.sourceUrl;
+
+      // Build absolute ICS URL
+      currentIcsUrl = new URL(group.file, window.location.href).href;
+      const urlText = document.getElementById('ics-url');
+      if (urlText) urlText.textContent = currentIcsUrl;
+
+      // Apple calendar webcal link
+      const webcalUrl = currentIcsUrl.replace(/^https?:\/\//i, 'webcal://');
+      const btnApple = document.getElementById('btn-apple');
+      if (btnApple) btnApple.href = webcalUrl;
+
+      // Google calendar link
+      const btnGoogle = document.getElementById('btn-google');
+      if (btnGoogle) {
+        if (group.gcalId && !group.gcalId.startsWith('__')) {
+          const base64Cid = btoa(group.gcalId).replace(/=+$/, '');
+          btnGoogle.href = 'https://calendar.google.com/calendar/u/0/r?cid=' + encodeURIComponent(base64Cid);
+        } else {
+          btnGoogle.href = 'https://calendar.google.com/calendar/render?cid=' + encodeURIComponent(webcalUrl);
+        }
+      }
+
+      // Download button
+      const btnDownload = document.getElementById('btn-download');
+      if (btnDownload) {
+        btnDownload.href = group.file;
+        btnDownload.download = group.file;
+        const btnDownloadText = document.getElementById('btn-download-text');
+        if (btnDownloadText) {
+          btnDownloadText.textContent = `Скачать файл ${group.file}`;
+        }
+      }
+
+      // Save preference
+      try {
+        localStorage.setItem('selected_group', groupId);
+      } catch (e) {}
+
+      // Update URL query string
+      if (updateHistory) {
+        try {
+          const url = new URL(window.location);
+          url.searchParams.set('group', groupId);
+          window.history.replaceState({ group: groupId }, '', url.toString());
+        } catch (e) {}
+      }
     }
-    const btnGoogle = document.getElementById('btn-google');
-    btnGoogle.href = googleUrl;
 
-    // На телефоне Google открывает приложение и игнорирует cid: вместо этого показываем подсказку
-    // (iPhone в режиме настольного сайта и iPad сообщают Mac, поэтому идут по обычной ссылке)
+    // Initialize from URL params or localStorage
+    function initGroup() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let initialGroup = urlParams.get('group');
+      if (!initialGroup || !GROUPS_DATA[initialGroup]) {
+        try {
+          initialGroup = localStorage.getItem('selected_group');
+        } catch (e) {}
+      }
+      if (!initialGroup || !GROUPS_DATA[initialGroup]) {
+        initialGroup = '426top-4';
+      }
+      switchGroup(initialGroup, false);
+    }
+
+    initGroup();
+
+    // Phone detection for Google Calendar
     const isPhone = /iPhone|iPod|Android/i.test(navigator.userAgent);
-    btnGoogle.addEventListener('click', (e) => {
+    document.getElementById('btn-google').addEventListener('click', (e) => {
       if (!isPhone) return;
       e.preventDefault();
       document.getElementById('phone-hint').classList.add('show');
     });
 
     function copyIcsUrl() {
-      navigator.clipboard.writeText(icsPath).then(() => {
+      if (!currentIcsUrl) return;
+      navigator.clipboard.writeText(currentIcsUrl).then(() => {
         const btn = document.getElementById('copy-btn');
         btn.textContent = 'Скопировано!';
         btn.classList.add('copied');
