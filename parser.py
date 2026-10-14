@@ -119,6 +119,9 @@ SUBJECT_SHORT_NAMES: Dict[str, str] = {
     "физкультура и спорт": "физ-ра",
     "физкультура": "физ-ра",
     "фкис": "физ-ра",
+    "элективные дисциплины по физической культуре и спорту": "физ-ра",
+    "элективные дисциплины по физической культуре": "физ-ра",
+    "элективные дисциплины по фкис": "физ-ра",
     "история россии": "история",
     "история": "история",
 }
@@ -142,6 +145,114 @@ LOCATION_MAPPING: Dict[str, str] = {
 MONTH_MAP: Dict[str, int] = {
     "янв": 1, "фев": 2, "мар": 3, "апр": 4, "май": 5, "мая": 5,
     "июн": 6, "июл": 7, "авг": 8, "сен": 9, "окт": 10, "ноя": 11, "дек": 12,
+}
+
+# Schedule of PE rooms / halls by teacher (Faculty of Control Systems, 1st course)
+PE_ROOMS_SCHEDULE: Dict[str, Dict[str, str]] = {
+    "2026-09-17": {
+        "Тарасов А.В.": "1",
+        "Помещикова Н.В.": "8",
+        "Гасюль А.В.": "1",
+        "Помещиков С.В.": "Г\\Б",
+        "Гужов Ф.А.": "ЦОФ",
+        "Ахметов Н.Р.": "21",
+        "Рибицкий Ю.Ю.": "11",
+        "Давыдов А.Д.": "4",
+        "Бозриков Д.М.": "25",
+        "Иконникова К.Д.": "24",
+        "Александров В.А.": "ЦОФ",
+    },
+    "2026-09-24": {
+        "Тарасов А.В.": "ЦОФ",
+        "Помещикова Н.В.": "ЦОФ",
+        "Гасюль А.В.": "8",
+        "Помещиков С.В.": "1",
+        "Гужов Ф.А.": "7",
+        "Ахметов Н.Р.": "25",
+        "Рибицкий Ю.Ю.": "4",
+        "Давыдов А.Д.": "21",
+        "Бозриков Д.М.": "24",
+        "Иконникова К.Д.": "5",
+        "Александров В.А.": "Г\\Б",
+    },
+    "2026-10-01": {
+        "Тарасов А.В.": "24",
+        "Помещикова Н.В.": "1",
+        "Гасюль А.В.": "ЦОФ",
+        "Помещиков С.В.": "8",
+        "Гужов Ф.А.": "Г\\Б",
+        "Ахметов Н.Р.": "ЦОФ",
+        "Рибицкий Ю.Ю.": "25",
+        "Давыдов А.Д.": "1",
+        "Бозриков Д.М.": "7",
+        "Иконникова К.Д.": "21",
+        "Александров В.А.": "5",
+    },
+    "2026-10-08": {
+        "Тарасов А.В.": "8",
+        "Помещикова Н.В.": "Г\\Б",
+        "Гасюль А.В.": "25",
+        "Помещиков С.В.": "21",
+        "Гужов Ф.А.": "1",
+        "Ахметов Н.Р.": "4",
+        "Рибицкий Ю.Ю.": "ЦОФ",
+        "Давыдов А.Д.": "ЦОФ",
+        "Бозриков Д.М.": "5",
+        "Иконникова К.Д.": "24",
+        "Александров В.А.": "7",
+    },
+    "2026-10-15": {
+        "Тарасов А.В.": "Г\\Б",
+        "Помещикова Н.В.": "4",
+        "Гасюль А.В.": "21",
+        "Помещиков С.В.": "25",
+        "Гужов Ф.А.": "8",
+        "Ахметов Н.Р.": "1",
+        "Рибицкий Ю.Ю.": "11",
+        "Давыдов А.Д.": "24",
+        "Бозриков Д.М.": "ЦОФ",
+        "Иконникова К.Д.": "ЦОФ",
+        "Александров В.А.": "1",
+    },
+    "2026-10-22": {
+        "Тарасов А.В.": "21",
+        "Помещикова Н.В.": "5",
+        "Гасюль А.В.": "Г\\Б",
+        "Помещиков С.В.": "ЦОФ",
+        "Гужов Ф.А.": "ЦОФ",
+        "Ахметов Н.Р.": "8",
+        "Рибицкий Ю.Ю.": "24",
+        "Давыдов А.Д.": "4",
+        "Бозриков Д.М.": "1",
+        "Иконникова К.Д.": "1",
+        "Александров В.А.": "25",
+    },
+    "2026-10-29": {
+        "Тарасов А.В.": "1",
+        "Помещикова Н.В.": "25",
+        "Гасюль А.В.": "4",
+        "Помещиков С.В.": "7",
+        "Гужов Ф.А.": "24",
+        "Ахметов Н.Р.": "Г\\Б",
+        "Рибицкий Ю.Ю.": "1",
+        "Давыдов А.Д.": "8",
+        "Бозриков Д.М.": "21",
+        "Иконникова К.Д.": "Г\\Б",
+        "Александров В.А.": "ЦОФ",
+    },
+    "2026-11-05": {
+        "Тарасов А.В.": "25",
+        "Помещикова Н.В.": "1",
+        "Гасюль А.В.": "1",
+        "Помещиков С.В.": "4",
+        "Гужов Ф.А.": "7",
+        "Ахметов Н.Р.": "24",
+        "Рибицкий Ю.Ю.": "8",
+        "Давыдов А.Д.": "Г\\Б",
+        "Бозриков Д.М.": "Г\\Б",
+        "Иконникова К.Д.": "21",
+        "Александров В.А.": "5",
+    },
 }
 
 DEFAULT_HEADERS: Dict[str, str] = {
@@ -382,6 +493,44 @@ def format_event_data(
     return summary, clean_location
 
 
+def is_pe_lesson(disc_name: str, summary: str = "") -> bool:
+    """Checks whether a lesson is Physical Education."""
+    text = f"{disc_name} {summary}".lower()
+    return (
+        "физ-ра" in text
+        or "физическ" in text
+        or "фкис" in text
+    )
+
+
+def format_pe_room(room_val: str) -> str:
+    """Formats room name for PE schedule (e.g. 'ауд. 1' or 'Г\\Б')."""
+    room_clean = room_val.strip()
+    if room_clean.isdigit():
+        return f"ауд. {room_clean}"
+    return room_clean
+
+
+def get_pe_rooms_for_date(event_date: date) -> Optional[Dict[str, str]]:
+    """
+    Returns PE rooms dictionary for a given date by direct date match
+    or by matching the ISO study week.
+    """
+    date_str = event_date.strftime("%Y-%m-%d")
+    if date_str in PE_ROOMS_SCHEDULE:
+        return PE_ROOMS_SCHEDULE[date_str]
+
+    ev_iso = event_date.isocalendar()[:2]  # (year, week)
+    for key_date_str, rooms in PE_ROOMS_SCHEDULE.items():
+        try:
+            kd = datetime.strptime(key_date_str, "%Y-%m-%d").date()
+            if kd.isocalendar()[:2] == ev_iso:
+                return rooms
+        except ValueError:
+            continue
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Cell & Event Parsing
 # ---------------------------------------------------------------------------
@@ -475,6 +624,15 @@ def parse_cell(
             desc_parts.append(f"Группы: {groups}")
         if modal_data.get("Ссылка на электронный ресурс"):
             desc_parts.append(f"Ссылка: {modal_data['Ссылка на электронный ресурс']}")
+
+        # Check if lesson is Physical Education and append rooms schedule
+        if is_pe_lesson(disc_name, summary):
+            pe_rooms = get_pe_rooms_for_date(day_date)
+            if pe_rooms:
+                desc_parts.append("")
+                desc_parts.append("🏟️ Аудитории по преподавателям:")
+                for teacher_name, room_val in pe_rooms.items():
+                    desc_parts.append(f"• {teacher_name} — {format_pe_room(room_val)}")
 
         description = "\n".join(desc_parts)
 
@@ -758,6 +916,12 @@ def apply_overrides(
                 marker = f"{emoji} [{ov_type}]".strip() if emoji else f"[{ov_type}]"
                 new_ev.add("summary", f"⚡ {marker} {cap_subject}".strip())
                 desc = f"⚡ Изменение в расписании от преподавателя: {comment}" if comment else "⚡ Изменение в расписании от преподавателя"
+                if is_pe_lesson(ov_subject):
+                    pe_rooms = get_pe_rooms_for_date(target_date)
+                    if pe_rooms:
+                        desc += "\n\n🏟️ Аудитории по преподавателям:\n" + "\n".join(
+                            f"• {t_name} — {format_pe_room(r_val)}" for t_name, r_val in pe_rooms.items()
+                        )
                 new_ev.add("description", desc)
                 if ov_loc:
                     loc = f"📍 {ov_loc}" if not ov_loc.startswith("📍") else ov_loc
