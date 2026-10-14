@@ -133,19 +133,19 @@ def extract_event_payload(ev: Event, tz: ZoneInfo = TIMEZONE) -> Optional[Dict[s
             color_id = "8"  # Graphite
         elif summary.startswith("🍺"):
             color_id = "5"  # Banana
-        elif "[ЛЕК]" in summary:
+        elif "ЛЕК" in summary:
             color_id = "10"  # Basil
-        elif "[ПРАК]" in summary:
+        elif "ПРАК" in summary:
             color_id = "9"  # Blueberry
-        elif "[ЛАБ]" in summary:
+        elif "ЛАБ" in summary:
             color_id = "3"  # Grape
-        elif "[СРС]" in summary:
+        elif "СРС" in summary:
             color_id = "8"  # Graphite
-        elif "[КУРС]" in summary:
+        elif "КУРС" in summary:
             color_id = "4"  # Flamingo
-        elif "[ЗАЧ]" in summary:
+        elif "ЗАЧ" in summary:
             color_id = "5"  # Banana
-        elif "[ЭКЗ]" in summary:
+        elif "ЭКЗ" in summary:
             color_id = "11"  # Tomato
         else:
             color_id = "10"

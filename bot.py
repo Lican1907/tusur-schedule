@@ -350,7 +350,7 @@ async def list_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         time_info = f" в {ov.get('time_start')}" if ov.get("time_start") else ""
         lines.append(
             f"*{idx}. {action_sym}* `{ov.get('date')}`{time_info}\n"
-            f"   • Предмет: *[{ov.get('type')}] {ov.get('subject')}*\n"
+            f"   • Предмет: *{ov.get('type')} {TYPE_EMOJI.get(ov.get('type', ''), '')} {ov.get('subject')}*\n"
             f"   • Примечание: _{ov.get('comment', 'без комментария')}_\n"
             f"   • ID: `{ov.get('id')}`\n"
         )
@@ -428,7 +428,7 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             color_desc = COLOR_DESCRIPTIONS["8"]
         else:
             emoji = TYPE_EMOJI.get(ov.type, "🟢")
-            title = f"⚡ {emoji} [{ov.type}] {ov.subject}"
+            title = f"⚡ {ov.type} {emoji} {ov.subject}"
             color_id = "10" if "ЛЕК" in ov.type else ("9" if "ПРАК" in ov.type else ("3" if "ЛАБ" in ov.type else "8"))
             color_desc = COLOR_DESCRIPTIONS.get(color_id, "🟩 Зелёный (10)")
 

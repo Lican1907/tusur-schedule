@@ -85,26 +85,26 @@ BELL_SCHEDULE: Dict[int, Tuple[str, str]] = {
 
 # Lesson types mapping to colored emoji tags
 TYPE_MAPPING: Dict[str, str] = {
-    "лек": "🟢 [ЛЕК]",
-    "лекция": "🟢 [ЛЕК]",
-    "прак": "🔵 [ПРАК]",
-    "практика": "🔵 [ПРАК]",
-    "лаб": "🟣 [ЛАБ]",
-    "лабораторная": "🟣 [ЛАБ]",
-    "лабораторная работа": "🟣 [ЛАБ]",
-    "срс": "⚪ [СРС]",
-    "сам": "⚪ [СРС]",
-    "самостоятельная работа": "⚪ [СРС]",
-    "курс": "🌸 [КУРС]",
-    "курсовая": "🌸 [КУРС]",
-    "курсовое проектирование": "🌸 [КУРС]",
-    "зач": "🟡 [ЗАЧ]",
-    "зачет": "🟡 [ЗАЧ]",
-    "зачёт": "🟡 [ЗАЧ]",
-    "диф. зачет": "🟡 [ЗАЧ]",
-    "диф.зачет": "🟡 [ЗАЧ]",
-    "экз": "🔴 [ЭКЗ]",
-    "экзамен": "🔴 [ЭКЗ]",
+    "лек": "ЛЕК 🟢",
+    "лекция": "ЛЕК 🟢",
+    "прак": "ПРАК 🔵",
+    "практика": "ПРАК 🔵",
+    "лаб": "ЛАБ 🟣",
+    "лабораторная": "ЛАБ 🟣",
+    "лабораторная работа": "ЛАБ 🟣",
+    "срс": "СРС ⚪",
+    "сам": "СРС ⚪",
+    "самостоятельная работа": "СРС ⚪",
+    "курс": "КУРС 🌸",
+    "курсовая": "КУРС 🌸",
+    "курсовое проектирование": "КУРС 🌸",
+    "зач": "ЗАЧ 🟡",
+    "зачет": "ЗАЧ 🟡",
+    "зачёт": "ЗАЧ 🟡",
+    "диф. зачет": "ЗАЧ 🟡",
+    "диф.зачет": "ЗАЧ 🟡",
+    "экз": "ЭКЗ 🔴",
+    "экзамен": "ЭКЗ 🔴",
 }
 
 TYPE_EMOJI: Dict[str, str] = {
@@ -482,7 +482,7 @@ def format_event_data(
     """
     Formats clean SUMMARY and LOCATION with a pin for a standard lesson event.
     Returns: (summary, clean_location)
-    - summary: '[TYPE] Subject' (e.g. '[ЛЕК] Математика', '[ПРАК] физ-ра')
+    - summary: '<TYPE> <EMOJI> <Subject>' (e.g. 'ЛЕК 🟢 Математика', 'ЛАБ 🟣 Информатика')
     - location: '📍 BUILDING ROOM', '📍 BUILDING', '📍 ROOM', or clean string with pin
     """
     # 1. Lesson type marker
@@ -496,7 +496,7 @@ def format_event_data(
         if not type_marker:
             clean_t = re.sub(r"[\[\]\s]", "", lesson_type).upper()
             emoji = TYPE_EMOJI.get(clean_t, "")
-            type_marker = f"{emoji} [{clean_t}]".strip() if clean_t else ""
+            type_marker = f"{clean_t} {emoji}".strip() if clean_t else ""
 
     # 2. Short subject name
     short_subject = shorten_subject(discipline_name)
@@ -935,7 +935,7 @@ def apply_overrides(
 
                 del matched_ev["summary"]
                 emoji = TYPE_EMOJI.get(ov_type, "")
-                marker = f"{emoji} [{ov_type}]".strip() if emoji else f"[{ov_type}]"
+                marker = f"{ov_type} {emoji}".strip() if emoji else ov_type
                 matched_ev.add("summary", f"⚡ {marker} {cap_subject}".strip())
 
                 if "location" in matched_ev:
@@ -953,7 +953,7 @@ def apply_overrides(
                 del matched_ev["description"]
                 matched_ev.add("description", f"{prefix}\n{old_desc}".strip())
 
-                logger.info("Override %s: Replaced event at %s %s with '⚡ [%s] %s'", ov_id, target_date, time_start, ov_type, cap_subject)
+                logger.info("Override %s: Replaced event at %s %s with '⚡ %s %s'", ov_id, target_date, time_start, marker, cap_subject)
             else:
                 # Add as new event
                 if not time_start:
@@ -977,7 +977,7 @@ def apply_overrides(
 
                 new_ev = Event()
                 emoji = TYPE_EMOJI.get(ov_type, "")
-                marker = f"{emoji} [{ov_type}]".strip() if emoji else f"[{ov_type}]"
+                marker = f"{ov_type} {emoji}".strip() if emoji else ov_type
                 new_ev.add("summary", f"⚡ {marker} {cap_subject}".strip())
                 desc = f"⚡ Изменение в расписании от преподавателя: {comment}" if comment else "⚡ Изменение в расписании от преподавателя"
                 if is_pe_lesson(ov_subject):
@@ -1001,7 +1001,7 @@ def apply_overrides(
                 new_ev.add("uid", f"tusur-override-{ov_id}-{target_date.strftime('%Y%m%d')}@{TIMEZONE_STR}")
 
                 result_events.append(new_ev)
-                logger.info("Override %s: Created new event on %s at %s: '⚡ [%s] %s'", ov_id, target_date, time_start, ov_type, cap_subject)
+                logger.info("Override %s: Created new event on %s at %s: '⚡ %s %s'", ov_id, target_date, time_start, marker, cap_subject)
 
     return result_events
 
