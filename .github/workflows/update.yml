@@ -34,7 +34,7 @@ jobs:
 
       - name: Run parser
         run: |
-          if [ "${{ inputs.all_weeks }}" = "false" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.all_weeks }}" = "false" ]; then
             python parser.py
           else
             python parser.py --all-weeks
@@ -48,18 +48,6 @@ jobs:
           fi
           echo "schedule.ics size: $(wc -c < schedule.ics) bytes"
           head -n 20 schedule.ics
-
-      - name: Commit and push schedule.ics to main
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add schedule.ics
-          if git diff --staged --quiet; then
-            echo "No changes to schedule.ics"
-          else
-            git commit -m "Auto-update schedule.ics [skip ci]"
-            git push origin main
-          fi
 
       - name: Prepare GitHub Pages directory
         run: |

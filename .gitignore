@@ -18,6 +18,8 @@ __pycache__/
 
 # Temporary analysis / debug artifacts
 page_sample.html
+# Generated calendar artifacts
+schedule.ics
 test_schedule.ics
 schedule_all.ics
 inspect_*.py

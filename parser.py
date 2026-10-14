@@ -13,16 +13,18 @@ import sys
 import time
 from collections import defaultdict
 from datetime import date, datetime, timedelta
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
+from zoneinfo import ZoneInfo
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from icalendar import Alarm, Calendar, Event, Timezone, TimezoneStandard
-import pytz
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
 
-# Configure logging
+# ---------------------------------------------------------------------------
+# Logging Configuration
+# ---------------------------------------------------------------------------
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -30,8 +32,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger("tusur_parser")
 
-DEFAULT_URL = "https://timetable.tusur.ru/faculties/fsu/groups/426top-4"
+# ---------------------------------------------------------------------------
+# Constants & Configuration
+# ---------------------------------------------------------------------------
 TIMEZONE_STR = "Asia/Tomsk"
+TIMEZONE = ZoneInfo(TIMEZONE_STR)
+
+DEFAULT_URL = "https://timetable.tusur.ru/faculties/fsu/groups/426top-4"
 OUTPUT_FILE = "schedule.ics"
 
 # Bell schedule of TUSUR (Томский государственный университет систем управления и радиоэлектроники)
@@ -45,12 +52,73 @@ BELL_SCHEDULE: Dict[int, Tuple[str, str]] = {
     7: ("20:15", "21:50"),
 }
 
-MONTH_MAP = {
+# Lesson types mapping to colored emoji tags
+TYPE_MAPPING: Dict[str, str] = {
+    "лек": "🟢 [ЛЕК]",
+    "лекция": "🟢 [ЛЕК]",
+    "прак": "🔵 [ПРАК]",
+    "практика": "🔵 [ПРАК]",
+    "лаб": "🟣 [ЛАБ]",
+    "лабораторная": "🟣 [ЛАБ]",
+    "лабораторная работа": "🟣 [ЛАБ]",
+    "срс": "⚪ [СРС]",
+    "сам": "⚪ [СРС]",
+    "самостоятельная работа": "⚪ [СРС]",
+    "курс": "🌸 [КУРС]",
+    "курсовая": "🌸 [КУРС]",
+    "курсовое проектирование": "🌸 [КУРС]",
+    "зач": "🟡 [ЗАЧ]",
+    "зачет": "🟡 [ЗАЧ]",
+    "зачёт": "🟡 [ЗАЧ]",
+    "диф. зачет": "🟡 [ЗАЧ]",
+    "диф.зачет": "🟡 [ЗАЧ]",
+    "экз": "🔴 [ЭКЗ]",
+    "экзамен": "🔴 [ЭКЗ]",
+}
+
+# Abbreviations for disciplines
+SUBJECT_SHORT_NAMES: Dict[str, str] = {
+    "дискретная математика": "дискретка",
+    "дм": "дискретка",
+    "основы российской государственности": "ОРГ",
+    "орг": "ОРГ",
+    "проектирование индивидуальной траектории развития": "ПИТР",
+    "проектирование индивидуальной траектории": "ПИТР",
+    "питр": "ПИТР",
+    "иностранный язык": "английский",
+    "английский язык": "английский",
+    "английский": "английский",
+    "физическая культура и спорт": "физ-ра",
+    "физическая культура": "физ-ра",
+    "физкультура и спорт": "физ-ра",
+    "физкультура": "физ-ра",
+    "фкис": "физ-ра",
+    "история россии": "история",
+    "история": "история",
+}
+
+# University campus buildings mapping
+LOCATION_MAPPING: Dict[str, str] = {
+    "главный корпус": "ГК",
+    "пр. ленина, 40": "ГК",
+    "ленина, 40": "ГК",
+    "гк": "ГК",
+    "радиотехнический корпус": "РК",
+    "ул. вершинина, 47": "РК",
+    "вершинина, 47": "РК",
+    "рк": "РК",
+    "корпус фэт": "ФЭТ",
+    "фэт": "ФЭТ",
+    "красноармейская, 146": "ФЭТ",
+    "вершинина, 74": "ФЭТ",
+}
+
+MONTH_MAP: Dict[str, int] = {
     "янв": 1, "фев": 2, "мар": 3, "апр": 4, "май": 5, "мая": 5,
     "июн": 6, "июл": 7, "авг": 8, "сен": 9, "окт": 10, "ноя": 11, "дек": 12,
 }
 
-DEFAULT_HEADERS = {
+DEFAULT_HEADERS: Dict[str, str] = {
     "User-Agent": (
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
@@ -60,6 +128,9 @@ DEFAULT_HEADERS = {
 }
 
 
+# ---------------------------------------------------------------------------
+# HTTP Fetching
+# ---------------------------------------------------------------------------
 def create_http_session() -> requests.Session:
     """Creates a requests session with retry strategy and default headers."""
     session = requests.Session()
@@ -77,7 +148,7 @@ def create_http_session() -> requests.Session:
 
 
 def fetch_page(url: str, session: Optional[requests.Session] = None) -> str:
-    """Fetches HTML page from the given URL."""
+    """Fetches HTML page from the given URL with error handling and timeouts."""
     close_session = False
     if session is None:
         session = create_http_session()
@@ -89,11 +160,17 @@ def fetch_page(url: str, session: Optional[requests.Session] = None) -> str:
         response.raise_for_status()
         response.encoding = response.apparent_encoding or "utf-8"
         return response.text
+    except requests.RequestException as e:
+        logger.error("Failed to fetch schedule from %s: %s", url, e)
+        raise
     finally:
         if close_session:
             session.close()
 
 
+# ---------------------------------------------------------------------------
+# HTML & Modal Parsing Helpers
+# ---------------------------------------------------------------------------
 def parse_modals(soup: BeautifulSoup) -> Dict[str, Dict[str, str]]:
     """Extracts detailed information from all lesson modals on the page."""
     modals: Dict[str, Dict[str, str]] = {}
@@ -110,7 +187,6 @@ def parse_modals(soup: BeautifulSoup) -> Dict[str, Dict[str, str]]:
                 strong = p.find("strong")
                 if strong:
                     key = strong.get_text(strip=True).rstrip(":")
-                    # Extract text removing the key prefix
                     full_p_text = p.get_text(separator=" ", strip=True)
                     val = full_p_text.replace(strong.get_text(strip=True), "", 1).strip()
                     info[key] = val
@@ -155,96 +231,231 @@ def determine_week_start(soup: BeautifulSoup, modals: Dict[str, Dict[str, str]])
     return None
 
 
-def format_lesson_type(lesson_type: str) -> str:
-    """Formats lesson type strictly with specified emoji and short code."""
+def discover_weeks(html: str, base_url: str) -> List[str]:
+    """Discovers all semester week URLs from the carousel navigation."""
+    soup = BeautifulSoup(html, "html.parser")
+    weeks_ul = soup.find("ul", class_="weeks")
+    week_urls: List[str] = []
+    if weeks_ul:
+        for li in weeks_ul.find_all("li", class_="tile"):
+            a = li.find("a")
+            if a and a.get("href"):
+                href = a["href"]
+                if href.startswith("/"):
+                    href = "https://timetable.tusur.ru" + href
+                week_urls.append(href)
+    return week_urls
+
+
+# ---------------------------------------------------------------------------
+# Data Formatting
+# ---------------------------------------------------------------------------
+def format_event_data(
+    discipline_name: str,
+    lesson_type: str,
+    raw_location: str = "",
+    short_aud: str = "",
+) -> Tuple[str, str]:
+    """
+    Formats short SUMMARY and clean LOCATION for an event.
+    Returns: (summary, clean_location)
+    - summary: '[MARKER] ShortSubject' or 'ShortSubject'
+    - location: 'BUILDING ROOM', 'BUILDING', 'ROOM', or clean string without 'ауд.'
+    """
+    # 1. Lesson type marker
     lt = lesson_type.strip().lower()
-    if not lt:
-        return ""
-    if "лек" in lt:
-        return "🟢 [ЛЕК]"
-    if "прак" in lt:
-        return "🔵 [ПРАК]"
-    if "лаб" in lt:
-        return "🟣 [ЛАБ]"
-    if "сам" in lt or "срс" in lt:
-        return "⚪ [СРС]"
-    if "курс" in lt:
-        return "🌸 [КУРС]"
-    if "зач" in lt:
-        return "🟡 [ЗАЧ]"
-    if "экз" in lt:
-        return "🔴 [ЭКЗ]"
-    return f"[{lesson_type.strip()}]"
+    type_marker = ""
+    if lt:
+        for key, marker in TYPE_MAPPING.items():
+            if key in lt:
+                type_marker = marker
+                break
+        if not type_marker:
+            type_marker = f"[{lesson_type.strip()}]"
 
+    # 2. Short subject name
+    disc_clean = discipline_name.strip()
+    n_lower = disc_clean.lower()
+    short_subject = disc_clean
+    for key, abbr in SUBJECT_SHORT_NAMES.items():
+        if key in n_lower or n_lower == key:
+            short_subject = abbr
+            break
 
-def shorten_subject(name: str) -> str:
-    """Case-insensitive abbreviation of subject names according to rules."""
-    n_lower = name.strip().lower()
-    if "проектирование индивидуальной траектории" in n_lower or "питр" in n_lower:
-        return "ПИТР"
-    if "основы российской государственности" in n_lower or n_lower == "орг":
-        return "ОРГ"
-    if "история россии" in n_lower:
-        return "история"
-    if "иностранный язык" in n_lower:
-        return "английский"
-    if "физическая культура" in n_lower or "фкис" in n_lower or "физкультура" in n_lower:
-        return "физ-ра"
-    if "дискретная математика" in n_lower or n_lower == "дм":
-        return "дискретка"
-    return name.strip()
+    summary = f"{type_marker} {short_subject}".strip() if type_marker else short_subject
 
-
-def format_location(raw_loc: str, short_aud: str = "") -> str:
-    """Formats location strictly as '<КОРПУС> <НОМЕР_АУДИТОРИИ>'."""
-    combined = f"{raw_loc} {short_aud}".strip().lower()
-    if not combined:
-        return ""
-
+    # 3. Clean location
+    combined = f"{raw_location} {short_aud}".strip().lower()
     building = ""
-    if (
-        "главный корпус" in combined
-        or "пр. ленина, 40" in combined
-        or "ленина, 40" in combined
-        or re.search(r"\bгк\b", combined)
-    ):
+    if any(k in combined for k in ("главный корпус", "пр. ленина, 40", "ленина, 40")) or re.search(r"\bгк\b", combined):
         building = "ГК"
-    elif (
-        "радиотехнический корпус" in combined
-        or "ул. вершинина, 47" in combined
-        or "вершинина, 47" in combined
-        or re.search(r"\bрк\b", combined)
-    ):
+    elif any(k in combined for k in ("радиотехнический корпус", "ул. вершинина, 47", "вершинина, 47")) or re.search(r"\bрк\b", combined):
         building = "РК"
-    elif (
-        "корпус фэт" in combined
-        or "фэт" in combined
-        or "красноармейская, 146" in combined
-        or "вершинина, 74" in combined
-        or re.search(r"\bф\b", combined)
-    ):
+    elif any(k in combined for k in ("корпус фэт", "вершинина, 74", "красноармейская, 146")) or "фэт" in combined or re.search(r"\bф\b", combined):
         building = "ФЭТ"
 
     room = ""
-    # Extract auditorium number e.g. "ауд. 310" or "ауд 310" or "119а"
-    m = re.search(r"ауд\.?\s*([0-9]+[а-яёa-z]?)", combined, re.IGNORECASE)
-    if m:
-        room = m.group(1).upper()
+    m_room = re.search(r"ауд\.?\s*([0-9]+[а-яёa-z]?)", combined, re.IGNORECASE)
+    if m_room:
+        room = m_room.group(1).upper()
     else:
-        m2 = re.search(r"(?:гк|рк|фэт|ф)?\s*([0-9]{3}[а-яёa-z]?)", combined, re.IGNORECASE)
-        if m2:
-            room = m2.group(1).upper()
+        m_num = re.search(r"(?:гк|рк|фэт|ф)?\s*([0-9]{3}[а-яёa-z]?)", combined, re.IGNORECASE)
+        if m_num:
+            room = m_num.group(1).upper()
 
     if building and room:
-        return f"{building} {room}"
-    if building:
-        return building
-    if room:
-        return room
-    return raw_loc.strip()
+        clean_location = f"{building} {room}"
+    elif building:
+        clean_location = building
+    elif room:
+        clean_location = room
+    else:
+        clean = re.sub(r"\bауд\.?\s*", "", raw_location, flags=re.IGNORECASE).strip()
+        clean = re.sub(r"^[,\.\s]+|[,\.\s]+$", "", clean)
+        clean_location = clean or short_aud.strip()
+
+    return summary, clean_location
 
 
-def parse_week_events(html: str, tz: pytz.BaseTzInfo) -> List[Event]:
+# ---------------------------------------------------------------------------
+# Cell & Event Parsing
+# ---------------------------------------------------------------------------
+def parse_cell(
+    cell: Tag,
+    pair_num: int,
+    default_date: Optional[date],
+    modals: Dict[str, Dict[str, str]],
+    tz: ZoneInfo = TIMEZONE,
+) -> List[Event]:
+    """
+    Parses a single schedule table cell (td.lesson_cell).
+    Extracts discipline, type, teacher, auditorium, subgroup notes,
+    detects shifted start times ('с 12:30' for pair 3 -> strictly 12:30-14:05),
+    and creates Event objects for all lessons in the cell.
+    """
+    events: List[Event] = []
+    lessons = cell.find_all("div", class_="lesson-cell")
+
+    for l_div in lessons:
+        disc_span = l_div.find("span", class_="discipline")
+        lesson_id = disc_span.get("data-lesson-id") if disc_span else None
+        modal_data = modals.get(lesson_id, {}) if lesson_id else {}
+
+        # Resolve exact date
+        day_date = default_date
+        if "Дата проведения" in modal_data:
+            try:
+                day_date = datetime.strptime(modal_data["Дата проведения"], "%d.%m.%Y").date()
+            except ValueError:
+                pass
+
+        if not day_date:
+            logger.warning("Could not determine date for lesson %s, skipping", lesson_id)
+            continue
+
+        # Subject title
+        disc_name = modal_data.get("title") or (disc_span.get_text(strip=True) if disc_span else "Занятие")
+
+        # Lesson type (e.g. Лекция, Практика, Лабораторная работа)
+        kind_span = l_div.find("span", class_="kind")
+        abbr = kind_span.find("abbr") if kind_span else None
+        cell_kind = (abbr.get("title") if abbr and abbr.get("title") else kind_span.get_text(strip=True)) if kind_span else ""
+        lesson_type = modal_data.get("Вид занятия") or cell_kind
+
+        # Auditorium & Location
+        aud_span = l_div.find("span", class_="auditoriums")
+        tooltip_i = aud_span.find("i", class_="js-tooltip") if aud_span else None
+        full_aud = tooltip_i.get("title") if tooltip_i and tooltip_i.get("title") else ""
+        short_aud = modal_data.get("Место проведения") or (aud_span.get_text(strip=True) if aud_span else "")
+
+        # Format summary and clean location
+        summary, location = format_event_data(disc_name, lesson_type, full_aud, short_aud)
+
+        # Subgroup / comments / notes
+        note_span = l_div.find("span", class_="note")
+        subgroup = (
+            modal_data.get("Подгруппа")
+            or modal_data.get("Комментарий")
+            or (note_span.get_text(strip=True) if note_span else "")
+        )
+
+        # Teacher
+        teacher = modal_data.get("Преподаватель")
+        if not teacher:
+            grp_span = l_div.find("span", class_="group")
+            teacher = grp_span.get_text(strip=True) if grp_span else ""
+
+        # Additional groups
+        groups = modal_data.get("Совместно с группами") or modal_data.get("Группы") or ""
+
+        # Detailed description
+        desc_parts: List[str] = []
+        if disc_name:
+            desc_parts.append(f"Предмет: {disc_name}")
+        if lesson_type:
+            desc_parts.append(f"Вид: {lesson_type}")
+        if teacher:
+            desc_parts.append(f"Преподаватель: {teacher}")
+        if subgroup:
+            desc_parts.append(f"Подгруппа: {subgroup}")
+        if full_aud:
+            desc_parts.append(
+                f"Аудитория: {short_aud} ({full_aud})"
+                if short_aud and short_aud != full_aud
+                else f"Аудитория: {full_aud}"
+            )
+        elif short_aud:
+            desc_parts.append(f"Аудитория: {short_aud}")
+        if groups:
+            desc_parts.append(f"Группы: {groups}")
+        if modal_data.get("Ссылка на электронный ресурс"):
+            desc_parts.append(f"Ссылка: {modal_data['Ссылка на электронный ресурс']}")
+
+        description = "\n".join(desc_parts)
+
+        # Check for shifted start time (e.g. badge 'с 12:30' or modal note)
+        shift_search = f"{str(cell)} {modal_data.get('Комментарий', '')} {modal_data.get('Подгруппа', '')} {subgroup}"
+        m_shift = re.search(r"с\s*(\d{1,2})[:.](\d{2})", shift_search, re.IGNORECASE)
+
+        if (pair_num == 3 and "12:30" in shift_search) or (
+            m_shift and pair_num == 3 and m_shift.group(1) == "12" and m_shift.group(2) == "30"
+        ):
+            s_h, s_m = 12, 30
+            e_h, e_m = 14, 5  # Strictly 12:30–14:05 (95 min) for 3rd pair shift
+        elif m_shift:
+            s_h = int(m_shift.group(1))
+            s_m = int(m_shift.group(2))
+            start_mins = s_h * 60 + s_m
+            end_mins = start_mins + 95  # Standard lesson duration: 95 minutes
+            e_h = (end_mins // 60) % 24
+            e_m = end_mins % 60
+        else:
+            start_time_str, end_time_str = BELL_SCHEDULE.get(pair_num, ("08:50", "10:25"))
+            s_h, s_m = map(int, start_time_str.split(":"))
+            e_h, e_m = map(int, end_time_str.split(":"))
+
+        dt_start = datetime(day_date.year, day_date.month, day_date.day, s_h, s_m, tzinfo=tz)
+        dt_end = datetime(day_date.year, day_date.month, day_date.day, e_h, e_m, tzinfo=tz)
+
+        event = Event()
+        event.add("summary", summary)
+        event.add("description", description)
+        if location:
+            event.add("location", location)
+        event.add("dtstart", dt_start)
+        event.add("dtend", dt_end)
+        event.add("dtstamp", datetime.now(tz))
+
+        day_num = day_date.weekday() + 1
+        uid_id = lesson_id if lesson_id else f"{pair_num}-{day_num}"
+        event.add("uid", f"tusur-{uid_id}-{day_date.strftime('%Y%m%d')}@timetable.tusur.ru")
+
+        events.append(event)
+
+    return events
+
+
+def parse_week_events(html: str, tz: ZoneInfo = TIMEZONE) -> List[Event]:
     """Parses lessons from a single week HTML page and returns list of Event objects."""
     soup = BeautifulSoup(html, "html.parser")
     modals = parse_modals(soup)
@@ -256,7 +467,8 @@ def parse_week_events(html: str, tz: pytz.BaseTzInfo) -> List[Event]:
         return []
 
     events: List[Event] = []
-    rows = desktop_table.find("tbody").find_all("tr")
+    tbody = desktop_table.find("tbody")
+    rows = tbody.find_all("tr") if tbody else desktop_table.find_all("tr")
 
     for r in rows:
         row_classes = r.get("class", [])
@@ -269,18 +481,8 @@ def parse_week_events(html: str, tz: pytz.BaseTzInfo) -> List[Event]:
         if not pair_num:
             continue
 
-        # Bell call times
-        time_th = r.find("th", class_="time")
-        start_time_str, end_time_str = BELL_SCHEDULE.get(pair_num, ("08:50", "10:25"))
-        if time_th:
-            spans = time_th.find_all("span")
-            if len(spans) >= 2:
-                start_time_str = spans[0].get_text(strip=True)
-                end_time_str = spans[1].get_text(strip=True)
-
         cells = r.find_all("td", class_="lesson_cell")
         for c_idx, cell in enumerate(cells):
-            # Day number: 1 = Monday, ..., 6 = Saturday
             day_num = c_idx + 1
             for c in cell.get("class", []):
                 m = re.match(r"day_(\d+)", c)
@@ -288,148 +490,82 @@ def parse_week_events(html: str, tz: pytz.BaseTzInfo) -> List[Event]:
                     day_num = int(m.group(1))
                     break
 
-            day_date = None
+            default_date = None
             if week_start:
-                day_date = week_start + timedelta(days=day_num - 1)
+                default_date = week_start + timedelta(days=day_num - 1)
 
-            lessons = cell.find_all("div", class_="lesson-cell")
-            for l_div in lessons:
-                disc_span = l_div.find("span", class_="discipline")
-                lesson_id = disc_span.get("data-lesson-id") if disc_span else None
-                modal_data = modals.get(lesson_id, {}) if lesson_id else {}
-
-                # Fallback / exact date from modal if available
-                if "Дата проведения" in modal_data:
-                    try:
-                        day_date = datetime.strptime(modal_data["Дата проведения"], "%d.%m.%Y").date()
-                    except ValueError:
-                        pass
-
-                if not day_date:
-                    logger.warning("Could not determine date for lesson %s, skipping", lesson_id)
-                    continue
-
-                # Subject title
-                disc_name = modal_data.get("title") or (disc_span.get_text(strip=True) if disc_span else "Занятие")
-
-                # Lesson type (e.g. Лекция, Практика, Лабораторная работа)
-                kind_span = l_div.find("span", class_="kind")
-                abbr = kind_span.find("abbr") if kind_span else None
-                cell_kind = (abbr.get("title") if abbr and abbr.get("title") else kind_span.get_text(strip=True)) if kind_span else ""
-                lesson_type = modal_data.get("Вид занятия") or cell_kind
-
-                # Auditorium & Location
-                aud_span = l_div.find("span", class_="auditoriums")
-                tooltip_i = aud_span.find("i", class_="js-tooltip") if aud_span else None
-                full_aud = tooltip_i.get("title") if tooltip_i and tooltip_i.get("title") else ""
-                short_aud = modal_data.get("Место проведения") or (aud_span.get_text(strip=True) if aud_span else "")
-                location = format_location(full_aud, short_aud)
-
-                # Subgroup / comments / notes
-                note_span = l_div.find("span", class_="note")
-                subgroup = (
-                    modal_data.get("Подгруппа")
-                    or modal_data.get("Комментарий")
-                    or (note_span.get_text(strip=True) if note_span else "")
-                )
-
-                # Teacher
-                teacher = modal_data.get("Преподаватель")
-                if not teacher:
-                    grp_span = l_div.find("span", class_="group")
-                    teacher = grp_span.get_text(strip=True) if grp_span else ""
-
-                # Additional groups
-                groups = modal_data.get("Совместно с группами") or modal_data.get("Группы") or ""
-
-                # SUMMARY: <МАРКЕР_И_ТИП> <СОКРАЩЕННЫЙ_ПРЕДМЕТ>
-                type_marker = format_lesson_type(lesson_type)
-                short_subject = shorten_subject(disc_name)
-                summary = f"{type_marker} {short_subject}".strip() if type_marker else short_subject
-
-                # DESCRIPTION: полные данные без сокращений
-                desc_parts = []
-                if disc_name:
-                    desc_parts.append(f"Предмет: {disc_name}")
-                if lesson_type:
-                    desc_parts.append(f"Вид: {lesson_type}")
-                if teacher:
-                    desc_parts.append(f"Преподаватель: {teacher}")
-                if subgroup:
-                    desc_parts.append(f"Подгруппа: {subgroup}")
-                if full_aud:
-                    desc_parts.append(f"Аудитория: {short_aud} ({full_aud})" if short_aud and short_aud != full_aud else f"Аудитория: {full_aud}")
-                elif short_aud:
-                    desc_parts.append(f"Аудитория: {short_aud}")
-                if groups:
-                    desc_parts.append(f"Группы: {groups}")
-                if modal_data.get("Ссылка на электронный ресурс"):
-                    desc_parts.append(f"Ссылка: {modal_data['Ссылка на электронный ресурс']}")
-
-                description = "\n".join(desc_parts)
-
-                # Check for shifted start time (e.g. badge "с 12:30" or modal note)
-                shift_search = f"{str(l_div)} {modal_data.get('Комментарий', '')} {modal_data.get('Подгруппа', '')} {subgroup}"
-                m_shift = re.search(r"с\s*(\d{1,2})[:.](\d{2})", shift_search, re.IGNORECASE)
-
-                if (pair_num == 3 and "12:30" in shift_search) or (m_shift and (pair_num == 3 or "12:30" in shift_search)):
-                    s_h, s_m = 12, 30
-                    e_h, e_m = 14, 5  # Standard duration: 1 hour 35 minutes (ends at 14:05)
-                elif m_shift:
-                    s_h = int(m_shift.group(1))
-                    s_m = int(m_shift.group(2))
-                    start_mins = s_h * 60 + s_m
-                    end_mins = start_mins + 95  # Standard lesson duration: 95 minutes
-                    e_h = (end_mins // 60) % 24
-                    e_m = end_mins % 60
-                else:
-                    # Standard bell call times
-                    try:
-                        s_h, s_m = map(int, start_time_str.split(":"))
-                        e_h, e_m = map(int, end_time_str.split(":"))
-                    except ValueError:
-                        s_h, s_m = map(int, BELL_SCHEDULE[pair_num][0].split(":"))
-                        e_h, e_m = map(int, BELL_SCHEDULE[pair_num][1].split(":"))
-
-                dt_start = tz.localize(datetime(day_date.year, day_date.month, day_date.day, s_h, s_m))
-                dt_end = tz.localize(datetime(day_date.year, day_date.month, day_date.day, e_h, e_m))
-
-                event = Event()
-                event.add("summary", summary)
-                event.add("description", description)
-                if location:
-                    event.add("location", location)
-                event.add("dtstart", dt_start)
-                event.add("dtend", dt_end)
-                event.add("dtstamp", datetime.now(tz))
-
-                uid_id = lesson_id if lesson_id else f"{pair_num}-{day_num}"
-                event.add("uid", f"tusur-{uid_id}-{day_date.strftime('%Y%m%d')}@timetable.tusur.ru")
-
-                events.append(event)
+            cell_events = parse_cell(
+                cell=cell,
+                pair_num=pair_num,
+                default_date=default_date,
+                modals=modals,
+                tz=tz,
+            )
+            events.extend(cell_events)
 
     logger.info("Found %d lessons for week starting %s", len(events), week_start)
     return events
 
 
-def discover_weeks(html: str, base_url: str) -> List[str]:
-    """Discovers all semester week URLs from the carousel navigation."""
-    soup = BeautifulSoup(html, "html.parser")
-    weeks_ul = soup.find("ul", class_="weeks")
-    week_urls = []
-    if weeks_ul:
-        for li in weeks_ul.find_all("li", class_="tile"):
-            a = li.find("a")
-            if a and a.get("href"):
-                href = a["href"]
-                if href.startswith("/"):
-                    href = "https://timetable.tusur.ru" + href
-                week_urls.append(href)
-    return week_urls
+# ---------------------------------------------------------------------------
+# Beer Event Builder
+# ---------------------------------------------------------------------------
+def build_beer_event(
+    target_date: date,
+    lessons_today: List[Event],
+    tz: ZoneInfo = TIMEZONE,
+) -> Optional[Event]:
+    """
+    Creates a VEVENT '🍺 Пить пиво дозволено' with VALARM strictly for the current day
+    (target_date == today), provided there were lessons on that day.
+    """
+    today = datetime.now(tz).date()
+    if target_date != today:
+        return None
+    if not lessons_today:
+        return None
+
+    # Latest end time among today's lessons
+    end_times: List[datetime] = []
+    for ev in lessons_today:
+        dtend_prop = ev.get("dtend")
+        if dtend_prop and hasattr(dtend_prop, "dt"):
+            dt = dtend_prop.dt
+            if isinstance(dt, datetime):
+                end_times.append(dt)
+
+    if not end_times:
+        return None
+
+    latest_end_dt = max(end_times)
+
+    beer_ev = Event()
+    beer_ev.add("summary", "🍺 Пить пиво дозволено")
+    beer_ev.add("dtstart", latest_end_dt)
+    beer_ev.add("dtend", latest_end_dt + timedelta(hours=2))
+    beer_ev.add("location", "Свобода")
+    beer_ev.add("description", "Все пары на сегодня закончились. Время заслуженного отдыха.")
+    beer_ev.add("uid", f"beer_{target_date.strftime('%Y%m%d')}@tusur")
+    beer_ev.add("dtstamp", datetime.now(tz))
+
+    alarm = Alarm()
+    alarm.add("action", "DISPLAY")
+    alarm.add("description", "🍺 Пить пиво дозволено!")
+    alarm.add("trigger", timedelta(minutes=0))
+    beer_ev.add_component(alarm)
+
+    return beer_ev
 
 
-def build_calendar(events: List[Event], group_name: str = "426топ-4") -> Calendar:
-    """Builds a complete RFC 5545 Calendar with VTIMEZONE, VEVENTs, and beer time events."""
+# ---------------------------------------------------------------------------
+# Calendar Builder & Aggregator
+# ---------------------------------------------------------------------------
+def build_calendar(
+    events: List[Event],
+    group_name: str = "426топ-4",
+    tz: ZoneInfo = TIMEZONE,
+) -> Calendar:
+    """Builds a complete RFC 5545 Calendar with VTIMEZONE, VEVENTs, and beer time event."""
     cal = Calendar()
     cal.add("prodid", "-//TUSUR Timetable Parser//timetable.tusur.ru//RU")
     cal.add("version", "2.0")
@@ -450,7 +586,7 @@ def build_calendar(events: List[Event], group_name: str = "426топ-4") -> Cale
     tz_comp.add_component(tz_std)
     cal.add_component(tz_comp)
 
-    # Group lesson events by date to create dynamic beer events
+    # Group lesson events by date to check for today's lessons
     lessons_by_day: Dict[date, List[Event]] = defaultdict(list)
     for ev in events:
         uid = str(ev.get("uid", ""))
@@ -462,39 +598,20 @@ def build_calendar(events: List[Event], group_name: str = "426топ-4") -> Cale
             ev_date = d.date() if isinstance(d, datetime) else d
             lessons_by_day[ev_date].append(ev)
 
-    tz = pytz.timezone(TIMEZONE_STR)
     today = datetime.now(tz).date()
     all_events: List[Event] = list(events)
 
-    # Restrict beer event strictly to today only
+    # Add beer event strictly for today if there were lessons
     today_lessons = lessons_by_day.get(today, [])
-    if today_lessons and today.weekday() != 6:
-        # Latest end time among today's lessons (accounting for any shifted times)
-        latest_end_dt = max(ev.get("dtend").dt for ev in today_lessons)
-
-        beer_ev = Event()
-        beer_ev.add("summary", "🍺 Пить пиво дозволено")
-        beer_ev.add("dtstart", latest_end_dt)
-        beer_ev.add("dtend", latest_end_dt + timedelta(hours=2))
-        beer_ev.add("location", "Свобода")
-        beer_ev.add("description", "Все пары на сегодня закончились. Время заслуженного отдыха.")
-        beer_ev.add("uid", f"beer_{today.strftime('%Y%m%d')}@tusur")
-        beer_ev.add("dtstamp", datetime.now(tz))
-
-        # Add embedded VALARM notification
-        alarm = Alarm()
-        alarm.add("action", "DISPLAY")
-        alarm.add("description", "🍺 Пить пиво дозволено!")
-        alarm.add("trigger", timedelta(minutes=0))
-        beer_ev.add_component(alarm)
-
+    beer_ev = build_beer_event(target_date=today, lessons_today=today_lessons, tz=tz)
+    if beer_ev:
         all_events.append(beer_ev)
-        logger.info("Added beer event for today (%s) with start time %s", today, latest_end_dt)
+        logger.info("Added beer event for today (%s)", today)
     else:
-        logger.info("No beer event created for today (%s): no pairs or weekend", today)
+        logger.info("No beer event created for today (%s): no lessons today or weekend", today)
 
     # De-duplicate events by UID
-    seen_uids = set()
+    seen_uids: Set[str] = set()
     for ev in all_events:
         uid = str(ev.get("uid"))
         if uid not in seen_uids:
@@ -504,45 +621,52 @@ def build_calendar(events: List[Event], group_name: str = "426топ-4") -> Cale
     return cal
 
 
-def parse_schedule(url: str = DEFAULT_URL, all_weeks: bool = False) -> Calendar:
-    """Main parsing orchestrator. Returns populated Calendar object."""
-    tz = pytz.timezone(TIMEZONE_STR)
+def parse_semester(
+    url: str = DEFAULT_URL,
+    all_weeks: bool = True,
+    tz: ZoneInfo = TIMEZONE,
+) -> Calendar:
+    """
+    Main parsing orchestrator. Aggregates schedule events across the semester
+    (or single week), deduplicates by UID, and returns a populated Calendar object.
+    """
     session = create_http_session()
 
     try:
-        # Fetch initial (current week) page
         main_html = fetch_page(url, session=session)
-        events = parse_week_events(main_html, tz)
+        events = parse_week_events(main_html, tz=tz)
 
         if all_weeks:
             week_urls = discover_weeks(main_html, url)
             logger.info("Discovered %d weeks in carousel for full semester parsing", len(week_urls))
 
-            # Identify the currently viewed week's URL to avoid redundant fetching
+            # Identify the currently viewed week URL to avoid redundant requests
             soup_main = BeautifulSoup(main_html, "html.parser")
-            active_tile = soup_main.find("li", class_=lambda c: c and "tile" in c.split() and ("current" in c.split() or "current-week" in c.split()))
+            active_tile = soup_main.find(
+                "li",
+                class_=lambda c: c and "tile" in c.split() and ("current" in c.split() or "current-week" in c.split()),
+            )
             active_href = ""
             if active_tile and active_tile.find("a"):
                 active_href = active_tile.find("a").get("href", "")
 
             for idx, w_url in enumerate(week_urls, start=1):
-                # Skip if already fetched as main page
                 if w_url == url or (active_href and w_url.endswith(active_href)):
                     logger.info("Skipping already fetched current week (%d/%d): %s", idx, len(week_urls), w_url)
                     continue
 
                 try:
-                    time.sleep(0.3)  # Polite crawling delay between requests
+                    time.sleep(0.3)  # Polite crawling delay
                     logger.info("Processing week %d/%d: %s", idx, len(week_urls), w_url)
                     w_html = fetch_page(w_url, session=session)
-                    w_events = parse_week_events(w_html, tz)
+                    w_events = parse_week_events(w_html, tz=tz)
                     if not w_events:
                         logger.info("No lessons found for week %s (vacation or session)", w_url)
                     events.extend(w_events)
                 except Exception as e:
                     logger.warning("Failed to fetch/parse week %s: %s (skipping and continuing)", w_url, e)
 
-        # Extract group name from title if possible
+        # Extract group name from title if present
         soup = BeautifulSoup(main_html, "html.parser")
         h1 = soup.find("h1")
         group_name = "426топ-4"
@@ -551,13 +675,21 @@ def parse_schedule(url: str = DEFAULT_URL, all_weeks: bool = False) -> Calendar:
             if m:
                 group_name = m.group(1)
 
-        cal = build_calendar(events, group_name=group_name)
+        cal = build_calendar(events, group_name=group_name, tz=tz)
         return cal
     finally:
         session.close()
 
 
-def main():
+# Backward compatibility alias
+parse_schedule = parse_semester
+
+
+# ---------------------------------------------------------------------------
+# CLI Entrypoint
+# ---------------------------------------------------------------------------
+def main() -> None:
+    """CLI entrypoint with argument parsing."""
     parser = argparse.ArgumentParser(description="Parse TUSUR group schedule into iCalendar (.ics)")
     parser.add_argument(
         "--url",
@@ -584,7 +716,7 @@ def main():
     logger.info("Timezone: %s", TIMEZONE_STR)
 
     try:
-        cal = parse_schedule(url=args.url, all_weeks=args.all_weeks)
+        cal = parse_semester(url=args.url, all_weeks=args.all_weeks)
         ical_data = cal.to_ical()
 
         with open(args.output, "wb") as f:
