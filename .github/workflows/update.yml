@@ -52,6 +52,14 @@ jobs:
           echo "schedule.ics size: $(wc -c < schedule.ics) bytes"
           head -n 20 schedule.ics
 
+      - name: Inject GOOGLE_CALENDAR_ID into index.html for Pages
+        env:
+          GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
+        run: |
+          if [ -n "$GOOGLE_CALENDAR_ID" ]; then
+            python -c "import os; p='index.html'; s=open(p,encoding='utf-8').read(); open(p,'w',encoding='utf-8').write(s.replace('__GOOGLE_CALENDAR_ID__', os.environ['GOOGLE_CALENDAR_ID'].strip()))"
+          fi
+
       - name: Prepare GitHub Pages directory
         run: |
           mkdir -p public
