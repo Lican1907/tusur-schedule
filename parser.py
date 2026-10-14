@@ -55,28 +55,38 @@ BELL_SCHEDULE: Dict[int, Tuple[str, str]] = {
     7: ("20:15", "21:50"),
 }
 
-# Lesson types mapping to compact clean codes (no circle emojis in summary)
+# Lesson types mapping to colored emoji tags
 TYPE_MAPPING: Dict[str, str] = {
-    "лек": "[ЛЕК]",
-    "лекция": "[ЛЕК]",
-    "прак": "[ПРАК]",
-    "практика": "[ПРАК]",
-    "лаб": "[ЛАБ]",
-    "лабораторная": "[ЛАБ]",
-    "лабораторная работа": "[ЛАБ]",
-    "срс": "[СРС]",
-    "сам": "[СРС]",
-    "самостоятельная работа": "[СРС]",
-    "курс": "[КУРС]",
-    "курсовая": "[КУРС]",
-    "курсовое проектирование": "[КУРС]",
-    "зач": "[ЗАЧ]",
-    "зачет": "[ЗАЧ]",
-    "зачёт": "[ЗАЧ]",
-    "диф. зачет": "[ЗАЧ]",
-    "диф.зачет": "[ЗАЧ]",
-    "экз": "[ЭКЗ]",
-    "экзамен": "[ЭКЗ]",
+    "лек": "🟢 [ЛЕК]",
+    "лекция": "🟢 [ЛЕК]",
+    "прак": "🔵 [ПРАК]",
+    "практика": "🔵 [ПРАК]",
+    "лаб": "🟣 [ЛАБ]",
+    "лабораторная": "🟣 [ЛАБ]",
+    "лабораторная работа": "🟣 [ЛАБ]",
+    "срс": "⚪ [СРС]",
+    "сам": "⚪ [СРС]",
+    "самостоятельная работа": "⚪ [СРС]",
+    "курс": "🌸 [КУРС]",
+    "курсовая": "🌸 [КУРС]",
+    "курсовое проектирование": "🌸 [КУРС]",
+    "зач": "🟡 [ЗАЧ]",
+    "зачет": "🟡 [ЗАЧ]",
+    "зачёт": "🟡 [ЗАЧ]",
+    "диф. зачет": "🟡 [ЗАЧ]",
+    "диф.зачет": "🟡 [ЗАЧ]",
+    "экз": "🔴 [ЭКЗ]",
+    "экзамен": "🔴 [ЭКЗ]",
+}
+
+TYPE_EMOJI: Dict[str, str] = {
+    "ЛЕК": "🟢",
+    "ПРАК": "🔵",
+    "ЛАБ": "🟣",
+    "СРС": "⚪",
+    "КУРС": "🌸",
+    "ЗАЧ": "🟡",
+    "ЭКЗ": "🔴",
 }
 
 # Google Calendar API colorId mapping
@@ -321,7 +331,8 @@ def format_event_data(
                 break
         if not type_marker:
             clean_t = re.sub(r"[\[\]\s]", "", lesson_type).upper()
-            type_marker = f"[{clean_t}]" if clean_t else ""
+            emoji = TYPE_EMOJI.get(clean_t, "")
+            type_marker = f"{emoji} [{clean_t}]".strip() if clean_t else ""
 
     # 2. Short subject name
     short_subject = shorten_subject(discipline_name)
@@ -590,7 +601,7 @@ def apply_overrides(
 ) -> List[Event]:
     """
     Applies manual teacher overrides from overrides.json to events:
-    - 'cancel': changes summary to '❌ ОТМЕНА <Предмет>', sets colorId='8', marks cancelled
+    - 'cancel': changes summary to '❌ [ОТМЕНА] <Предмет>', sets colorId='8', marks cancelled
     - 'set': replaces or adds lesson with '⚡ [<ТИП>] <Предмет>', sets colorId and location
     """
     if not overrides:
@@ -655,9 +666,9 @@ def apply_overrides(
 
                 if subj_match and type_match:
                     matched = True
-                    # Update summary strictly to: ❌ ОТМЕНА <Предмет с заглавной буквы>
+                    # Update summary strictly to: ❌ [ОТМЕНА] <Предмет с заглавной буквы>
                     del ev["summary"]
-                    ev.add("summary", f"❌ ОТМЕНА {cap_subject}")
+                    ev.add("summary", f"❌ [ОТМЕНА] {cap_subject}")
 
                     # Update colorId to "8" (Graphite / Grey)
                     if "x-color-id" in ev:
@@ -701,7 +712,9 @@ def apply_overrides(
                     loc = old_loc
 
                 del matched_ev["summary"]
-                matched_ev.add("summary", f"⚡ [{ov_type}] {cap_subject}")
+                emoji = TYPE_EMOJI.get(ov_type, "")
+                marker = f"{emoji} [{ov_type}]".strip() if emoji else f"[{ov_type}]"
+                matched_ev.add("summary", f"⚡ {marker} {cap_subject}".strip())
 
                 if "location" in matched_ev:
                     del matched_ev["location"]
@@ -741,7 +754,9 @@ def apply_overrides(
                 dt_end = datetime(target_date.year, target_date.month, target_date.day, e_h, e_m, tzinfo=tz)
 
                 new_ev = Event()
-                new_ev.add("summary", f"⚡ [{ov_type}] {cap_subject}")
+                emoji = TYPE_EMOJI.get(ov_type, "")
+                marker = f"{emoji} [{ov_type}]".strip() if emoji else f"[{ov_type}]"
+                new_ev.add("summary", f"⚡ {marker} {cap_subject}".strip())
                 desc = f"⚡ Изменение в расписании от преподавателя: {comment}" if comment else "⚡ Изменение в расписании от преподавателя"
                 new_ev.add("description", desc)
                 if ov_loc:

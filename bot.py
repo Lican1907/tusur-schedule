@@ -65,6 +65,16 @@ COLOR_DESCRIPTIONS: Dict[str, str] = {
     "11": "🟥 Красный (Tomato / ЭКЗ)",
 }
 
+TYPE_EMOJI: Dict[str, str] = {
+    "ЛЕК": "🟢",
+    "ПРАК": "🔵",
+    "ЛАБ": "🟣",
+    "СРС": "⚪",
+    "КУРС": "🌸",
+    "ЗАЧ": "🟡",
+    "ЭКЗ": "🔴",
+}
+
 DAYS_RU = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
 
 
@@ -336,7 +346,7 @@ async def list_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     lines = [f"📋 *Список активных правок ({len(overrides)}):*\n"]
     for idx, ov in enumerate(overrides, 1):
-        action_sym = "❌ ОТМЕНА" if ov.get("action") == "cancel" else "⚡ ЗАМЕНА"
+        action_sym = "❌ [ОТМЕНА]" if ov.get("action") == "cancel" else "⚡ [ЗАМЕНА]"
         time_info = f" в {ov.get('time_start')}" if ov.get("time_start") else ""
         lines.append(
             f"*{idx}. {action_sym}* `{ov.get('date')}`{time_info}\n"
@@ -414,10 +424,11 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     for idx, ov in enumerate(analysis.overrides, start=1):
         if ov.action == "cancel":
-            title = f"❌ ОТМЕНА {ov.subject}"
+            title = f"❌ [ОТМЕНА] {ov.subject}"
             color_desc = COLOR_DESCRIPTIONS["8"]
         else:
-            title = f"⚡ [{ov.type}] {ov.subject}"
+            emoji = TYPE_EMOJI.get(ov.type, "🟢")
+            title = f"⚡ {emoji} [{ov.type}] {ov.subject}"
             color_id = "10" if "ЛЕК" in ov.type else ("9" if "ПРАК" in ov.type else ("3" if "ЛАБ" in ov.type else "8"))
             color_desc = COLOR_DESCRIPTIONS.get(color_id, "🟩 Зелёный (10)")
 
