@@ -462,6 +462,17 @@ def shorten_subject(discipline_name: str) -> str:
     return capitalize_first(disc_clean)
 
 
+def is_pe_lesson(disc_name: str, summary: str = "") -> bool:
+    """Checks whether a lesson is Physical Education."""
+    text = f"{disc_name} {summary}".lower()
+    return (
+        "физ-ра" in text
+        or "физическ" in text
+        or "физкульт" in text
+        or "фкис" in text
+    )
+
+
 def format_event_data(
     discipline_name: str,
     lesson_type: str,
@@ -498,34 +509,37 @@ def format_event_data(
         summary = short_subject
 
     # 3. Clean location
-    combined = f"{raw_location} {short_aud}".strip().lower()
-    building = ""
-    if any(k in combined for k in ("главный корпус", "пр. ленина, 40", "ленина, 40")) or re.search(r"\bгк\b", combined):
-        building = "ГК"
-    elif any(k in combined for k in ("радиотехнический корпус", "ул. вершинина, 47", "вершинина, 47")) or re.search(r"\bрк\b", combined):
-        building = "РК"
-    elif any(k in combined for k in ("корпус фэт", "вершинина, 74", "красноармейская, 146")) or "фэт" in combined or re.search(r"\bф\b", combined):
-        building = "ФЭТ"
-
-    room = ""
-    m_room = re.search(r"ауд\.?\s*([0-9]+[а-яёa-z]?)", combined, re.IGNORECASE)
-    if m_room:
-        room = m_room.group(1).upper()
+    if is_pe_lesson(discipline_name, short_subject):
+        clean_location = "см. описание"
     else:
-        m_num = re.search(r"(?:гк|рк|фэт|ф)?\s*([0-9]{3}[а-яёa-z]?)", combined, re.IGNORECASE)
-        if m_num:
-            room = m_num.group(1).upper()
+        combined = f"{raw_location} {short_aud}".strip().lower()
+        building = ""
+        if any(k in combined for k in ("главный корпус", "пр. ленина, 40", "ленина, 40")) or re.search(r"\bгк\b", combined):
+            building = "ГК"
+        elif any(k in combined for k in ("радиотехнический корпус", "ул. вершинина, 47", "вершинина, 47")) or re.search(r"\bрк\b", combined):
+            building = "РК"
+        elif any(k in combined for k in ("корпус фэт", "вершинина, 74", "красноармейская, 146")) or "фэт" in combined or re.search(r"\bф\b", combined):
+            building = "ФЭТ"
 
-    if building and room:
-        clean_location = f"{building} {room}"
-    elif building:
-        clean_location = building
-    elif room:
-        clean_location = room
-    else:
-        clean = re.sub(r"\bауд\.?\s*", "", raw_location, flags=re.IGNORECASE).strip()
-        clean = re.sub(r"^[,\.\s]+|[,\.\s]+$", "", clean)
-        clean_location = clean or short_aud.strip()
+        room = ""
+        m_room = re.search(r"ауд\.?\s*([0-9]+[а-яёa-z]?)", combined, re.IGNORECASE)
+        if m_room:
+            room = m_room.group(1).upper()
+        else:
+            m_num = re.search(r"(?:гк|рк|фэт|ф)?\s*([0-9]{3}[а-яёa-z]?)", combined, re.IGNORECASE)
+            if m_num:
+                room = m_num.group(1).upper()
+
+        if building and room:
+            clean_location = f"{building} {room}"
+        elif building:
+            clean_location = building
+        elif room:
+            clean_location = room
+        else:
+            clean = re.sub(r"\bауд\.?\s*", "", raw_location, flags=re.IGNORECASE).strip()
+            clean = re.sub(r"^[,\.\s]+|[,\.\s]+$", "", clean)
+            clean_location = clean or short_aud.strip()
 
     # Prepend pin 📍 if location is present
     if clean_location:
@@ -533,16 +547,6 @@ def format_event_data(
             clean_location = f"📍 {clean_location}"
 
     return summary, clean_location
-
-
-def is_pe_lesson(disc_name: str, summary: str = "") -> bool:
-    """Checks whether a lesson is Physical Education."""
-    text = f"{disc_name} {summary}".lower()
-    return (
-        "физ-ра" in text
-        or "физическ" in text
-        or "фкис" in text
-    )
 
 
 def format_pe_room(room_val: str) -> str:
@@ -924,6 +928,8 @@ def apply_overrides(
                     loc = old_loc
                 elif ov_loc:
                     loc = f"📍 {ov_loc}" if not ov_loc.startswith("📍") else ov_loc
+                elif is_pe_lesson(ov_subject):
+                    loc = "📍 см. описание"
                 else:
                     loc = old_loc
 
@@ -984,6 +990,8 @@ def apply_overrides(
                 if ov_loc:
                     loc = f"📍 {ov_loc}" if not ov_loc.startswith("📍") else ov_loc
                     new_ev.add("location", loc)
+                elif is_pe_lesson(ov_subject):
+                    new_ev.add("location", "📍 см. описание")
 
                 new_ev.add("dtstart", dt_start)
                 new_ev.add("dtend", dt_end)
