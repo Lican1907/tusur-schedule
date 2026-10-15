@@ -25,9 +25,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -310,15 +312,15 @@ fun ScheduleScreen() {
 
                         Surface(
                             onClick = { selectedDateStr = day.date },
-                            shape = RoundedCornerShape(12.dp),
+                            shape = RoundedCornerShape(14.dp),
                             color = when {
-                                isSelected -> AccentBlue
+                                isSelected -> AccentPurple
                                 isToday -> DarkSurfaceVariant
                                 else -> DarkSurface
                             },
                             border = BorderStroke(
                                 1.dp,
-                                if (isSelected) AccentBlue else if (isToday) AccentGreen else DarkBorder
+                                if (isSelected) Color(0x66FFFFFF) else if (isToday) AccentGreen else DarkBorderSubtle
                             ),
                             modifier = Modifier.width(78.dp)
                         ) {
@@ -330,21 +332,21 @@ fun ScheduleScreen() {
                                     text = dayOfWeekStr,
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = if (isSelected) DarkBackground else if (isToday) AccentGreen else TextSecondary
+                                    color = if (isSelected) Color.White else if (isToday) AccentGreen else TextSecondary
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
                                     text = dayOfMonthStr,
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = if (isSelected) DarkBackground else TextPrimary
+                                    color = if (isSelected) Color.White else TextPrimary
                                 )
                                 if (isToday) {
                                     Spacer(modifier = Modifier.height(2.dp))
                                     Box(
                                         modifier = Modifier
                                             .size(4.dp)
-                                            .background(if (isSelected) DarkBackground else AccentGreen, RoundedCornerShape(2.dp))
+                                            .background(if (isSelected) Color.White else AccentGreen, RoundedCornerShape(2.dp))
                                     )
                                 }
                             }
@@ -364,20 +366,40 @@ fun ScheduleScreen() {
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = AccentBlue)
+                    CircularProgressIndicator(color = AccentPurple)
                 }
             } else if (currentDaySchedule == null || currentDaySchedule.lessons.isEmpty()) {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "В этот день пар нет 🎉\nМожно отдыхать!",
-                        color = TextSecondary,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        lineHeight = 22.sp
-                    )
+                    Surface(
+                        shape = RoundedCornerShape(18.dp),
+                        color = CardEmptyBg,
+                        border = BorderStroke(1.dp, DarkBorder),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "🎉",
+                                fontSize = 32.sp
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "В этот день пар нет\nМожно отдыхать!",
+                                color = Color(0xFFE0E0E0),
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium,
+                                lineHeight = 22.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 }
             } else {
                 LazyColumn(
@@ -517,9 +539,9 @@ fun LiveDayBanner(day: DaySchedule) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 6.dp),
-            shape = RoundedCornerShape(14.dp),
+            shape = RoundedCornerShape(18.dp),
             color = DarkSurface,
-            border = BorderStroke(1.dp, AccentBlue)
+            border = BorderStroke(1.dp, Color(0x335F508A))
         ) {
             Column(modifier = Modifier.padding(14.dp)) {
                 Row(
@@ -535,7 +557,7 @@ fun LiveDayBanner(day: DaySchedule) {
                     )
                     Text(
                         text = "Осталось: $minutesLeft мин",
-                        color = AccentBlue,
+                        color = AccentPurple,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -547,7 +569,7 @@ fun LiveDayBanner(day: DaySchedule) {
                         .fillMaxWidth()
                         .height(6.dp)
                         .clip(RoundedCornerShape(3.dp)),
-                    color = AccentBlue,
+                    color = AccentPurple,
                     trackColor = DarkSurfaceVariant
                 )
             }
@@ -565,9 +587,9 @@ fun LiveDayBanner(day: DaySchedule) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 6.dp),
-                shape = RoundedCornerShape(14.dp),
-                color = Color(0x26D29922),
-                border = BorderStroke(1.dp, AccentAmber)
+                shape = RoundedCornerShape(18.dp),
+                color = Color(0x26B88226),
+                border = BorderStroke(1.dp, Color(0x66B88226))
             ) {
                 Row(
                     modifier = Modifier.padding(14.dp),
@@ -599,72 +621,84 @@ fun LiveDayBanner(day: DaySchedule) {
 
 @Composable
 fun LessonCard(lesson: LessonItem, selectedPeTeacher: String?) {
-    val barColor = parseColor(lesson.color_hex)
-    val cardBorder = if (lesson.is_override) BorderStroke(1.dp, AccentAmber) else BorderStroke(1.dp, DarkBorder)
+    val (cardBrush, cardBorderColor) = getLessonBrushAndBorder(lesson)
     val resolvedAud = lesson.getResolvedLocation(selectedPeTeacher)
+
+    val typeTag = when {
+        lesson.is_cancelled -> "ОТМЕНА"
+        lesson.type.uppercase().contains("ЛЕК") -> "ЛЕК"
+        lesson.type.uppercase().contains("ПРАК") -> "ПРАК"
+        lesson.type.uppercase().contains("ЛАБ") -> "ЛАБ"
+        else -> lesson.type
+    }
+
+    val shortSubject = lesson.subject_short?.ifEmpty { null }
+        ?: lesson.subject?.ifEmpty { null }
+        ?: lesson.displaySubject
+
+    val line1 = if (lesson.is_cancelled) {
+        "ОТМЕНА • $shortSubject"
+    } else if (lesson.is_override) {
+        "⚡ $typeTag • $shortSubject"
+    } else {
+        "$typeTag • $shortSubject"
+    }
+
+    val timeStr = if (lesson.time_start.isNotEmpty() && lesson.time_end.isNotEmpty()) {
+        "${lesson.time_start}–${lesson.time_end}"
+    } else {
+        lesson.time_start.ifEmpty { "–" }
+    }
+
+    val line2 = buildString {
+        append(timeStr)
+        if (resolvedAud.isNotEmpty()) {
+            append(", 📍 ")
+            append(resolvedAud)
+        }
+        if (lesson.teacher.isNotEmpty()) {
+            append(" • ")
+            append(lesson.teacher)
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        color = DarkSurface,
-        border = cardBorder
+        shape = RoundedCornerShape(18.dp),
+        color = Color.Transparent,
+        border = BorderStroke(1.dp, cardBorderColor)
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            // Left color accent bar
-            Box(
-                modifier = Modifier
-                    .width(5.dp)
-                    .fillMaxHeight()
-                    .background(barColor)
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(14.dp)
-            ) {
-                // Time & Type Badge Row
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(cardBrush)
+                .padding(horizontal = 16.dp, vertical = 13.dp)
+        ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                // Line 1: [ТИП] • [Предмет]
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "${lesson.time_start} — ${lesson.time_end}",
-                        color = TextSecondary,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.SemiBold
+                        text = line1,
+                        color = Color.White,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        textDecoration = if (lesson.is_cancelled) TextDecoration.LineThrough else TextDecoration.None,
+                        modifier = Modifier.weight(1f, fill = false)
                     )
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        if (lesson.is_shifted_time) {
-                            Surface(
-                                shape = RoundedCornerShape(6.dp),
-                                color = Color(0x33D29922)
-                            ) {
-                                Text(
-                                    text = "⚠️ Сдвиг 12:30",
-                                    color = AccentAmber,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                                )
-                            }
-                        }
-
-                        val badgeText = when {
-                            lesson.is_cancelled -> "ОТМЕНА"
-                            lesson.is_override -> "⚡ ${lesson.type}"
-                            else -> lesson.type
-                        }
-
+                    if (lesson.is_shifted_time) {
+                        Spacer(modifier = Modifier.width(8.dp))
                         Surface(
                             shape = RoundedCornerShape(6.dp),
-                            color = if (lesson.is_cancelled) Color(0x33484F58) else barColor.copy(alpha = 0.2f)
+                            color = Color(0x33D29922)
                         ) {
                             Text(
-                                text = badgeText,
-                                color = if (lesson.is_cancelled) CancelledGrey else barColor,
+                                text = "⚠️ Сдвиг 12:30",
+                                color = AccentAmber,
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
@@ -673,85 +707,55 @@ fun LessonCard(lesson: LessonItem, selectedPeTeacher: String?) {
                     }
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(3.dp))
 
-                // Subject title
+                // Line 2: [Время], 📍 [Аудитория]
                 Text(
-                    text = if (lesson.is_override) "⚡ ${lesson.displaySubject}" else lesson.displaySubject,
-                    color = if (lesson.is_cancelled) TextMuted else TextPrimary,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    textDecoration = if (lesson.is_cancelled) TextDecoration.LineThrough else TextDecoration.None
+                    text = line2,
+                    color = Color(0xE6FFFFFF),
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Normal,
+                    maxLines = 1
                 )
 
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // Location and Teacher
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (resolvedAud.isNotEmpty()) {
-                        Text(
-                            text = "📍 $resolvedAud",
-                            color = AccentBlue,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-
-                    if (lesson.teacher.isNotEmpty()) {
-                        if (resolvedAud.isNotEmpty()) {
-                            Text(
-                                text = " • ",
-                                color = TextMuted,
-                                fontSize = 13.sp
-                            )
-                        }
-                        Text(
-                            text = lesson.teacher,
-                            color = TextSecondary,
-                            fontSize = 13.sp,
-                            maxLines = 1
-                        )
-                    }
-                }
-
-                // Override comment banner
-                if (lesson.is_override && !lesson.override_comment.isNullOrEmpty()) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                // Override / Cancellation Banner
+                if (!lesson.override_comment.isNullOrEmpty()) {
+                    Spacer(modifier = Modifier.height(6.dp))
                     Surface(
                         shape = RoundedCornerShape(8.dp),
-                        color = Color(0x26D29922),
-                        border = BorderStroke(1.dp, Color(0x66D29922))
+                        color = if (lesson.is_cancelled) Color(0x33484F58) else Color(0x33D29922),
+                        border = BorderStroke(1.dp, if (lesson.is_cancelled) Color(0x4DFFFFFF) else Color(0x66FFD566))
                     ) {
                         Text(
-                            text = "⚡ ${lesson.override_comment}",
-                            color = AccentAmber,
+                            text = if (lesson.is_cancelled) "❌ ${lesson.override_comment}" else "⚡ ${lesson.override_comment}",
+                            color = if (lesson.is_cancelled) Color(0xFFE6EDF3) else AccentAmber,
                             fontSize = 12.sp,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                        )
-                    }
-                }
-
-                // Cancellation banner
-                if (lesson.is_cancelled && !lesson.override_comment.isNullOrEmpty()) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        color = Color(0x33484F58)
-                    ) {
-                        Text(
-                            text = "❌ ${lesson.override_comment}",
-                            color = Color(0xFFE6EDF3),
-                            fontSize = 12.sp,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                         )
                     }
                 }
             }
         }
     }
+}
+
+private fun getLessonBrushAndBorder(lesson: LessonItem): Pair<Brush, Color> {
+    if (lesson.is_cancelled) {
+        return Pair(
+            Brush.verticalGradient(listOf(CardCancelledTop, CardCancelledBottom)),
+            if (lesson.is_override) AccentAmber else DarkBorder
+        )
+    }
+    val upperType = lesson.type.uppercase()
+    val brush = when {
+        upperType.contains("ЛЕК") -> Brush.verticalGradient(listOf(CardLekTop, CardLekBottom))
+        upperType.contains("ПРАК") -> Brush.verticalGradient(listOf(CardPrakTop, CardPrakBottom))
+        upperType.contains("ЛАБ") -> Brush.verticalGradient(listOf(CardLabTop, CardLabBottom))
+        else -> Brush.verticalGradient(listOf(CardPrakTop, CardPrakBottom))
+    }
+    val borderColor = if (lesson.is_override) AccentAmber else Color(0x33FFFFFF)
+    return Pair(brush, borderColor)
 }
 
 private fun parseColor(hex: String): Color {
@@ -764,6 +768,6 @@ private fun parseColor(hex: String): Color {
             Color(colorInt)
         }
     } catch (_: Exception) {
-        AccentBlue
+        AccentPurple
     }
 }

@@ -1,7 +1,7 @@
 <resources>
     <style name="Theme.TusurSchedule" parent="android:Theme.Material.NoActionBar">
-        <item name="android:statusBarColor">#0D1117</item>
-        <item name="android:navigationBarColor">#0D1117</item>
-        <item name="android:windowBackground">#0D1117</item>
+        <item name="android:statusBarColor">#0F1115</item>
+        <item name="android:navigationBarColor">#0F1115</item>
+        <item name="android:windowBackground">#0F1115</item>
     </style>
 </resources>

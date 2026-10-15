@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer subtle shadow layer -->
+    <item
+        android:top="2dp"
+        android:bottom="0dp"
+        android:left="1dp"
+        android:right="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="30dp" />
+            <solid android:color="#20000000" />
+        </shape>
+    </item>
+
+    <!-- 1.5dp specular reflection rim (acrylic bevel highlight on top/left) -->
+    <item
+        android:top="0dp"
+        android:left="0dp"
+        android:right="1.5dp"
+        android:bottom="1.5dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="30dp" />
+            <stroke
+                android:width="1.5dp"
+                android:color="#66FFFFFF" />
+            <solid android:color="#401E222A" />
+        </shape>
+    </item>
+
+    <!-- Semi-transparent liquid-glass dark backdrop fill -->
+    <item
+        android:top="1.5dp"
+        android:left="1.5dp"
+        android:right="1dp"
+        android:bottom="1dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="28.5dp" />
+            <gradient
+                android:angle="270"
+                android:startColor="#401E222A"
+                android:endColor="#3312151B" />
+        </shape>
+    </item>
+</layer-list>
