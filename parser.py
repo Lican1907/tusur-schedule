@@ -51,6 +51,7 @@ SUPPORTED_GROUPS: Dict[str, Dict[str, Any]] = {
         "url": "https://timetable.tusur.ru/faculties/fsu/groups/426top-4",
         "output_files": ["schedule.ics", "schedule-426top-4.ics"],
         "sync_gcal": True,
+        "pe_teacher": "Тарасов А.В.",
     },
     "426top-1": {
         "name": "426топ-1",
@@ -70,6 +71,12 @@ SUPPORTED_GROUPS: Dict[str, Dict[str, Any]] = {
         "output_files": ["schedule-426-3.ics"],
         "sync_gcal": False,
     },
+}
+
+# Group PE teacher assignments (each group can have its own teacher)
+GROUP_PE_TEACHERS: Dict[str, str] = {
+    "426топ-4": "Тарасов А.В.",
+    "426top-4": "Тарасов А.В.",
 }
 
 # Bell schedule of TUSUR (Томский государственный университет систем управления и радиоэлектроники)
@@ -478,6 +485,8 @@ def format_event_data(
     lesson_type: str,
     raw_location: str = "",
     short_aud: str = "",
+    group_name: str = "",
+    event_date: Optional[date] = None,
 ) -> Tuple[str, str]:
     """
     Formats clean SUMMARY and LOCATION with a pin for a standard lesson event.
@@ -510,7 +519,11 @@ def format_event_data(
 
     # 3. Clean location
     if is_pe_lesson(discipline_name, short_subject):
-        clean_location = "см. описание"
+        pe_room = get_pe_room_for_group(group_name, event_date) if (group_name and event_date) else None
+        if pe_room:
+            clean_location = pe_room
+        else:
+            clean_location = "см. описание"
     else:
         combined = f"{raw_location} {short_aud}".strip().lower()
         building = ""
@@ -577,6 +590,67 @@ def get_pe_rooms_for_date(event_date: date) -> Optional[Dict[str, str]]:
     return None
 
 
+def get_pe_teacher_for_group(group_name: str) -> Optional[str]:
+    """Returns assigned PE teacher for a given group, if configured."""
+    if not group_name:
+        return None
+    norm = group_name.strip().lower()
+    norm_latin = norm.replace("топ", "top")
+    norm_cyr = norm.replace("top", "топ")
+
+    for grp_key, teacher in GROUP_PE_TEACHERS.items():
+        k_norm = grp_key.strip().lower()
+        if (
+            k_norm == norm
+            or k_norm in norm
+            or norm in k_norm
+            or k_norm in norm_latin
+            or k_norm in norm_cyr
+        ):
+            return teacher
+
+    for g_key, g_cfg in SUPPORTED_GROUPS.items():
+        pe_t = g_cfg.get("pe_teacher")
+        if not pe_t:
+            continue
+        k_norm = g_key.strip().lower()
+        cfg_name = g_cfg.get("name", "").strip().lower()
+        if (
+            k_norm in norm
+            or norm in k_norm
+            or cfg_name in norm
+            or norm in cfg_name
+            or k_norm in norm_latin
+            or k_norm in norm_cyr
+        ):
+            return pe_t
+
+    return None
+
+
+def get_pe_room_for_group(group_name: str, event_date: date) -> Optional[str]:
+    """
+    Returns the formatted PE room for a group's assigned PE teacher on a given date.
+    Returns None if no teacher is configured for the group or no room is scheduled.
+    """
+    teacher = get_pe_teacher_for_group(group_name)
+    if not teacher:
+        return None
+    pe_rooms = get_pe_rooms_for_date(event_date)
+    if not pe_rooms:
+        return None
+
+    if teacher in pe_rooms:
+        return format_pe_room(pe_rooms[teacher])
+
+    surname = teacher.split()[0].lower()
+    for t_name, r_val in pe_rooms.items():
+        if surname in t_name.lower() or t_name.lower() in teacher.lower():
+            return format_pe_room(r_val)
+
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Cell & Event Parsing
 # ---------------------------------------------------------------------------
@@ -585,6 +659,7 @@ def parse_cell(
     pair_num: int,
     default_date: Optional[date],
     modals: Dict[str, Dict[str, str]],
+    group_name: str = "426топ-4",
     tz: ZoneInfo = TIMEZONE,
 ) -> List[Event]:
     """
@@ -628,8 +703,34 @@ def parse_cell(
         full_aud = tooltip_i.get("title") if tooltip_i and tooltip_i.get("title") else ""
         short_aud = modal_data.get("Место проведения") or (aud_span.get_text(strip=True) if aud_span else "")
 
+        # Teacher
+        teacher = modal_data.get("Преподаватель")
+        if not teacher:
+            grp_span = l_div.find("span", class_="group")
+            teacher = grp_span.get_text(strip=True) if grp_span else ""
+
         # Format summary and clean location
-        summary, location = format_event_data(disc_name, lesson_type, full_aud, short_aud)
+        summary, location = format_event_data(
+            disc_name,
+            lesson_type,
+            raw_location=full_aud,
+            short_aud=short_aud,
+            group_name=group_name,
+            event_date=day_date,
+        )
+
+        # Physical Education adjustments: specific teacher and room for group
+        if is_pe_lesson(disc_name, summary):
+            pe_teacher = get_pe_teacher_for_group(group_name)
+            if pe_teacher:
+                teacher = pe_teacher
+            pe_room = get_pe_room_for_group(group_name, day_date)
+            if pe_room:
+                short_aud = pe_room
+                full_aud = pe_room
+                location = f"📍 {pe_room}"
+            else:
+                location = "📍 см. описание"
 
         # Subgroup / comments / notes
         note_span = l_div.find("span", class_="note")
@@ -638,12 +739,6 @@ def parse_cell(
             or modal_data.get("Комментарий")
             or (note_span.get_text(strip=True) if note_span else "")
         )
-
-        # Teacher
-        teacher = modal_data.get("Преподаватель")
-        if not teacher:
-            grp_span = l_div.find("span", class_="group")
-            teacher = grp_span.get_text(strip=True) if grp_span else ""
 
         # Additional groups
         groups = modal_data.get("Совместно с группами") or modal_data.get("Группы") or ""
@@ -727,9 +822,20 @@ def parse_cell(
     return events
 
 
-def parse_week_events(html: str, tz: ZoneInfo = TIMEZONE) -> List[Event]:
+def parse_week_events(
+    html: str,
+    group_name: str = "426топ-4",
+    tz: ZoneInfo = TIMEZONE,
+) -> List[Event]:
     """Parses lessons from a single week HTML page and returns list of Event objects."""
     soup = BeautifulSoup(html, "html.parser")
+    if not group_name or group_name == "426топ-4":
+        h1 = soup.find("h1")
+        if h1:
+            m = re.search(r"группы\s+([^\s]+)", h1.get_text())
+            if m:
+                group_name = m.group(1)
+
     modals = parse_modals(soup)
     week_start = determine_week_start(soup, modals)
 
@@ -771,6 +877,7 @@ def parse_week_events(html: str, tz: ZoneInfo = TIMEZONE) -> List[Event]:
                 pair_num=pair_num,
                 default_date=default_date,
                 modals=modals,
+                group_name=group_name,
                 tz=tz,
             )
             events.extend(cell_events)
@@ -929,7 +1036,8 @@ def apply_overrides(
                 elif ov_loc:
                     loc = f"📍 {ov_loc}" if not ov_loc.startswith("📍") else ov_loc
                 elif is_pe_lesson(ov_subject):
-                    loc = "📍 см. описание"
+                    pe_room = get_pe_room_for_group(group_name, target_date)
+                    loc = f"📍 {pe_room}" if pe_room else "📍 см. описание"
                 else:
                     loc = old_loc
 
@@ -981,6 +1089,12 @@ def apply_overrides(
                 new_ev.add("summary", f"⚡ {marker} {cap_subject}".strip())
                 desc = f"⚡ Изменение в расписании от преподавателя: {comment}" if comment else "⚡ Изменение в расписании от преподавателя"
                 if is_pe_lesson(ov_subject):
+                    pe_teacher = get_pe_teacher_for_group(group_name)
+                    if pe_teacher:
+                        desc += f"\nПреподаватель: {pe_teacher}"
+                    pe_room = get_pe_room_for_group(group_name, target_date)
+                    if pe_room:
+                        desc += f"\nАудитория: {pe_room}"
                     pe_rooms = get_pe_rooms_for_date(target_date)
                     if pe_rooms:
                         desc += "\n\n🏟️ Аудитории по преподавателям:\n" + "\n".join(
@@ -991,7 +1105,8 @@ def apply_overrides(
                     loc = f"📍 {ov_loc}" if not ov_loc.startswith("📍") else ov_loc
                     new_ev.add("location", loc)
                 elif is_pe_lesson(ov_subject):
-                    new_ev.add("location", "📍 см. описание")
+                    pe_room = get_pe_room_for_group(group_name, target_date)
+                    new_ev.add("location", f"📍 {pe_room}" if pe_room else "📍 см. описание")
 
                 new_ev.add("dtstart", dt_start)
                 new_ev.add("dtend", dt_end)
@@ -1143,7 +1258,23 @@ def parse_semester(
 
     try:
         main_html = fetch_page(url, session=session)
-        events = parse_week_events(main_html, tz=tz)
+
+        # Extract group name early so week parsing knows the specific group
+        if not group_name:
+            soup_main_grp = BeautifulSoup(main_html, "html.parser")
+            h1 = soup_main_grp.find("h1")
+            if h1:
+                m = re.search(r"группы\s+([^\s]+)", h1.get_text())
+                if m:
+                    group_name = m.group(1)
+            if not group_name:
+                m_url = re.search(r"/groups/([^/?#]+)", url)
+                if m_url and m_url.group(1) in SUPPORTED_GROUPS:
+                    group_name = SUPPORTED_GROUPS[m_url.group(1)].get("name", m_url.group(1))
+            if not group_name:
+                group_name = "426топ-4"
+
+        events = parse_week_events(main_html, group_name=group_name, tz=tz)
 
         if all_weeks:
             week_urls = discover_weeks(main_html, url)
@@ -1168,22 +1299,12 @@ def parse_semester(
                     time.sleep(0.3)  # Polite crawling delay
                     logger.info("Processing week %d/%d: %s", idx, len(week_urls), w_url)
                     w_html = fetch_page(w_url, session=session)
-                    w_events = parse_week_events(w_html, tz=tz)
+                    w_events = parse_week_events(w_html, group_name=group_name, tz=tz)
                     if not w_events:
                         logger.info("No lessons found for week %s (vacation or session)", w_url)
                     events.extend(w_events)
                 except Exception as e:
                     logger.warning("Failed to fetch/parse week %s: %s (skipping and continuing)", w_url, e)
-
-        # Extract group name from title if present
-        soup = BeautifulSoup(main_html, "html.parser")
-        h1 = soup.find("h1")
-        if not group_name:
-            group_name = "426топ-4"
-            if h1:
-                m = re.search(r"группы\s+([^\s]+)", h1.get_text())
-                if m:
-                    group_name = m.group(1)
 
         # Apply teacher overrides if present
         overrides = load_overrides()
