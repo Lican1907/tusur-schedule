@@ -1,0 +1,57 @@
+{
+  "generated_at": "2026-10-16T00:12:58.878920+07:00",
+  "date": "2026-10-16",
+  "weekday": 5,
+  "group": "426топ-4",
+  "is_weekend": false,
+  "pair_status": "before_classes",
+  "current_pair": null,
+  "next_pair": 1,
+  "minutes_left_in_pair": null,
+  "minutes_until_next_pair": 518,
+  "total_lessons_today": 2,
+  "lessons": [
+    {
+      "pair_num": 2,
+      "time_start": "10:40",
+      "time_end": "12:15",
+      "subject": "История России",
+      "short_subject": "История",
+      "lesson_type": "Практика",
+      "teacher": "Берсенев Максим Валерьевич",
+      "room": "323",
+      "building": "ГК",
+      "location": "📍 ГК 323",
+      "status": "ACTIVE",
+      "color_id": "9",
+      "summary": "ПРАК 🔵 История",
+      "subgroup": "",
+      "uid": "tusur-673993-20261016@timetable.tusur.ru"
+    },
+    {
+      "pair_num": 3,
+      "time_start": "13:15",
+      "time_end": "14:50",
+      "subject": "Математика",
+      "short_subject": "Математика",
+      "lesson_type": "Практика",
+      "teacher": "Ельцова Тамара Александровна",
+      "room": "323",
+      "building": "ГК",
+      "location": "📍 ГК 323",
+      "status": "ACTIVE",
+      "color_id": "9",
+      "summary": "ПРАК 🔵 Математика",
+      "subgroup": "",
+      "uid": "tusur-673994-20261016@timetable.tusur.ru"
+    }
+  ],
+  "beer_event": {
+    "summary": "🍺 Можно пить пиво!",
+    "location": "🎉 Свобода",
+    "time_start": "14:50",
+    "time_end": "16:50",
+    "description": "Все пары на сегодня закончились. Время заслуженного отдыха.",
+    "color_id": "5"
+  }
+}

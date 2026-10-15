@@ -1,0 +1,57 @@
+{
+  "generated_at": "2026-10-16T00:13:57.145059+07:00",
+  "date": "2026-10-16",
+  "weekday": 5,
+  "group": "426топ-1",
+  "is_weekend": false,
+  "pair_status": "before_classes",
+  "current_pair": null,
+  "next_pair": 1,
+  "minutes_left_in_pair": null,
+  "minutes_until_next_pair": 517,
+  "total_lessons_today": 2,
+  "lessons": [
+    {
+      "pair_num": 1,
+      "time_start": "08:50",
+      "time_end": "10:25",
+      "subject": "История России",
+      "short_subject": "История",
+      "lesson_type": "Практика",
+      "teacher": "Попов Юрий Павлович",
+      "room": "410",
+      "building": "ГК",
+      "location": "📍 ГК 410",
+      "status": "ACTIVE",
+      "color_id": "9",
+      "summary": "ПРАК 🔵 История",
+      "subgroup": "",
+      "uid": "tusur-673984-20261016@timetable.tusur.ru"
+    },
+    {
+      "pair_num": 2,
+      "time_start": "10:40",
+      "time_end": "12:15",
+      "subject": "Основы российской государственности",
+      "short_subject": "ОРГ",
+      "lesson_type": "Практика",
+      "teacher": "Пустоварова Анна Олеговна",
+      "room": "331",
+      "building": "ГК",
+      "location": "📍 ГК 331",
+      "status": "ACTIVE",
+      "color_id": "9",
+      "summary": "ПРАК 🔵 ОРГ",
+      "subgroup": "",
+      "uid": "tusur-673985-20261016@timetable.tusur.ru"
+    }
+  ],
+  "beer_event": {
+    "summary": "🍺 Можно пить пиво!",
+    "location": "🎉 Свобода",
+    "time_start": "12:15",
+    "time_end": "14:15",
+    "description": "Все пары на сегодня закончились. Время заслуженного отдыха.",
+    "color_id": "5"
+  }
+}
