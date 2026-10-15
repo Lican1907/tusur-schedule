@@ -4,6 +4,8 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization")
 }
 
+val runNumber = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1
+
 android {
     namespace = "ru.lican1907.tusurschedule"
     compileSdk = 34
@@ -12,8 +14,10 @@ android {
         applicationId = "ru.lican1907.tusurschedule"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = runNumber
+        versionName = "1.0.$runNumber"
+        buildConfigField("int", "APP_VERSION_CODE", "$runNumber")
+        buildConfigField("String", "APP_VERSION_NAME", "\"1.0.$runNumber\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -45,6 +49,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {

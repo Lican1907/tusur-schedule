@@ -21,8 +21,10 @@ class ScheduleSyncWorker(
     override suspend fun doWork(): Result {
         return try {
             val repo = ScheduleRepository(applicationContext)
-            repo.loadSchedule(forceRefresh = true)
-            ScheduleWidget().updateAll(applicationContext)
+            val updated = repo.syncIfNewer()
+            if (updated) {
+                ScheduleWidget().updateAll(applicationContext)
+            }
             Result.success()
         } catch (_: Exception) {
             Result.retry()

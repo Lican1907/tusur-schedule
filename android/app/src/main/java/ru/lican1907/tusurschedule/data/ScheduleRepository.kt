@@ -82,6 +82,9 @@ class ScheduleRepository(private val context: Context) {
                     val parsed = json.decodeFromString<ScheduleResponse>(responseJson)
                     // Save to cache
                     cacheFile.writeText(responseJson, Charsets.UTF_8)
+                    if (parsed.generated_at.isNotEmpty()) {
+                        prefs.edit().putString("last_generated_at_${group.id}", parsed.generated_at).apply()
+                    }
                     return@withContext Result.success(parsed)
                 } catch (e: Exception) {
                     // JSON parsing failed, try cache below
@@ -101,6 +104,76 @@ class ScheduleRepository(private val context: Context) {
 
             Result.failure(Exception("Не удалось загрузить расписание. Проверьте интернет-соединение."))
         }
+
+    suspend fun syncIfNewer(groupSlug: String? = null): Boolean = withContext(Dispatchers.IO) {
+        val targetGroupId = groupSlug ?: selectedGroupId
+        val group = SUPPORTED_GROUPS.firstOrNull { it.id == targetGroupId } ?: getSelectedGroup()
+        val cacheFile = File(context.filesDir, "schedule_${group.id}.json")
+
+        var localGeneratedAt = prefs.getString("last_generated_at_${group.id}", null)
+        if (localGeneratedAt.isNullOrEmpty() && cacheFile.exists()) {
+            try {
+                val cached = json.decodeFromString<ScheduleResponse>(cacheFile.readText(Charsets.UTF_8))
+                localGeneratedAt = cached.generated_at
+                if (!localGeneratedAt.isNullOrEmpty()) {
+                    prefs.edit().putString("last_generated_at_${group.id}", localGeneratedAt).apply()
+                }
+            } catch (_: Exception) {
+                // ignore
+            }
+        }
+
+        val baseUrl = "https://lican1907.github.io/tusur-schedule/"
+        val targetUrl = "$baseUrl${group.fileName}"
+
+        var responseJson: String? = null
+        try {
+            responseJson = fetchUrl(targetUrl)
+        } catch (e: Exception) {
+            if (group.id == "426top-4") {
+                try {
+                    responseJson = fetchUrl("${baseUrl}schedule.json")
+                } catch (_: Exception) {
+                    // ignore
+                }
+            }
+        }
+
+        if (responseJson.isNullOrEmpty()) {
+            return@withContext false
+        }
+
+        try {
+            val remoteResponse = json.decodeFromString<ScheduleResponse>(responseJson)
+            val remoteGeneratedAt = remoteResponse.generated_at
+
+            val isNewer = when {
+                localGeneratedAt.isNullOrEmpty() -> true
+                remoteGeneratedAt.isEmpty() -> false
+                else -> {
+                    try {
+                        val remoteTime = java.time.OffsetDateTime.parse(remoteGeneratedAt)
+                        val localTime = java.time.OffsetDateTime.parse(localGeneratedAt)
+                        remoteTime.isAfter(localTime)
+                    } catch (_: Exception) {
+                        remoteGeneratedAt > localGeneratedAt
+                    }
+                }
+            }
+
+            if (isNewer) {
+                cacheFile.writeText(responseJson, Charsets.UTF_8)
+                if (remoteGeneratedAt.isNotEmpty()) {
+                    prefs.edit().putString("last_generated_at_${group.id}", remoteGeneratedAt).apply()
+                }
+                return@withContext true
+            }
+        } catch (_: Exception) {
+            return@withContext false
+        }
+
+        false
+    }
 
     private fun fetchUrl(url: String): String {
         val request = Request.Builder()

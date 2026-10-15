@@ -35,17 +35,27 @@ jobs:
         working-directory: android
         run: gradle assembleDebug --stacktrace
 
-      - name: Prepare APK artifact
+      - name: Prepare APK artifact & version info
         run: |
           mkdir -p android/dist
           cp android/app/build/outputs/apk/debug/app-debug.apk android/tusur-schedule.apk
           ls -lh android/tusur-schedule.apk
+          cat <<EOF > android/version.json
+          {
+            "version_code": ${{ github.run_number }},
+            "version_name": "1.0.${{ github.run_number }}",
+            "download_url": "https://github.com/Lican1907/tusur-schedule/releases/download/latest-apk/tusur-schedule.apk"
+          }
+          EOF
+          cat android/version.json
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: tusur-schedule-apk
-          path: android/tusur-schedule.apk
+          path: |
+            android/tusur-schedule.apk
+            android/version.json
           if-no-files-found: error
 
       - name: Publish Latest APK Release
@@ -58,6 +68,7 @@ jobs:
             ### 📱 Автоматическая сборка Android-приложения ТУСУР Расписание
             
             - **Файл**: `tusur-schedule.apk`
+            - **Версия**: `1.0.${{ github.run_number }}` (build `${{ github.run_number }}`)
             - **Коммит**: ${{ github.sha }}
             - **Дата сборки**: ${{ github.event.head_commit.timestamp || github.event.repository.updated_at }}
             
@@ -65,8 +76,11 @@ jobs:
             - Нативный интерактивный виджет на Jetpack Glance с автоматическим обновлением;
             - Оффлайн-кэш для мгновенной работы без интернета;
             - Выбор учебной группы и индивидуального зала преподавателя физкультуры;
-            - Живой таймер идущей пары и статус `🍺 Пить пиво дозволено!`.
-          files: android/tusur-schedule.apk
+            - Живой таймер идущей пары и статус `🍺 Пить пиво дозволено!`;
+            - Автообновление расписания в фоне и In-App APK Updater.
+          files: |
+            android/tusur-schedule.apk
+            android/version.json
           draft: false
           prerelease: false
           make_latest: true

@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.appwidget.updateAll
 import kotlinx.coroutines.launch
+import ru.lican1907.tusurschedule.BuildConfig
 import ru.lican1907.tusurschedule.data.*
 import ru.lican1907.tusurschedule.ui.theme.*
 import ru.lican1907.tusurschedule.widget.ScheduleWidget
@@ -69,6 +70,7 @@ class MainActivity : ComponentActivity() {
 fun ScheduleScreen() {
     val context = LocalContext.current
     val repository = remember { ScheduleRepository(context) }
+    val updateManager = remember { AppUpdateManager(context) }
     val scope = rememberCoroutineScope()
 
     var scheduleResponse by remember { mutableStateOf<ScheduleResponse?>(null) }
@@ -79,6 +81,12 @@ fun ScheduleScreen() {
 
     var groupDropdownExpanded by remember { mutableStateOf(false) }
     var peDropdownExpanded by remember { mutableStateOf(false) }
+
+    // In-App update state
+    var availableUpdate by remember { mutableStateOf<AppUpdateInfo?>(null) }
+    var isDownloadingUpdate by remember { mutableStateOf(false) }
+    var downloadProgress by remember { mutableStateOf(0) }
+    var updateError by remember { mutableStateOf<String?>(null) }
 
     fun refreshSchedule(force: Boolean) {
         scope.launch {
@@ -100,6 +108,21 @@ fun ScheduleScreen() {
 
     LaunchedEffect(selectedGroup) {
         refreshSchedule(force = false)
+    }
+
+    LaunchedEffect(Unit) {
+        scope.launch {
+            val updated = repository.syncIfNewer(selectedGroup.id)
+            if (updated) {
+                refreshSchedule(force = false)
+            }
+        }
+        scope.launch {
+            val update = updateManager.checkUpdate()
+            if (update != null) {
+                availableUpdate = update
+            }
+        }
     }
 
     val days = scheduleResponse?.days ?: emptyList()
@@ -370,6 +393,94 @@ fun ScheduleScreen() {
                 }
             }
         }
+    }
+
+    if (availableUpdate != null) {
+        val update = availableUpdate!!
+        AlertDialog(
+            onDismissRequest = {
+                if (!isDownloadingUpdate) {
+                    availableUpdate = null
+                }
+            },
+            title = {
+                Text(
+                    text = "Доступно обновление приложения!",
+                    color = TextPrimary,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+            },
+            text = {
+                Column {
+                    if (isDownloadingUpdate) {
+                        Text(
+                            text = "Скачивание обновления: $downloadProgress%",
+                            color = TextSecondary,
+                            fontSize = 14.sp
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        LinearProgressIndicator(
+                            progress = { downloadProgress / 100f },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(6.dp)
+                                .clip(RoundedCornerShape(3.dp)),
+                            color = AccentBlue,
+                            trackColor = DarkSurfaceVariant
+                        )
+                    } else {
+                        Text(
+                            text = "Установлена версия ${BuildConfig.APP_VERSION_NAME}, доступна ${update.versionName}. Обновить сейчас?",
+                            color = TextSecondary,
+                            fontSize = 14.sp
+                        )
+                        if (updateError != null) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = updateError!!,
+                                color = Color(0xFFF85149),
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                if (!isDownloadingUpdate) {
+                    Button(
+                        onClick = {
+                            isDownloadingUpdate = true
+                            updateError = null
+                            scope.launch {
+                                val res = updateManager.downloadAndInstall(update) { progress ->
+                                    downloadProgress = progress
+                                }
+                                if (res.isSuccess) {
+                                    availableUpdate = null
+                                    isDownloadingUpdate = false
+                                } else {
+                                    isDownloadingUpdate = false
+                                    updateError = res.exceptionOrNull()?.message ?: "Ошибка скачивания"
+                                }
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = AccentBlue)
+                    ) {
+                        Text("Обновить", color = Color.White)
+                    }
+                }
+            },
+            dismissButton = {
+                if (!isDownloadingUpdate) {
+                    TextButton(onClick = { availableUpdate = null }) {
+                        Text("Позже", color = TextSecondary)
+                    }
+                }
+            },
+            containerColor = DarkSurface,
+            shape = RoundedCornerShape(16.dp)
+        )
     }
 }
 
