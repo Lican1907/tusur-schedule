@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ТУСУР Расписание</string>
+    <string name="widget_description">Виджет актуального расписания пар ТУСУР</string>
+</resources>

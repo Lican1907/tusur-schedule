@@ -1,0 +1,74 @@
+name: Build and Release Android APK
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'android/**'
+      - '.github/workflows/android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.7'
+
+      - name: Build Debug APK
+        working-directory: android
+        run: gradle assembleDebug --stacktrace
+
+      - name: Prepare APK artifact
+        run: |
+          mkdir -p android/dist
+          cp android/app/build/outputs/apk/debug/app-debug.apk android/tusur-schedule.apk
+          ls -lh android/tusur-schedule.apk
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tusur-schedule-apk
+          path: android/tusur-schedule.apk
+          if-no-files-found: error
+
+      - name: Publish Latest APK Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag_name: latest-apk
+          name: "📱 Android App & Widget (Latest APK)"
+          body: |
+            ### 📱 Автоматическая сборка Android-приложения ТУСУР Расписание
+            
+            - **Файл**: `tusur-schedule.apk`
+            - **Коммит**: ${{ github.sha }}
+            - **Дата сборки**: ${{ github.event.head_commit.timestamp || github.event.repository.updated_at }}
+            
+            Включает:
+            - Нативный интерактивный виджет на Jetpack Glance с автоматическим обновлением;
+            - Оффлайн-кэш для мгновенной работы без интернета;
+            - Выбор учебной группы и индивидуального зала преподавателя физкультуры;
+            - Живой таймер идущей пары и статус `🍺 Пить пиво дозволено!`.
+          files: android/tusur-schedule.apk
+          draft: false
+          prerelease: false
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
