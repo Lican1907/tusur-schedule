@@ -2,6 +2,7 @@ package ru.lican1907.tusurschedule.data
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.content.FileProvider
 import kotlinx.coroutines.Dispatchers
@@ -11,6 +12,7 @@ import okhttp3.Request
 import org.json.JSONObject
 import ru.lican1907.tusurschedule.BuildConfig
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.concurrent.TimeUnit
 
@@ -23,13 +25,17 @@ data class AppUpdateInfo(
 class AppUpdateManager(private val context: Context) {
 
     private val checkClient = OkHttpClient.Builder()
-        .connectTimeout(5, TimeUnit.SECONDS)
-        .readTimeout(5, TimeUnit.SECONDS)
+        .followRedirects(true)
+        .followSslRedirects(true)
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
         .build()
 
     private val downloadClient = OkHttpClient.Builder()
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
+        .followRedirects(true)
+        .followSslRedirects(true)
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(120, TimeUnit.SECONDS)
         .build()
 
     suspend fun checkUpdate(): AppUpdateInfo? = withContext(Dispatchers.IO) {
@@ -95,12 +101,12 @@ class AppUpdateManager(private val context: Context) {
                 if (!response.isSuccessful) {
                     return@withContext Result.failure(Exception("HTTP error: ${response.code}"))
                 }
-                val body = response.body ?: return@withContext Result.failure(Exception("Empty response body"))
+                val body = response.body ?: return@withContext Result.failure(Exception("Пустой ответ сервера"))
                 val contentLength = body.contentLength()
                 val inputStream = body.byteStream()
                 val outputStream = FileOutputStream(apkFile)
 
-                val buffer = ByteArray(8 * 1024)
+                val buffer = ByteArray(32 * 1024)
                 var bytesRead: Int
                 var totalBytesRead = 0L
 
@@ -114,11 +120,43 @@ class AppUpdateManager(private val context: Context) {
                                 onProgress(progress)
                             }
                         }
+                        output.flush()
                     }
+                }
+
+                if (contentLength > 0 && totalBytesRead < contentLength) {
+                    apkFile.delete()
+                    return@withContext Result.failure(Exception("Загрузка не завершена ($totalBytesRead из $contentLength байт)"))
                 }
             }
 
+            // Проверка целостности загруженного APK файла
+            if (!apkFile.exists() || apkFile.length() < 100_000L) {
+                apkFile.delete()
+                return@withContext Result.failure(Exception("Файл обновления поврежден или пуст (${apkFile.length()} байт)"))
+            }
+
+            // Проверка сигнатуры ZIP/APK архива (первые байты PK 0x03 0x04)
+            val isZipArchive = try {
+                FileInputStream(apkFile).use { fis ->
+                    val header = ByteArray(4)
+                    val read = fis.read(header)
+                    read == 4 && header[0] == 0x50.toByte() && header[1] == 0x4B.toByte() &&
+                            header[2] == 0x03.toByte() && header[3] == 0x04.toByte()
+                }
+            } catch (_: Exception) {
+                false
+            }
+
+            if (!isZipArchive) {
+                apkFile.delete()
+                return@withContext Result.failure(Exception("Некорректный формат пакета APK"))
+            }
+
             onProgress(100)
+
+            // Делаем файл доступным для чтения системному установщику
+            apkFile.setReadable(true, false)
 
             val apkUri = FileProvider.getUriForFile(
                 context,
@@ -128,8 +166,20 @@ class AppUpdateManager(private val context: Context) {
 
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(apkUri, "application/vnd.android.package-archive")
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
             }
+
+            // Явное предоставление прав на чтение всем обработчикам Intent установки
+            val resolveInfoList = context.packageManager.queryIntentActivities(
+                intent,
+                PackageManager.MATCH_DEFAULT_ONLY
+            )
+            for (resolveInfo in resolveInfoList) {
+                val targetPackage = resolveInfo.activityInfo.packageName
+                context.grantUriPermission(targetPackage, apkUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+
             context.startActivity(intent)
 
             Result.success(Unit)
