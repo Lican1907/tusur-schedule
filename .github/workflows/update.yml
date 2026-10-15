@@ -35,6 +35,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Run unit tests
+        run: |
+          python -m unittest discover tests
+
       - name: Run parser
         env:
           GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
@@ -48,7 +52,7 @@ jobs:
 
       - name: Verify schedule artifacts
         run: |
-          for f in schedule.ics schedule-426top-4.ics schedule-426top-1.ics schedule-426top-2.ics schedule-426-3.ics; do
+          for f in schedule.ics schedule-426top-4.ics schedule-426top-1.ics schedule-426top-2.ics schedule-426-3.ics schedule.json schedule-426top-4.json today.json; do
             if [ ! -f "$f" ]; then
               echo "Error: $f was not generated!"
               exit 1
@@ -69,6 +73,8 @@ jobs:
         run: |
           mkdir -p public
           cp schedule*.ics public/
+          cp schedule*.json public/
+          cp today*.json public/ 2>/dev/null || true
           if [ -f index.html ]; then
             cp index.html public/
           fi

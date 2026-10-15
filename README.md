@@ -133,20 +133,59 @@
 
 ## 🏗 Архитектура репозитория
 
-```
+```text
 tusur-schedule/
-├── .github/
-│   └── workflows/
-│       └── update.yml      # CI/CD пайплайн (парсинг, синхронизация с GCal, деплой ics в gh-pages)
-├── .gitignore              # Исключение секретов (service_account.json, .env) и артефактов
-├── parser.py               # Основной парсер ТУСУР, генератор .ics и интегратор overrides/gcal
-├── gcal_sync.py            # Модуль прямой синхронизации с Google Calendar API
-├── bot.py                  # Telegram-бот с Gemini API и управлением overrides
-├── overrides.json          # База ручных правок расписания преподавателей
+├── .github/workflows/
+│   └── update.yml          # CI/CD пайплайн (тесты, парсинг, GCal, деплой .ics и .json в gh-pages)
+├── data/
+│   ├── bell_schedule.json  # Сетка звонков (08:50-10:25 и др.)
+│   ├── pe_schedule.json    # Матрица залов физкультуры по датам и преподавателям
+│   ├── mappings.json       # Сокращения предметов, типы, корпуса (ГК, РК, ФЭТ) и группы
+│   └── overrides.json      # База ручных правок расписания преподавателей
+├── src/
+│   ├── config.py           # Загрузка конфигураций и констант из data/
+│   ├── pipeline.py         # Основной оркестратор парсинга и экспорта (.ics & .json)
+│   ├── core/
+│   │   ├── models.py       # Доменные модели: Lesson, TimeSlot, DaySchedule, Group
+│   │   ├── bells.py        # Расчёт звонков, определение текущей пары и обратный отсчет
+│   │   └── beer.py         # Логика события «Можно пить пиво!»
+│   ├── scraper/
+│   │   ├── client.py       # HTTP-клиент с повторными попытками и заголовками
+│   │   └── parser.py       # Парсинг HTML timetable.tusur.ru, модалок и дней
+│   ├── overrides/
+│   │   └── engine.py       # Замены, отмены, сохранение аудиторий преподавателей
+│   ├── exporters/
+│   │   ├── ics.py          # Генератор календаря RFC 5545 iCalendar (.ics)
+│   │   └── json.py         # Генератор JSON для виджетов (today.json, schedule-<group>.json)
+│   └── integrations/
+│       ├── gcal.py         # Прямая синхронизация с Google Calendar API
+│       └── bot/            # Telegram-бот с Gemini AI (Structured Outputs)
+├── tests/
+│   ├── test_bells.py       # Тесты сетки звонков и обратного отсчета
+│   ├── test_overrides.py   # Тесты отмен, замен и сохранения аудиторий
+│   └── test_exporters.py   # Тесты генерации .ics и схемы .json
+├── parser.py               # CLI-шим обратной совместимости -> src/
+├── gcal_sync.py            # CLI-шим обратной совместимости -> src/integrations/gcal.py
+├── bot.py                  # CLI-шим обратной совместимости -> src/integrations/bot/
+├── overrides.json          # Корневая ссылка на ручные правки (обратная совместимость)
 ├── index.html              # Веб-лендинг для подписки
 ├── requirements.txt        # Python-зависимости
 └── README.md               # Документация проекта
 ```
+
+---
+
+## 📱 JSON API для виджета расписания
+
+Вместе с календарями `.ics`, пайплайн генерирует JSON-файлы, готовые для использования мобильным виджетом и веб-приложениями:
+
+1. **`today.json`** (и `today-<group>.json`):
+   - Содержит нормализованный список пар на текущий день (`pair_num`, `time_start`, `time_end`, `subject`, `lesson_type`, `teacher`, `room`, `building`, `status`, `color_id`).
+   - Содержит статус текущей пары в реальном времени (`pair_status`: `in_pair`, `in_break`, `before_classes`, `after_classes`), текущую пару (`current_pair`), следующую пару (`next_pair`), а также количество минут до конца пары или перерыва (`minutes_left_in_pair`, `minutes_until_next_pair`).
+   - Содержит блок события отдыха `beer_event` (если сегодня есть/были пары).
+
+2. **`schedule-<group>.json`** (и `schedule.json` для группы по умолчанию):
+   - Полное структурированное расписание семестра, сгруппированное по датам (`days: { "YYYY-MM-DD": [...] }`).
 
 ---
 
@@ -216,6 +255,11 @@ python gcal_sync.py
 ### 4. Запуск Telegram-бота
 ```bash
 python bot.py
+```
+
+### 5. Запуск модульных тестов
+```bash
+python -m unittest discover tests
 ```
 
 ---
