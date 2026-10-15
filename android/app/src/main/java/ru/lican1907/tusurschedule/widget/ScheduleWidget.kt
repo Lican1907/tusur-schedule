@@ -11,6 +11,7 @@ import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.LinearProgressIndicator
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.cornerRadius
@@ -38,7 +39,9 @@ import ru.lican1907.tusurschedule.data.LessonItem
 import ru.lican1907.tusurschedule.data.ScheduleRepository
 import ru.lican1907.tusurschedule.ui.MainActivity
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 class ScheduleWidget : GlanceAppWidget() {
@@ -55,6 +58,8 @@ class ScheduleWidget : GlanceAppWidget() {
         } else null
 
         provideContent {
+            val isToday = targetDay != null && targetDay.date == ScheduleRepository.getTomskToday().toString()
+
             val displayDateText = if (targetDay != null) {
                 try {
                     val parsedDate = LocalDate.parse(targetDay.date)
@@ -74,132 +79,148 @@ class ScheduleWidget : GlanceAppWidget() {
                 "Нет данных"
             }
 
-            // 1. Фоновый контейнер виджета (глубокое тёмное стекло 0xF00D1117)
+            // 1. Главный контейнер виджета (глубокое тёмное стекло 0xF00D1117 со светлым кантом 0x20FFFFFF)
             Box(
                 modifier = GlanceModifier
                     .fillMaxSize()
-                    .background(Color(0xF00D1117))
+                    .background(Color(0x20FFFFFF))
                     .cornerRadius(24.dp)
-                    .border(width = 1.dp, color = Color(0x20FFFFFF))
-                    .padding(horizontal = 10.dp, vertical = 12.dp)
+                    .padding(1.dp)
             ) {
-                Column(modifier = GlanceModifier.fillMaxSize()) {
-                    // 2. Верхняя панель (Header)
-                    Row(
-                        modifier = GlanceModifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Слева: Чип группы + крупная дата
-                        Column(
+                Box(
+                    modifier = GlanceModifier
+                        .fillMaxSize()
+                        .background(Color(0xF00D1117))
+                        .cornerRadius(23.dp)
+                        .border(width = 1.dp, color = Color(0x20FFFFFF))
+                        .padding(horizontal = 10.dp, vertical = 12.dp)
+                ) {
+                    Column(modifier = GlanceModifier.fillMaxSize()) {
+                        // 2. Шапка виджета (Header)
+                        Row(
                             modifier = GlanceModifier
-                                .defaultWeight()
-                                .clickable(actionStartActivity<MainActivity>())
+                                .fillMaxWidth()
+                                .padding(bottom = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Box(
+                            // Слева: Чип группы + дата дня (клик открывает MainActivity)
+                            Column(
                                 modifier = GlanceModifier
-                                    .background(Color(0x25FFFFFF))
-                                    .cornerRadius(6.dp)
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                                    .defaultWeight()
+                                    .clickable(actionStartActivity<MainActivity>())
                             ) {
+                                Box(
+                                    modifier = GlanceModifier
+                                        .background(Color(0x25FFFFFF))
+                                        .cornerRadius(6.dp)
+                                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                                ) {
+                                    Text(
+                                        text = currentGroup.name,
+                                        style = TextStyle(
+                                            color = ColorProvider(Color(0xFFE6EDF3)),
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Bold
+                                        ),
+                                        maxLines = 1
+                                    )
+                                }
+
+                                Spacer(modifier = GlanceModifier.height(3.dp))
+
                                 Text(
-                                    text = currentGroup.name,
+                                    text = displayDateText,
                                     style = TextStyle(
-                                        color = ColorProvider(Color(0xFFE6EDF3)),
-                                        fontSize = 11.sp,
+                                        color = ColorProvider(Color.White),
+                                        fontSize = 15.sp,
                                         fontWeight = FontWeight.Bold
                                     ),
                                     maxLines = 1
                                 )
                             }
 
-                            Spacer(modifier = GlanceModifier.height(3.dp))
-
-                            Text(
-                                text = displayDateText,
-                                style = TextStyle(
-                                    color = ColorProvider(Color.White),
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Bold
-                                ),
-                                maxLines = 1
-                            )
-                        }
-
-                        // Справа: круглая кнопка обновления (32.dp x 32.dp, cornerRadius 16.dp)
-                        Box(
-                            modifier = GlanceModifier
-                                .width(32.dp)
-                                .height(32.dp)
-                                .background(Color(0x25FFFFFF))
-                                .cornerRadius(16.dp)
-                                .clickable(actionRunCallback<RefreshWidgetActionCallback>()),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "🔄",
-                                style = TextStyle(fontSize = 14.sp)
-                            )
-                        }
-                    }
-
-                    // 3. Содержимое / Карточки пар
-                    if (targetDay == null || targetDay.lessons.isEmpty()) {
-                        Box(
-                            modifier = GlanceModifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally
+                            // Справа: круглая полупрозрачная кнопка обновления (32.dp x 32.dp, cornerRadius 16.dp)
+                            Box(
+                                modifier = GlanceModifier
+                                    .width(32.dp)
+                                    .height(32.dp)
+                                    .background(Color(0x25FFFFFF))
+                                    .cornerRadius(16.dp)
+                                    .clickable(actionRunCallback<RefreshWidgetActionCallback>()),
+                                contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = "Пар нет 🎉",
-                                    style = TextStyle(
-                                        color = ColorProvider(Color.White),
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                )
-                                Spacer(modifier = GlanceModifier.height(4.dp))
-                                Text(
-                                    text = "Можно отдыхать!",
-                                    style = TextStyle(
-                                        color = ColorProvider(Color(0xCCFFFFFF)),
-                                        fontSize = 11.sp
-                                    )
+                                    text = "🔄",
+                                    style = TextStyle(fontSize = 14.sp)
                                 )
                             }
                         }
-                    } else {
-                        LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
-                            items(targetDay.lessons) { lesson ->
-                                LiquidGlassLessonCard(lesson, selectedPeTeacher)
-                                Spacer(modifier = GlanceModifier.height(8.dp))
-                            }
 
-                            // 4. Карточка отдыха («🍺 Пить пиво дозволено»)
-                            if (!targetDay.beer_time.isNullOrEmpty()) {
-                                item {
-                                    Box(
-                                        modifier = GlanceModifier
-                                            .fillMaxWidth()
-                                            .padding(top = 2.dp, bottom = 4.dp)
-                                            .background(Color(0x35D29922))
-                                            .cornerRadius(16.dp)
-                                            .border(width = 1.dp, color = Color(0x60E3B341))
-                                            .padding(vertical = 10.dp, horizontal = 12.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = "🍺 Пиво дозволено с ${targetDay.beer_time} • 🎉 Свобода",
-                                            style = TextStyle(
-                                                color = ColorProvider(Color(0xFFFFD566)),
-                                                fontSize = 12.sp,
-                                                fontWeight = FontWeight.Bold
-                                            ),
-                                            maxLines = 2
+                        // 3. Содержимое / Стеклянные карточки пар (LazyColumn)
+                        if (targetDay == null || targetDay.lessons.isEmpty()) {
+                            Box(
+                                modifier = GlanceModifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Text(
+                                        text = "Пар нет 🎉",
+                                        style = TextStyle(
+                                            color = ColorProvider(Color.White),
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.Bold
                                         )
+                                    )
+                                    Spacer(modifier = GlanceModifier.height(4.dp))
+                                    Text(
+                                        text = "Можно отдыхать!",
+                                        style = TextStyle(
+                                            color = ColorProvider(Color(0xCCFFFFFF)),
+                                            fontSize = 11.sp
+                                        )
+                                    )
+                                }
+                            }
+                        } else {
+                            LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
+                                items(targetDay.lessons) { lesson ->
+                                    LiquidGlassLessonCard(lesson, selectedPeTeacher, isToday)
+                                    Spacer(modifier = GlanceModifier.height(8.dp))
+                                }
+
+                                // 4. Янтарная плашка отдыха (Beer Time)
+                                if (!targetDay.beer_time.isNullOrEmpty()) {
+                                    item {
+                                        Box(
+                                            modifier = GlanceModifier
+                                                .fillMaxWidth()
+                                                .padding(top = 2.dp, bottom = 4.dp)
+                                                .background(Color(0x60E3B341))
+                                                .cornerRadius(16.dp)
+                                                .padding(1.dp)
+                                        ) {
+                                            Box(
+                                                modifier = GlanceModifier
+                                                    .fillMaxWidth()
+                                                    .background(Color(0x35D29922))
+                                                    .cornerRadius(15.dp)
+                                                    .border(width = 1.dp, color = Color(0x60E3B341))
+                                                    .padding(vertical = 10.dp, horizontal = 12.dp),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Text(
+                                                    text = "🍺 Пиво дозволено с ${targetDay.beer_time} • 🎉 Свобода",
+                                                    style = TextStyle(
+                                                        color = ColorProvider(Color(0xFFFFD566)),
+                                                        fontSize = 12.sp,
+                                                        fontWeight = FontWeight.Bold
+                                                    ),
+                                                    maxLines = 2
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -211,8 +232,34 @@ class ScheduleWidget : GlanceAppWidget() {
     }
 
     @androidx.compose.runtime.Composable
-    private fun LiquidGlassLessonCard(lesson: LessonItem, selectedPeTeacher: String?) {
+    private fun LiquidGlassLessonCard(
+        lesson: LessonItem,
+        selectedPeTeacher: String?,
+        isToday: Boolean
+    ) {
         val (accentColor, cardBg) = getLiquidTint(lesson)
+
+        // Расчет живого статуса текущей пары (Live Status & Progress)
+        val now = LocalTime.now(ScheduleRepository.TOMSK_ZONE_ID)
+        val (isLive, minutesLeft, progress) = try {
+            if (isToday && !lesson.is_cancelled && lesson.time_start.isNotEmpty() && lesson.time_end.isNotEmpty()) {
+                val start = LocalTime.parse(lesson.time_start)
+                val end = LocalTime.parse(lesson.time_end)
+                if (!now.isBefore(start) && now.isBefore(end)) {
+                    val totalMin = ChronoUnit.MINUTES.between(start, end).toFloat()
+                    val elapsedMin = ChronoUnit.MINUTES.between(start, now).toFloat()
+                    val p = if (totalMin > 0f) (elapsedMin / totalMin).coerceIn(0f, 1f) else 0f
+                    val left = ChronoUnit.MINUTES.between(now, end)
+                    Triple(true, left, p)
+                } else {
+                    Triple(false, 0L, 0f)
+                }
+            } else {
+                Triple(false, 0L, 0f)
+            }
+        } catch (_: Exception) {
+            Triple(false, 0L, 0f)
+        }
 
         val locTeacherText = when {
             !lesson.pe_rooms.isNullOrEmpty() -> {
@@ -247,95 +294,150 @@ class ScheduleWidget : GlanceAppWidget() {
             lesson.displaySubject
         }
 
+        val borderColor = if (isLive) Color(0xFF00E676) else accentColor.copy(alpha = 0.35f)
+        val borderWidth = if (isLive) 1.5.dp else 1.dp
+
         Box(
             modifier = GlanceModifier
                 .fillMaxWidth()
-                .background(cardBg)
+                .background(borderColor)
                 .cornerRadius(16.dp)
-                .border(width = 1.dp, color = accentColor.copy(alpha = 0.35f))
-                .padding(10.dp)
+                .padding(borderWidth)
         ) {
-            Column(modifier = GlanceModifier.fillMaxWidth()) {
-                // Строка 1: Время + Бейдж типа
-                Row(
-                    modifier = GlanceModifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "${lesson.time_start}–${lesson.time_end}",
-                        style = TextStyle(
-                            color = ColorProvider(Color(0xCCFFFFFF)),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        maxLines = 1,
-                        modifier = GlanceModifier.defaultWeight()
-                    )
+            Box(
+                modifier = GlanceModifier
+                    .fillMaxWidth()
+                    .background(cardBg)
+                    .cornerRadius(15.dp)
+                    .border(width = borderWidth, color = borderColor)
+                    .padding(10.dp)
+            ) {
+                Column(modifier = GlanceModifier.fillMaxWidth()) {
+                    // Индикатор текущей пары (Live Status)
+                    if (isLive) {
+                        Row(
+                            modifier = GlanceModifier
+                                .fillMaxWidth()
+                                .background(Color(0x3300E676))
+                                .cornerRadius(6.dp)
+                                .padding(horizontal = 6.dp, vertical = 2.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "🟢 ИДЁТ СЕЙЧАС",
+                                style = TextStyle(
+                                    color = ColorProvider(Color(0xFF00E676)),
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold
+                                ),
+                                modifier = GlanceModifier.defaultWeight()
+                            )
+                            Text(
+                                text = "ещё $minutesLeft мин ⏳",
+                                style = TextStyle(
+                                    color = ColorProvider(Color(0xFFE6EDF3)),
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            )
+                        }
+                        Spacer(modifier = GlanceModifier.height(4.dp))
+                    }
 
-                    Box(
-                        modifier = GlanceModifier
-                            .background(accentColor.copy(alpha = 0.3f))
-                            .cornerRadius(6.dp)
-                            .padding(horizontal = 6.dp, vertical = 2.dp)
+                    // Строка 1: Время + Бейдж типа
+                    Row(
+                        modifier = GlanceModifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = typeBadge,
+                            text = "${lesson.time_start}–${lesson.time_end}",
                             style = TextStyle(
-                                color = ColorProvider(if (lesson.is_cancelled) Color(0xFFF85149) else accentColor),
-                                fontSize = 10.sp,
+                                color = ColorProvider(if (isLive) Color(0xFF00E676) else Color(0xCCFFFFFF)),
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold
+                            ),
+                            maxLines = 1,
+                            modifier = GlanceModifier.defaultWeight()
+                        )
+
+                        Box(
+                            modifier = GlanceModifier
+                                .background(accentColor.copy(alpha = 0.3f))
+                                .cornerRadius(6.dp)
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = typeBadge,
+                                style = TextStyle(
+                                    color = ColorProvider(if (lesson.is_cancelled) Color(0xFFF85149) else accentColor),
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold
+                                ),
+                                maxLines = 1
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = GlanceModifier.height(4.dp))
+
+                    // Строка 2: Название дисциплины
+                    Text(
+                        text = subjectTitle,
+                        style = TextStyle(
+                            color = ColorProvider(if (lesson.is_cancelled) Color(0xFF8B949E) else Color.White),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = if (lesson.is_cancelled) TextDecoration.LineThrough else TextDecoration.None
+                        ),
+                        maxLines = 2
+                    )
+
+                    // Строка 3: Аудитория и преподаватель
+                    if (locTeacherText.isNotEmpty()) {
+                        Spacer(modifier = GlanceModifier.height(3.dp))
+                        Text(
+                            text = locTeacherText,
+                            style = TextStyle(
+                                color = ColorProvider(Color(0xDDFFFFFF)),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Normal
                             ),
                             maxLines = 1
                         )
                     }
-                }
 
-                Spacer(modifier = GlanceModifier.height(4.dp))
+                    // Строка 4: Комментарий замены (если задан)
+                    if (lesson.is_override && !lesson.override_comment.isNullOrEmpty()) {
+                        Spacer(modifier = GlanceModifier.height(4.dp))
+                        Box(
+                            modifier = GlanceModifier
+                                .fillMaxWidth()
+                                .background(Color(0x25000000))
+                                .cornerRadius(6.dp)
+                                .padding(horizontal = 6.dp, vertical = 3.dp)
+                        ) {
+                            Text(
+                                text = "⚡ ${lesson.override_comment}",
+                                style = TextStyle(
+                                    color = ColorProvider(Color(0xFFF0883E)),
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Medium
+                                ),
+                                maxLines = 2
+                            )
+                        }
+                    }
 
-                // Строка 2: Название дисциплины
-                Text(
-                    text = subjectTitle,
-                    style = TextStyle(
-                        color = ColorProvider(if (lesson.is_cancelled) Color(0xFF8B949E) else Color.White),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        textDecoration = if (lesson.is_cancelled) TextDecoration.LineThrough else TextDecoration.None
-                    ),
-                    maxLines = 2
-                )
-
-                // Строка 3: Аудитория и преподаватель
-                if (locTeacherText.isNotEmpty()) {
-                    Spacer(modifier = GlanceModifier.height(3.dp))
-                    Text(
-                        text = locTeacherText,
-                        style = TextStyle(
-                            color = ColorProvider(Color(0xDDFFFFFF)),
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Normal
-                        ),
-                        maxLines = 1
-                    )
-                }
-
-                // Строка 4: Комментарий (если есть)
-                if (lesson.is_override && !lesson.override_comment.isNullOrEmpty()) {
-                    Spacer(modifier = GlanceModifier.height(4.dp))
-                    Box(
-                        modifier = GlanceModifier
-                            .fillMaxWidth()
-                            .background(Color(0x25000000))
-                            .cornerRadius(6.dp)
-                            .padding(horizontal = 6.dp, vertical = 3.dp)
-                    ) {
-                        Text(
-                            text = "⚡ ${lesson.override_comment}",
-                            style = TextStyle(
-                                color = ColorProvider(Color(0xFFF0883E)),
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Medium
-                            ),
-                            maxLines = 2
+                    // Нижняя полоса прогресса текущего занятия (Live Neon Progress)
+                    if (isLive) {
+                        Spacer(modifier = GlanceModifier.height(6.dp))
+                        LinearProgressIndicator(
+                            modifier = GlanceModifier
+                                .fillMaxWidth()
+                                .height(3.dp),
+                            progress = progress,
+                            color = ColorProvider(Color(0xFF00E676)),
+                            backgroundColor = ColorProvider(Color(0x3300E676))
                         )
                     }
                 }
@@ -349,7 +451,7 @@ class ScheduleWidget : GlanceAppWidget() {
         }
         val upperType = lesson.type.uppercase()
         return when {
-            upperType.contains("ЛЕК") -> Pair(Color(0xFF2EA043), Color(0x2A2EA043))
+            upperType.contains("ЛЕК") -> Pair(Color(0xFF00E676), Color(0x2A2EA043))
             upperType.contains("ПРАК") -> Pair(Color(0xFF388BFD), Color(0x2A388BFD))
             upperType.contains("ЛАБ") -> Pair(Color(0xFFA371F7), Color(0x2EA371F7))
             upperType.contains("СРС") -> Pair(Color(0xFFE3B341), Color(0x25E3B341))
@@ -378,6 +480,8 @@ class ScheduleWidget : GlanceAppWidget() {
 }
 
 private fun GlanceModifier.border(width: androidx.compose.ui.unit.Dp, color: Color): GlanceModifier = this
+
+typealias RefreshAction = RefreshWidgetActionCallback
 
 class RefreshWidgetActionCallback : ActionCallback {
     override suspend fun onAction(
