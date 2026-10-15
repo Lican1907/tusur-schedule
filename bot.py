@@ -37,6 +37,12 @@ try:
 except ImportError:
     pass
 
+# Ensure UTF-8 output on Windows consoles
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 # ---------------------------------------------------------------------------
 # Logging Configuration
 # ---------------------------------------------------------------------------
@@ -178,16 +184,37 @@ def analyze_message_with_gemini(text: str) -> Optional[TeacherMessageAnalysis]:
 5. Игнорируй постороннюю информацию: оценки, результаты тестов, дедлайны домашних заданий, вопросы студентов. Если в сообщении нет изменений расписания, ставь has_changes = false.
 """
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=text,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                response_schema=TeacherMessageAnalysis,
-                system_instruction=system_instruction,
-                temperature=0.1,
-            ),
-        )
+        preferred_model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+        candidate_models = [preferred_model]
+        for fallback in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
+            if fallback not in candidate_models:
+                candidate_models.append(fallback)
+
+        response = None
+        last_error = None
+        for m in candidate_models:
+            try:
+                response = client.models.generate_content(
+                    model=m,
+                    contents=text,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        response_schema=TeacherMessageAnalysis,
+                        system_instruction=system_instruction,
+                        temperature=0.1,
+                    ),
+                )
+                if response and response.text:
+                    logger.info("Successfully analyzed message using Gemini model: %s", m)
+                    break
+            except Exception as e:
+                last_error = e
+                logger.warning("Gemini model '%s' failed: %s (trying fallback if available)", m, e)
+
+        if not response or not response.text:
+            if last_error:
+                raise last_error
+            return None
 
         raw_json = response.text
         data = json.loads(raw_json)
@@ -267,13 +294,19 @@ def commit_overrides_to_github(overrides: List[Dict[str, Any]]) -> bool:
 
 
 def trigger_pipeline_and_sync() -> Dict[str, Any]:
-    """Re-parses the schedule with new overrides and syncs directly to Google Calendar."""
+    """Re-parses the schedule with new overrides and syncs directly to Google Calendar and JSON/ICS files."""
     import parser
     import gcal_sync
 
-    cal = parser.parse_semester(all_weeks=True)
-    with open("schedule.ics", "wb") as f:
-        f.write(cal.to_ical())
+    group_cfg = dict(parser.SUPPORTED_GROUPS.get("426top-4", {}))
+    if group_cfg:
+        cal = parser.parse_and_save_group("426top-4", group_cfg, all_weeks=True)
+    else:
+        cal = parser.parse_semester(all_weeks=True)
+        with open("schedule.ics", "wb") as f:
+            f.write(cal.to_ical())
+        if hasattr(cal, "_schedule_data") and cal._schedule_data:
+            parser.export_schedule_json(cal._schedule_data, "schedule.json")
 
     sync_result = gcal_sync.sync_calendar_if_configured(cal)
     return {
@@ -388,6 +421,75 @@ async def sync_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         await status_msg.edit_text(f"❌ Ошибка синхронизации: `{e}`", parse_mode=ParseMode.MARKDOWN)
 
 
+async def clear_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handles /clear command to remove one or all overrides."""
+    if not is_authorized(update):
+        await reject_unauthorized(update)
+        return
+
+    overrides = load_current_overrides()
+    if not overrides:
+        await update.effective_message.reply_text("ℹ️ Список правок `overrides.json` в данный момент пуст.")
+        return
+
+    args = context.args or []
+    if args:
+        target = args[0].strip()
+        ov_to_remove = None
+        if target.isdigit():
+            idx = int(target) - 1
+            if 0 <= idx < len(overrides):
+                ov_to_remove = overrides[idx]
+        else:
+            for ov in overrides:
+                if ov.get("id") == target:
+                    ov_to_remove = ov
+                    break
+
+        if not ov_to_remove:
+            await update.effective_message.reply_text(
+                f"⚠️ Правка `{target}` не найдена. Проверьте список через /list.",
+                parse_mode=ParseMode.MARKDOWN,
+            )
+            return
+
+        overrides = [ov for ov in overrides if ov.get("id") != ov_to_remove.get("id")]
+        save_current_overrides(overrides)
+        github_committed = commit_overrides_to_github(overrides)
+        github_str = " (сохранено на GitHub)" if github_committed else " (сохранено локально)"
+
+        try:
+            res = trigger_pipeline_and_sync()
+            await update.effective_message.reply_text(
+                f"🗑 *Правка удалена:*{github_str}\n"
+                f"• `{ov_to_remove.get('date')}` — *{ov_to_remove.get('type')} {ov_to_remove.get('subject')}*\n"
+                f"• ID: `{ov_to_remove.get('id')}`\n\n"
+                f"Осталось активных правок: *{len(overrides)}* (событий в календаре: *{res['events_count']}*)",
+                parse_mode=ParseMode.MARKDOWN,
+            )
+        except Exception as e:
+            logger.exception("Failed to sync after deleting override: %s", e)
+            await update.effective_message.reply_text(
+                f"⚠️ Правка удалена, но синхронизация завершилась с ошибкой: `{e}`",
+                parse_mode=ParseMode.MARKDOWN,
+            )
+        return
+
+    keyboard = [
+        [
+            InlineKeyboardButton(f"🗑 Удалить ВСЕ ({len(overrides)})", callback_data="confirm_clear_all"),
+            InlineKeyboardButton("❌ Отмена", callback_data="cancel_clear_all"),
+        ]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.effective_message.reply_text(
+        f"⚠️ Вы уверены, что хотите удалить ВСЕ активные правки ({len(overrides)} шт.)?\n\n"
+        "Либо укажите конкретную правку для удаления: `/clear <номер>` или `/clear <id>`",
+        parse_mode=ParseMode.MARKDOWN,
+        reply_markup=reply_markup,
+    )
+
+
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handles incoming text and forwarded teacher messages."""
     if not is_authorized(update):
@@ -398,11 +500,24 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     if not text:
         return
 
+    if not os.getenv("GEMINI_API_KEY"):
+        await update.effective_message.reply_text(
+            "⚠️ *GEMINI_API_KEY не настроен в .env.*\n\n"
+            "Для автоматического анализа сообщений преподавателей укажите бесплатный API-ключ:\n"
+            "1. Получите ключ в [Google AI Studio](https://aistudio.google.com/app/apikey)\n"
+            "2. Добавьте его в файл `.env`:\n"
+            "`GEMINI_API_KEY=AIzaSy...`\n\n"
+            "После добавления перезапустите бота.",
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
+        return
+
     progress_msg = await update.effective_message.reply_text("🧠 Анализирую сообщение через Gemini API...")
 
     analysis = analyze_message_with_gemini(text)
     if not analysis:
-        await progress_msg.edit_text("❌ Ошибка при обращении к Gemini API. Проверьте логи и ключ GEMINI_API_KEY.")
+        await progress_msg.edit_text("❌ Ошибка при обращении к Gemini API. Проверьте логи бота.")
         return
 
     if not analysis.has_changes or not analysis.overrides:
@@ -470,6 +585,29 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         await query.edit_message_text("❌ Применение изменений отменено пользователем.")
         return
 
+    if data == "cancel_clear_all":
+        await query.edit_message_text("❌ Очистка правок отменена.")
+        return
+
+    if data == "confirm_clear_all":
+        save_current_overrides([])
+        github_committed = commit_overrides_to_github([])
+        github_str = " (сохранено на GitHub)" if github_committed else " (сохранено локально)"
+        try:
+            res = trigger_pipeline_and_sync()
+            await query.edit_message_text(
+                f"🗑 *Все правки успешно удалены!*{github_str}\n\n"
+                f"Всего событий в расписании: *{res['events_count']}*",
+                parse_mode=ParseMode.MARKDOWN,
+            )
+        except Exception as e:
+            logger.exception("Failed to sync after clearing overrides: %s", e)
+            await query.edit_message_text(
+                f"⚠️ Правки очищены, но синхронизация завершилась с ошибкой: `{e}`",
+                parse_mode=ParseMode.MARKDOWN,
+            )
+        return
+
     if data == "apply_overrides":
         pending = context.user_data.get("pending_overrides", [])
         if not pending:
@@ -520,15 +658,36 @@ def main() -> None:
     token = os.getenv("TELEGRAM_BOT_TOKEN")
     if not token:
         logger.error("TELEGRAM_BOT_TOKEN environment variable is not set!")
-        print("Error: TELEGRAM_BOT_TOKEN environment variable is not set.", file=sys.stderr)
+        print("\n" + "=" * 62, file=sys.stderr)
+        print("❌ TELEGRAM_BOT_TOKEN environment variable is not set!", file=sys.stderr)
+        print("   1. Open @BotFather in Telegram and create a bot (/newbot).", file=sys.stderr)
+        print("   2. Copy .env.example to .env and set your token:", file=sys.stderr)
+        print("      TELEGRAM_BOT_TOKEN=123456789:ABCdefGHI...", file=sys.stderr)
+        print("=" * 62 + "\n", file=sys.stderr)
         sys.exit(1)
+
+    # CLI check mode to quickly test connection
+    if "--check" in sys.argv:
+        print("Testing Telegram connection with provided token...")
+
+        async def _check() -> None:
+            test_app = ApplicationBuilder().token(token).build()
+            async with test_app:
+                me = await test_app.bot.get_me()
+                print(f"✅ Success! Logged in as @{me.username} ({me.first_name}, ID: {me.id})")
+                print(f"   Authorized admin usernames: {', '.join(sorted(ALLOWED_USERNAMES))}")
+
+        asyncio.run(_check())
+        sys.exit(0)
 
     logger.info("Starting Telegram Bot with authorized users: %s", ALLOWED_USERNAMES)
     app = ApplicationBuilder().token(token).build()
 
     app.add_handler(CommandHandler("start", start_handler))
+    app.add_handler(CommandHandler("help", start_handler))
     app.add_handler(CommandHandler("status", status_handler))
     app.add_handler(CommandHandler("list", list_handler))
+    app.add_handler(CommandHandler("clear", clear_handler))
     app.add_handler(CommandHandler("sync", sync_handler))
     app.add_handler(CallbackQueryHandler(callback_handler))
     app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), message_handler))

@@ -42,4 +42,5 @@ podgruppa_search.txt
 service_account.json
 .env
 .env.*
+!.env.example
 .env.local
