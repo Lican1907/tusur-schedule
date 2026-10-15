@@ -137,6 +137,18 @@ COLOR_ID_MAPPING: Dict[str, str] = {
     "BEER": "5",        # Banana / Amber (leisure event)
 }
 
+# Mobile app and widget HEX color mapping
+COLOR_HEX_MAPPING: Dict[str, str] = {
+    "ЛЕК": "#2EA043",
+    "ПРАК": "#388BFD",
+    "ЛАБ": "#A371F7",
+    "СРС": "#8B949E",
+    "КУРС": "#F778BA",
+    "ЗАЧ": "#D29922",
+    "ЭКЗ": "#F85149",
+    "CANCELLED": "#484F58",
+}
+
 # Abbreviations for disciplines
 SUBJECT_SHORT_NAMES: Dict[str, str] = {
     "основы искусственного интеллекта": "ОИИ",
@@ -327,6 +339,27 @@ def get_color_id_for_type(lesson_type: str) -> str:
     if "экз" in lt:
         return COLOR_ID_MAPPING["ЭКЗ"]       # "11" (Tomato / Red)
     return "10"
+
+
+def get_lesson_type_code(lesson_type: str) -> str:
+    """Extracts short standard type code (ЛЕК, ПРАК, ЛАБ, СРС, КУРС, ЗАЧ, ЭКЗ)."""
+    lt = lesson_type.strip().lower()
+    if "лек" in lt:
+        return "ЛЕК"
+    if "прак" in lt:
+        return "ПРАК"
+    if "лаб" in lt:
+        return "ЛАБ"
+    if "сам" in lt or "срс" in lt:
+        return "СРС"
+    if "курс" in lt:
+        return "КУРС"
+    if "зач" in lt:
+        return "ЗАЧ"
+    if "экз" in lt:
+        return "ЭКЗ"
+    clean_t = re.sub(r"[\[\]\s]", "", lesson_type).upper()
+    return clean_t or "ЛЕК"
 
 
 # ---------------------------------------------------------------------------
@@ -781,11 +814,13 @@ def parse_cell(
         shift_search = f"{str(cell)} {modal_data.get('Комментарий', '')} {modal_data.get('Подгруппа', '')} {subgroup}"
         m_shift = re.search(r"с\s*(\d{1,2})[:.](\d{2})", shift_search, re.IGNORECASE)
 
+        is_shifted = False
         if (pair_num == 3 and "12:30" in shift_search) or (
             m_shift and pair_num == 3 and m_shift.group(1) == "12" and m_shift.group(2) == "30"
         ):
             s_h, s_m = 12, 30
             e_h, e_m = 14, 5  # Strictly 12:30–14:05 (95 min) for 3rd pair shift
+            is_shifted = True
         elif m_shift:
             s_h = int(m_shift.group(1))
             s_m = int(m_shift.group(2))
@@ -793,6 +828,7 @@ def parse_cell(
             end_mins = start_mins + 95  # Standard lesson duration: 95 minutes
             e_h = (end_mins // 60) % 24
             e_m = end_mins % 60
+            is_shifted = True
         else:
             start_time_str, end_time_str = BELL_SCHEDULE.get(pair_num, ("08:50", "10:25"))
             s_h, s_m = map(int, start_time_str.split(":"))
@@ -815,7 +851,39 @@ def parse_cell(
 
         day_num = day_date.weekday() + 1
         uid_id = lesson_id if lesson_id else f"{pair_num}-{day_num}"
-        event.add("uid", f"tusur-{uid_id}-{day_date.strftime('%Y%m%d')}@timetable.tusur.ru")
+        event_uid = f"tusur-{uid_id}-{day_date.strftime('%Y%m%d')}@timetable.tusur.ru"
+        event.add("uid", event_uid)
+
+        # Structured metadata for mobile app and widget (schedule.json)
+        type_code = get_lesson_type_code(lesson_type or cell_kind)
+        color_hex = COLOR_HEX_MAPPING.get(type_code, "#2EA043")
+        clean_loc = location.replace("📍", "").strip() if location else ""
+
+        pe_rooms_map = None
+        if is_pe_lesson(disc_name, summary):
+            raw_rooms = get_pe_rooms_for_date(day_date)
+            if raw_rooms:
+                pe_rooms_map = {t_name: format_pe_room(r_val) for t_name, r_val in raw_rooms.items()}
+
+        short_subj = shorten_subject(disc_name)
+
+        event._lesson_data = {
+            "uid": event_uid,
+            "date": day_date.strftime("%Y-%m-%d"),
+            "time_start": f"{s_h:02d}:{s_m:02d}",
+            "time_end": f"{e_h:02d}:{e_m:02d}",
+            "is_shifted_time": is_shifted,
+            "type": type_code,
+            "subject_short": short_subj,
+            "subject_full": disc_name,
+            "location": clean_loc,
+            "teacher": teacher or "",
+            "color_hex": color_hex,
+            "is_override": False,
+            "is_cancelled": False,
+            "override_comment": None,
+            "pe_rooms": pe_rooms_map,
+        }
 
         events.append(event)
 
@@ -1009,6 +1077,13 @@ def apply_overrides(
                     del ev["description"]
                     ev.add("description", f"{prefix}\n{old_desc}".strip())
 
+                    # Update structured metadata for schedule.json
+                    if hasattr(ev, "_lesson_data") and isinstance(ev._lesson_data, dict):
+                        ev._lesson_data["is_cancelled"] = True
+                        ev._lesson_data["is_override"] = False
+                        ev._lesson_data["override_comment"] = comment or None
+                        ev._lesson_data["color_hex"] = COLOR_HEX_MAPPING["CANCELLED"]
+
                     logger.info("Override %s: Cancelled '%s' on %s", ov_id, cap_subject, target_date)
 
             if not matched:
@@ -1060,6 +1135,25 @@ def apply_overrides(
                 old_desc = str(matched_ev.get("description", ""))
                 del matched_ev["description"]
                 matched_ev.add("description", f"{prefix}\n{old_desc}".strip())
+
+                # Update structured metadata for schedule.json
+                if hasattr(matched_ev, "_lesson_data") and isinstance(matched_ev._lesson_data, dict):
+                    matched_ev._lesson_data["is_override"] = True
+                    matched_ev._lesson_data["is_cancelled"] = False
+                    matched_ev._lesson_data["override_comment"] = comment or None
+                    matched_ev._lesson_data["type"] = ov_type
+                    matched_ev._lesson_data["subject_short"] = shorten_subject(ov_subject)
+                    matched_ev._lesson_data["subject_full"] = cap_subject
+                    matched_ev._lesson_data["location"] = loc.replace("📍", "").strip() if loc else ""
+                    matched_ev._lesson_data["color_hex"] = COLOR_HEX_MAPPING.get(ov_type, "#2EA043")
+                    if is_pe_lesson(ov_subject):
+                        p_rooms = get_pe_rooms_for_date(target_date)
+                        matched_ev._lesson_data["pe_rooms"] = (
+                            {t_name: format_pe_room(r_val) for t_name, r_val in p_rooms.items()}
+                            if p_rooms else None
+                        )
+                    else:
+                        matched_ev._lesson_data["pe_rooms"] = None
 
                 logger.info("Override %s: Replaced event at %s %s with '⚡ %s %s'", ov_id, target_date, time_start, marker, cap_subject)
             else:
@@ -1113,7 +1207,35 @@ def apply_overrides(
                 new_ev.add("dtstamp", datetime.now(tz))
                 color_id = COLOR_ID_MAPPING.get(ov_type, "10")
                 new_ev.add("x-color-id", color_id)
-                new_ev.add("uid", f"tusur-override-{ov_id}-{target_date.strftime('%Y%m%d')}@{TIMEZONE_STR}")
+                new_uid = f"tusur-override-{ov_id}-{target_date.strftime('%Y%m%d')}@{TIMEZONE_STR}"
+                new_ev.add("uid", new_uid)
+
+                # Set structured metadata for schedule.json
+                pe_rooms_map = None
+                pe_teacher = ""
+                if is_pe_lesson(ov_subject):
+                    p_rooms = get_pe_rooms_for_date(target_date)
+                    if p_rooms:
+                        pe_rooms_map = {t_name: format_pe_room(r_val) for t_name, r_val in p_rooms.items()}
+                    pe_teacher = get_pe_teacher_for_group(group_name) or ""
+
+                new_ev._lesson_data = {
+                    "uid": new_uid,
+                    "date": target_date.strftime("%Y-%m-%d"),
+                    "time_start": time_start,
+                    "time_end": f"{e_h:02d}:{e_m:02d}",
+                    "is_shifted_time": False,
+                    "type": ov_type,
+                    "subject_short": shorten_subject(ov_subject),
+                    "subject_full": cap_subject,
+                    "location": loc.replace("📍", "").strip() if loc else "",
+                    "teacher": pe_teacher,
+                    "color_hex": COLOR_HEX_MAPPING.get(ov_type, "#2EA043"),
+                    "is_override": True,
+                    "is_cancelled": False,
+                    "override_comment": comment or None,
+                    "pe_rooms": pe_rooms_map,
+                }
 
                 result_events.append(new_ev)
                 logger.info("Override %s: Created new event on %s at %s: '⚡ %s %s'", ov_id, target_date, time_start, marker, cap_subject)
@@ -1244,6 +1366,204 @@ def build_calendar(
     return cal
 
 
+# ---------------------------------------------------------------------------
+# Structured JSON Schedule Exporter (Mobile App & Widget API)
+# ---------------------------------------------------------------------------
+def get_event_lesson_data(
+    ev: Event,
+    group_name: str = "426топ-4",
+    tz: ZoneInfo = TIMEZONE,
+) -> Optional[Dict[str, Any]]:
+    """
+    Retrieves or reconstructs structured lesson dictionary from an Event object.
+    Returns None for non-lesson events (e.g. beer leisure event).
+    """
+    uid = str(ev.get("uid", ""))
+    summary = str(ev.get("summary", ""))
+
+    if uid.startswith("beer_") or "Можно пить пиво!" in summary:
+        return None
+
+    if hasattr(ev, "_lesson_data") and isinstance(ev._lesson_data, dict):
+        return dict(ev._lesson_data)
+
+    dtstart_prop = ev.get("dtstart")
+    dtend_prop = ev.get("dtend")
+    if not dtstart_prop or not hasattr(dtstart_prop, "dt") or not dtend_prop or not hasattr(dtend_prop, "dt"):
+        return None
+
+    dt_start = dtstart_prop.dt
+    dt_end = dtend_prop.dt
+    if not isinstance(dt_start, datetime) or not isinstance(dt_end, datetime):
+        return None
+
+    event_date = dt_start.date()
+    date_str = event_date.strftime("%Y-%m-%d")
+    time_start = dt_start.strftime("%H:%M")
+    time_end = dt_end.strftime("%H:%M")
+
+    location = str(ev.get("location", "")).replace("📍", "").strip()
+    description = str(ev.get("description", ""))
+
+    is_cancelled = summary.startswith("❌") or str(ev.get("x-status", "")).upper() == "CANCELLED"
+    is_override = summary.startswith("⚡")
+
+    override_comment = None
+    if is_cancelled:
+        m_c = re.search(r"❌ Занятие отменено преподавателем:\s*(.*)", description)
+        if m_c:
+            override_comment = m_c.group(1).strip()
+    elif is_override:
+        m_o = re.search(r"⚡ Изменение в расписании от преподавателя:\s*(.*)", description)
+        if m_o:
+            override_comment = m_o.group(1).strip()
+
+    teacher = ""
+    m_teach = re.search(r"Преподаватель:\s*(.+)", description)
+    if m_teach:
+        teacher = m_teach.group(1).strip()
+
+    clean_sum = summary.replace("⚡", "").replace("❌", "").replace("[ОТМЕНА]", "").strip()
+    type_code = "ЛЕК"
+    for t in ("ЛЕК", "ПРАК", "ЛАБ", "СРС", "КУРС", "ЗАЧ", "ЭКЗ"):
+        if t in clean_sum:
+            type_code = t
+            break
+
+    color_hex = COLOR_HEX_MAPPING["CANCELLED"] if is_cancelled else COLOR_HEX_MAPPING.get(type_code, "#2EA043")
+
+    subj = clean_sum
+    for t in ("ЛЕК", "ПРАК", "ЛАБ", "СРС", "КУРС", "ЗАЧ", "ЭКЗ"):
+        subj = subj.replace(t, "")
+    for emo in TYPE_EMOJI.values():
+        subj = subj.replace(emo, "")
+    subj_short = shorten_subject(subj.strip())
+
+    subj_full = subj_short
+    m_subj = re.search(r"Предмет:\s*(.+)", description)
+    if m_subj:
+        subj_full = m_subj.group(1).strip()
+
+    is_shifted = False
+    m_shift = re.search(r"с\s*(\d{1,2})[:.](\d{2})", description, re.IGNORECASE)
+    if m_shift or time_start == "12:30":
+        is_shifted = True
+
+    pe_rooms_map = None
+    if is_pe_lesson(subj_full, subj_short):
+        raw_rooms = get_pe_rooms_for_date(event_date)
+        if raw_rooms:
+            pe_rooms_map = {t_name: format_pe_room(r_val) for t_name, r_val in raw_rooms.items()}
+
+    return {
+        "uid": uid,
+        "date": date_str,
+        "time_start": time_start,
+        "time_end": time_end,
+        "is_shifted_time": is_shifted,
+        "type": type_code,
+        "subject_short": subj_short,
+        "subject_full": subj_full,
+        "location": location,
+        "teacher": teacher,
+        "color_hex": color_hex,
+        "is_override": is_override,
+        "is_cancelled": is_cancelled,
+        "override_comment": override_comment,
+        "pe_rooms": pe_rooms_map,
+    }
+
+
+def build_schedule_data(
+    events: List[Event],
+    group_name: str = "426топ-4",
+    tz: ZoneInfo = TIMEZONE,
+) -> Dict[str, Any]:
+    """
+    Constructs structured schedule dictionary for mobile applications and widgets:
+    - generated_at: ISO-8601 string in Asia/Tomsk timezone
+    - group: group name (e.g. '426топ-4')
+    - pe_teachers: list of all 11 PE teachers from PE_ROOMS_SCHEDULE
+    - days: list of study days sorted by date YYYY-MM-DD
+    """
+    # 1. PE teachers list (all 11 teachers, maintaining appearance order)
+    pe_teachers = list(dict.fromkeys(t for d in PE_ROOMS_SCHEDULE.values() for t in d.keys()))
+
+    # 2. De-duplicate events by UID and group by date
+    seen_uids: Set[str] = set()
+    lessons_by_date: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+
+    for ev in events:
+        uid = str(ev.get("uid", ""))
+        if not uid or uid in seen_uids:
+            continue
+        seen_uids.add(uid)
+
+        lesson_dict = get_event_lesson_data(ev, group_name=group_name, tz=tz)
+        if not lesson_dict:
+            continue
+
+        d_str = lesson_dict.get("date")
+        if not d_str:
+            continue
+
+        lesson_obj = {
+            "uid": lesson_dict["uid"],
+            "time_start": lesson_dict["time_start"],
+            "time_end": lesson_dict["time_end"],
+            "is_shifted_time": bool(lesson_dict.get("is_shifted_time", False)),
+            "type": lesson_dict["type"],
+            "subject_short": lesson_dict["subject_short"],
+            "subject_full": lesson_dict["subject_full"],
+            "location": lesson_dict["location"],
+            "teacher": lesson_dict["teacher"],
+            "color_hex": lesson_dict["color_hex"],
+            "is_override": bool(lesson_dict.get("is_override", False)),
+            "is_cancelled": bool(lesson_dict.get("is_cancelled", False)),
+            "override_comment": lesson_dict.get("override_comment", None),
+            "pe_rooms": lesson_dict.get("pe_rooms", None),
+        }
+        lessons_by_date[d_str].append(lesson_obj)
+
+    # 3. Build days list sorted by date YYYY-MM-DD
+    days: List[Dict[str, Any]] = []
+    for date_str in sorted(lessons_by_date.keys()):
+        day_lessons = lessons_by_date[date_str]
+        day_lessons.sort(key=lambda l: (l["time_start"], l["time_end"]))
+
+        # Beer time is latest time_end among active (non-cancelled) lessons of the day
+        active_lessons = [l for l in day_lessons if not l["is_cancelled"]]
+        beer_time = max((l["time_end"] for l in active_lessons), default=None)
+
+        days.append({
+            "date": date_str,
+            "beer_time": beer_time,
+            "lessons": day_lessons,
+        })
+
+    return {
+        "generated_at": datetime.now(tz).isoformat(),
+        "group": group_name,
+        "pe_teachers": pe_teachers,
+        "days": days,
+    }
+
+
+def export_schedule_json(
+    schedule_data: Dict[str, Any],
+    filepath: str = "schedule.json",
+) -> None:
+    """Exports structured schedule data to JSON file in UTF-8."""
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(schedule_data, f, ensure_ascii=False, indent=2)
+    logger.info(
+        "Saved structured schedule JSON to %s (%d days, %d bytes)",
+        filepath,
+        len(schedule_data.get("days", [])),
+        os.path.getsize(filepath),
+    )
+
+
 def parse_semester(
     url: str = DEFAULT_URL,
     all_weeks: bool = True,
@@ -1313,6 +1633,8 @@ def parse_semester(
             events = apply_overrides(events, overrides, group_name=group_name, tz=tz)
 
         cal = build_calendar(events, group_name=group_name, tz=tz)
+        schedule_data = build_schedule_data(events, group_name=group_name, tz=tz)
+        cal._schedule_data = schedule_data
         return cal
     finally:
         session.close()
@@ -1339,6 +1661,15 @@ def parse_and_save_group(
             f.write(ical_data)
         event_count = len([c for c in cal.walk("vevent")])
         logger.info("Saved %d events for %s to %s", event_count, name, out_file)
+
+    # Export structured JSON schedule for mobile app and widget
+    if hasattr(cal, "_schedule_data") and cal._schedule_data:
+        norm_key = group_key.lower().replace("топ", "top")
+        if norm_key in ("426top-4", "426топ-4"):
+            export_schedule_json(cal._schedule_data, "schedule.json")
+            export_schedule_json(cal._schedule_data, "schedule-426top-4.json")
+        else:
+            export_schedule_json(cal._schedule_data, f"schedule-{group_key}.json")
 
     if sync_gcal:
         try:
@@ -1415,6 +1746,8 @@ def main() -> None:
             ical_data = cal.to_ical()
             with open(output_file, "wb") as f:
                 f.write(ical_data)
+            if hasattr(cal, "_schedule_data") and cal._schedule_data:
+                export_schedule_json(cal._schedule_data, "schedule.json")
             event_count = len([c for c in cal.walk("vevent")])
             logger.info("SUCCESS: Wrote %d events to %s", event_count, output_file)
             if args.url == DEFAULT_URL:

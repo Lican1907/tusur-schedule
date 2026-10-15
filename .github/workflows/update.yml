@@ -48,7 +48,7 @@ jobs:
 
       - name: Verify schedule artifacts
         run: |
-          for f in schedule.ics schedule-426top-4.ics schedule-426top-1.ics schedule-426top-2.ics schedule-426-3.ics; do
+          for f in schedule.ics schedule-426top-4.ics schedule-426top-1.ics schedule-426top-2.ics schedule-426-3.ics schedule.json; do
             if [ ! -f "$f" ]; then
               echo "Error: $f was not generated!"
               exit 1
@@ -56,6 +56,7 @@ jobs:
             echo "$f size: $(wc -c < "$f") bytes"
           done
           head -n 20 schedule.ics
+          head -n 30 schedule.json
 
       - name: Inject GOOGLE_CALENDAR_ID into index.html for Pages
         env:
@@ -69,6 +70,7 @@ jobs:
         run: |
           mkdir -p public
           cp schedule*.ics public/
+          cp schedule*.json public/
           if [ -f index.html ]; then
             cp index.html public/
           fi
