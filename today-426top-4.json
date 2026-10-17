@@ -1,57 +1,15 @@
 {
-  "generated_at": "2026-10-17T01:40:58.286079+07:00",
-  "date": "2026-10-17",
-  "weekday": 6,
+  "generated_at": "2026-10-18T00:48:07.976891+07:00",
+  "date": "2026-10-18",
+  "weekday": 7,
   "group": "426топ-4",
-  "is_weekend": false,
+  "is_weekend": true,
   "pair_status": "before_classes",
   "current_pair": null,
   "next_pair": 1,
   "minutes_left_in_pair": null,
-  "minutes_until_next_pair": 430,
-  "total_lessons_today": 2,
-  "lessons": [
-    {
-      "pair_num": 1,
-      "time_start": "08:50",
-      "time_end": "10:25",
-      "subject": "Иностранный язык",
-      "short_subject": "Английский",
-      "lesson_type": "Практика",
-      "teacher": "Белкина Дина Александровна Горских Мирослава Евгеньевна Ёлкина Дарья Михайловна Серебрякова Ольга Анатольевна",
-      "room": "119",
-      "building": "РК",
-      "location": "📍 РК 119",
-      "status": "ACTIVE",
-      "color_id": "9",
-      "summary": "ПРАК 🔵 Английский",
-      "subgroup": "",
-      "uid": "tusur-676622-20261017@timetable.tusur.ru"
-    },
-    {
-      "pair_num": 2,
-      "time_start": "10:40",
-      "time_end": "12:15",
-      "subject": "Информатика",
-      "short_subject": "Информатика",
-      "lesson_type": "Лекция",
-      "teacher": "Пермякова Наталья Викторовна",
-      "room": "412",
-      "building": "ФЭТ",
-      "location": "📍 ФЭТ 412",
-      "status": "ACTIVE",
-      "color_id": "10",
-      "summary": "ЛЕК 🟢 Информатика",
-      "subgroup": "",
-      "uid": "tusur-673997-20261017@timetable.tusur.ru"
-    }
-  ],
-  "beer_event": {
-    "summary": "🍺 Можно пить пиво!",
-    "location": "🎉 Свобода",
-    "time_start": "12:15",
-    "time_end": "14:15",
-    "description": "Все пары на сегодня закончились. Время заслуженного отдыха.",
-    "color_id": "5"
-  }
+  "minutes_until_next_pair": 482,
+  "total_lessons_today": 0,
+  "lessons": [],
+  "beer_event": null
 }
