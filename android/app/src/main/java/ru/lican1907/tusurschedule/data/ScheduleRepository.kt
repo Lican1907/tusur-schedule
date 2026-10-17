@@ -36,6 +36,10 @@ class ScheduleRepository(private val context: Context) {
         get() = prefs.getString("selected_pe_teacher", "Тарасов А.В.") ?: "Тарасов А.В."
         set(value) = prefs.edit().putString("selected_pe_teacher", value).apply()
 
+    var selectedEnglishTeacher: String
+        get() = prefs.getString("selected_english_teacher", "Ёлкина Д.М.") ?: "Ёлкина Д.М."
+        set(value) = prefs.edit().putString("selected_english_teacher", value).apply()
+
     fun getSelectedGroup(): GroupItem {
         val currentId = selectedGroupId
         return SUPPORTED_GROUPS.firstOrNull { it.id == currentId } ?: SUPPORTED_GROUPS.first()

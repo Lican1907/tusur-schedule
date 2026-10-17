@@ -79,6 +79,15 @@ GROUP_PE_TEACHERS: Dict[str, str] = {
     "426top-4": "Тарасов А.В.",
 }
 
+# English teachers list for subgroup selection
+DEFAULT_ENGLISH_TEACHERS: List[str] = [
+    "Ёлкина Д.М.",
+    "Белкина Д.А.",
+    "Горских М.Е.",
+    "Менгардт Е.Р.",
+    "Серебрякова О.А.",
+]
+
 # Bell schedule of TUSUR (Томский государственный университет систем управления и радиоэлектроники)
 BELL_SCHEDULE: Dict[int, Tuple[str, str]] = {
     1: ("08:50", "10:25"),
@@ -1545,6 +1554,7 @@ def build_schedule_data(
         "generated_at": datetime.now(tz).isoformat(),
         "group": group_name,
         "pe_teachers": pe_teachers,
+        "english_teachers": DEFAULT_ENGLISH_TEACHERS,
         "days": days,
     }
 

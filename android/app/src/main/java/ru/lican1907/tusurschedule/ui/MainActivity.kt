@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,6 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.appwidget.updateAll
@@ -80,9 +82,11 @@ fun ScheduleScreen() {
     var selectedDateStr by remember { mutableStateOf<String?>(null) }
     var selectedGroup by remember { mutableStateOf(repository.getSelectedGroup()) }
     var selectedPeTeacher by remember { mutableStateOf(repository.selectedPeTeacher) }
+    var selectedEnglishTeacher by remember { mutableStateOf(repository.selectedEnglishTeacher) }
 
     var groupDropdownExpanded by remember { mutableStateOf(false) }
     var peDropdownExpanded by remember { mutableStateOf(false) }
+    var englishDropdownExpanded by remember { mutableStateOf(false) }
 
     // In-App update state
     var availableUpdate by remember { mutableStateOf<AppUpdateInfo?>(null) }
@@ -130,6 +134,11 @@ fun ScheduleScreen() {
     val days = scheduleResponse?.days ?: emptyList()
     val currentDaySchedule = days.firstOrNull { it.date == selectedDateStr }
     val peTeachers = scheduleResponse?.pe_teachers ?: emptyList()
+    val englishTeachers = if (scheduleResponse?.english_teachers?.isNotEmpty() == true) {
+        scheduleResponse.english_teachers
+    } else {
+        DEFAULT_ENGLISH_TEACHERS
+    }
 
     Scaffold(
         topBar = {
@@ -140,6 +149,7 @@ fun ScheduleScreen() {
                     .border(BorderStroke(1.dp, DarkBorder))
                     .padding(horizontal = 16.dp, vertical = 10.dp)
             ) {
+                // Top Row: Group Selector + Refresh Button
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -202,85 +212,155 @@ fun ScheduleScreen() {
                         }
                     }
 
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        // PE Teacher Selector Dropdown
-                        Box {
-                            Surface(
-                                onClick = { peDropdownExpanded = true },
-                                shape = RoundedCornerShape(10.dp),
-                                color = DarkSurfaceVariant,
-                                border = BorderStroke(1.dp, DarkBorder)
-                            ) {
-                                Row(
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        Icons.Default.FitnessCenter,
-                                        contentDescription = null,
-                                        tint = AccentGreen,
-                                        modifier = Modifier.size(15.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text(
-                                        text = selectedPeTeacher,
-                                        color = TextPrimary,
-                                        fontSize = 12.sp,
-                                        maxLines = 1
-                                    )
-                                    Icon(
-                                        Icons.Default.ArrowDropDown,
-                                        contentDescription = null,
-                                        tint = TextSecondary
-                                    )
-                                }
-                            }
+                    // Refresh Button
+                    IconButton(
+                        onClick = { refreshSchedule(force = true) },
+                        modifier = Modifier
+                            .size(36.dp)
+                            .background(DarkSurfaceVariant, RoundedCornerShape(10.dp))
+                            .border(BorderStroke(1.dp, DarkBorder), RoundedCornerShape(10.dp))
+                    ) {
+                        Icon(
+                            Icons.Default.Refresh,
+                            contentDescription = "Обновить",
+                            tint = AccentBlue,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
 
-                            DropdownMenu(
-                                expanded = peDropdownExpanded,
-                                onDismissRequest = { peDropdownExpanded = false },
-                                modifier = Modifier.background(DarkSurface)
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Bottom Row: PE Teacher Selector & English Teacher Selector
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    // PE Teacher Selector Dropdown
+                    Box(modifier = Modifier.weight(1f)) {
+                        Surface(
+                            onClick = { peDropdownExpanded = true },
+                            shape = RoundedCornerShape(10.dp),
+                            color = DarkSurfaceVariant,
+                            border = BorderStroke(1.dp, DarkBorder),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                val teachersList = if (peTeachers.isNotEmpty()) peTeachers else listOf(selectedPeTeacher)
-                                teachersList.forEach { teacherName ->
-                                    DropdownMenuItem(
-                                        text = {
-                                            Text(
-                                                text = teacherName,
-                                                color = if (teacherName == selectedPeTeacher) AccentGreen else TextPrimary
-                                            )
-                                        },
-                                        onClick = {
-                                            selectedPeTeacher = teacherName
-                                            repository.selectedPeTeacher = teacherName
-                                            peDropdownExpanded = false
-                                            scope.launch { ScheduleWidget().updateAll(context) }
-                                        }
-                                    )
-                                }
+                                Icon(
+                                    Icons.Default.FitnessCenter,
+                                    contentDescription = null,
+                                    tint = AccentGreen,
+                                    modifier = Modifier.size(15.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = selectedPeTeacher,
+                                    color = TextPrimary,
+                                    fontSize = 12.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Icon(
+                                    Icons.Default.ArrowDropDown,
+                                    contentDescription = null,
+                                    tint = TextSecondary
+                                )
                             }
                         }
 
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        // Refresh Button
-                        IconButton(
-                            onClick = { refreshSchedule(force = true) },
-                            modifier = Modifier
-                                .size(36.dp)
-                                .background(DarkSurfaceVariant, RoundedCornerShape(10.dp))
-                                .border(BorderStroke(1.dp, DarkBorder), RoundedCornerShape(10.dp))
+                        DropdownMenu(
+                            expanded = peDropdownExpanded,
+                            onDismissRequest = { peDropdownExpanded = false },
+                            modifier = Modifier.background(DarkSurface)
                         ) {
-                            Icon(
-                                Icons.Default.Refresh,
-                                contentDescription = "Обновить",
-                                tint = AccentBlue,
-                                modifier = Modifier.size(18.dp)
-                            )
+                            val teachersList = if (peTeachers.isNotEmpty()) peTeachers else listOf(selectedPeTeacher)
+                            teachersList.forEach { teacherName ->
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = teacherName,
+                                            color = if (teacherName == selectedPeTeacher) AccentGreen else TextPrimary
+                                        )
+                                    },
+                                    onClick = {
+                                        selectedPeTeacher = teacherName
+                                        repository.selectedPeTeacher = teacherName
+                                        peDropdownExpanded = false
+                                        scope.launch { ScheduleWidget().updateAll(context) }
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    // English Teacher Selector Dropdown
+                    Box(modifier = Modifier.weight(1f)) {
+                        Surface(
+                            onClick = { englishDropdownExpanded = true },
+                            shape = RoundedCornerShape(10.dp),
+                            color = DarkSurfaceVariant,
+                            border = BorderStroke(1.dp, DarkBorder),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    Icons.Default.Translate,
+                                    contentDescription = null,
+                                    tint = AccentBlue,
+                                    modifier = Modifier.size(15.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = selectedEnglishTeacher,
+                                    color = TextPrimary,
+                                    fontSize = 12.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Icon(
+                                    Icons.Default.ArrowDropDown,
+                                    contentDescription = null,
+                                    tint = TextSecondary
+                                )
+                            }
+                        }
+
+                        DropdownMenu(
+                            expanded = englishDropdownExpanded,
+                            onDismissRequest = { englishDropdownExpanded = false },
+                            modifier = Modifier.background(DarkSurface)
+                        ) {
+                            val teachersList = if (englishTeachers.isNotEmpty()) englishTeachers else listOf(selectedEnglishTeacher)
+                            teachersList.forEach { teacherName ->
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = teacherName,
+                                            color = if (teacherName == selectedEnglishTeacher) AccentBlue else TextPrimary
+                                        )
+                                    },
+                                    onClick = {
+                                        selectedEnglishTeacher = teacherName
+                                        repository.selectedEnglishTeacher = teacherName
+                                        englishDropdownExpanded = false
+                                        scope.launch { ScheduleWidget().updateAll(context) }
+                                    }
+                                )
+                            }
                         }
                     }
                 }
             }
+        }
         },
         containerColor = DarkBackground
     ) { innerPadding ->
@@ -410,7 +490,12 @@ fun ScheduleScreen() {
                     contentPadding = PaddingValues(bottom = 24.dp)
                 ) {
                     items(currentDaySchedule.lessons) { lesson ->
-                        LessonCard(lesson = lesson, selectedPeTeacher = selectedPeTeacher)
+                        LessonCard(
+                            lesson = lesson,
+                            selectedPeTeacher = selectedPeTeacher,
+                            selectedEnglishTeacher = selectedEnglishTeacher,
+                            dateStr = selectedDateStr
+                        )
                     }
                 }
             }
@@ -620,9 +705,15 @@ fun LiveDayBanner(day: DaySchedule) {
 }
 
 @Composable
-fun LessonCard(lesson: LessonItem, selectedPeTeacher: String?) {
+fun LessonCard(
+    lesson: LessonItem,
+    selectedPeTeacher: String?,
+    selectedEnglishTeacher: String? = null,
+    dateStr: String? = null
+) {
     val (cardBrush, cardBorderColor) = getLessonBrushAndBorder(lesson)
-    val resolvedAud = lesson.getResolvedLocation(selectedPeTeacher)
+    val resolvedAud = lesson.getResolvedLocation(selectedPeTeacher, selectedEnglishTeacher, dateStr)
+    val resolvedTeacher = lesson.getResolvedTeacher(selectedEnglishTeacher)
 
     val typeTag = when {
         lesson.is_cancelled -> "ОТМЕНА"
@@ -656,9 +747,9 @@ fun LessonCard(lesson: LessonItem, selectedPeTeacher: String?) {
             append(", 📍 ")
             append(resolvedAud)
         }
-        if (lesson.teacher.isNotEmpty()) {
+        if (resolvedTeacher.isNotEmpty() && !resolvedAud.contains(resolvedTeacher)) {
             append(" • ")
-            append(lesson.teacher)
+            append(resolvedTeacher)
         }
     }
 

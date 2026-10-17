@@ -75,6 +75,7 @@ class ScheduleWidget : GlanceAppWidget() {
         val repo = ScheduleRepository(context)
         val schedule = repo.loadSchedule(forceRefresh = false).getOrNull()
         val selectedPeTeacher = repo.selectedPeTeacher
+        val selectedEnglishTeacher = repo.selectedEnglishTeacher
         val groupName = repo.getSelectedGroup().name
 
         provideContent {
@@ -153,7 +154,8 @@ class ScheduleWidget : GlanceAppWidget() {
                     // 2. Hero Card
                     WidgetHeroCard(
                         hero = heroInfo,
-                        selectedPeTeacher = selectedPeTeacher
+                        selectedPeTeacher = selectedPeTeacher,
+                        selectedEnglishTeacher = selectedEnglishTeacher
                     )
 
                     // 3. Scrollable Schedule List (in full mode 4x4+)
@@ -175,7 +177,8 @@ class ScheduleWidget : GlanceAppWidget() {
                                 items(todayRemaining) { merged ->
                                     WidgetLessonCard(
                                         merged = merged,
-                                        selectedPeTeacher = selectedPeTeacher
+                                        selectedPeTeacher = selectedPeTeacher,
+                                        selectedEnglishTeacher = selectedEnglishTeacher
                                     )
                                     Spacer(modifier = GlanceModifier.height(ScheduleWidgetTheme.SpacingCards))
                                 }
@@ -199,7 +202,8 @@ class ScheduleWidget : GlanceAppWidget() {
                                 items(dayMerged) { merged ->
                                     WidgetLessonCard(
                                         merged = merged,
-                                        selectedPeTeacher = selectedPeTeacher
+                                        selectedPeTeacher = selectedPeTeacher,
+                                        selectedEnglishTeacher = selectedEnglishTeacher
                                     )
                                     Spacer(modifier = GlanceModifier.height(ScheduleWidgetTheme.SpacingCards))
                                 }
@@ -294,7 +298,8 @@ class ScheduleWidget : GlanceAppWidget() {
     @androidx.compose.runtime.Composable
     private fun WidgetHeroCard(
         hero: HeroInfo,
-        selectedPeTeacher: String
+        selectedPeTeacher: String,
+        selectedEnglishTeacher: String = ""
     ) {
         if (hero.isRest || hero.lesson == null) {
             // Rest state card
@@ -330,7 +335,7 @@ class ScheduleWidget : GlanceAppWidget() {
 
         val lesson = hero.lesson
         val bgDrawable = ScheduleWidgetTheme.getHeroDrawableRes(lesson.type, lesson.is_cancelled)
-        val resolvedLoc = lesson.getResolvedLocation(selectedPeTeacher)
+        val resolvedLoc = lesson.getResolvedLocation(selectedPeTeacher, selectedEnglishTeacher)
         val typeFullName = ScheduleWidgetTheme.getLessonTypeFullName(lesson.type, lesson.is_cancelled)
 
         Box(
@@ -467,12 +472,13 @@ class ScheduleWidget : GlanceAppWidget() {
     @androidx.compose.runtime.Composable
     private fun WidgetLessonCard(
         merged: MergedLessonItem,
-        selectedPeTeacher: String
+        selectedPeTeacher: String,
+        selectedEnglishTeacher: String = ""
     ) {
         val lesson = merged.lesson
         val typeColor = ScheduleWidgetTheme.getLessonTypeColor(lesson.type, lesson.is_cancelled)
         val typeFullName = ScheduleWidgetTheme.getLessonTypeFullName(lesson.type, lesson.is_cancelled)
-        val resolvedLoc = lesson.getResolvedLocation(selectedPeTeacher)
+        val resolvedLoc = lesson.getResolvedLocation(selectedPeTeacher, selectedEnglishTeacher)
 
         Box(
             modifier = GlanceModifier
