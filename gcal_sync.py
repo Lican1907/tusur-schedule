@@ -310,6 +310,69 @@ def sync_calendar(
             except Exception as e:
                 logger.warning("Failed to delete past beer event %s: %s", item_id, e)
 
+    # Clean up orphaned schedule events in the parsed date window
+    min_sync_date = min_date.date() if min_date else None
+    max_sync_date = max_date.date() if max_date else None
+    target_uids = {p["iCalUID"] for p in events_to_sync if p.get("iCalUID")}
+
+    if min_sync_date and max_sync_date:
+        for uid_key, item in list(existing_events_by_uid.items()):
+            item_id = item.get("id")
+            if not item_id or item_id in seen_deleted_ids:
+                continue
+
+            item_uid = item.get("iCalUID", "")
+            private_props = item.get("extendedProperties", {}).get("private", {})
+            tusur_uid = private_props.get("tusur_uid", "")
+            source = private_props.get("source", "")
+
+            # Only manage events created by this synchronization pipeline
+            is_tusur_event = (
+                source == "tusur_schedule_sync"
+                or item_uid.endswith("@timetable.tusur.ru")
+                or tusur_uid.endswith("@timetable.tusur.ru")
+            )
+            if not is_tusur_event:
+                continue
+
+            # Beer events are managed separately above
+            item_summary = item.get("summary", "")
+            if (
+                item_uid.startswith("beer_")
+                or tusur_uid.startswith("beer_")
+                or "🍺" in item_summary
+                or "пить пиво" in item_summary.lower()
+            ):
+                continue
+
+            item_start_str = item.get("start", {}).get("dateTime") or item.get("start", {}).get("date")
+            if not item_start_str:
+                continue
+            try:
+                if "T" in item_start_str:
+                    item_date = datetime.fromisoformat(item_start_str).date()
+                else:
+                    item_date = datetime.strptime(item_start_str[:10], "%Y-%m-%d").date()
+            except Exception:
+                continue
+
+            if min_sync_date <= item_date <= max_sync_date:
+                effective_uid = tusur_uid or item_uid
+                if effective_uid not in target_uids and item_uid not in target_uids:
+                    try:
+                        service.events().delete(calendarId=calendar_id, eventId=item_id).execute()
+                        stats["deleted"] += 1
+                        seen_deleted_ids.add(item_id)
+                        logger.info(
+                            "Deleted orphaned schedule event from %s: '%s' (uid: %s, id: %s)",
+                            item_date, item_summary, effective_uid, item_id,
+                        )
+                        keys_to_remove = [k for k, v in existing_events_by_uid.items() if v.get("id") == item_id]
+                        for k in keys_to_remove:
+                            existing_events_by_uid.pop(k, None)
+                    except Exception as e:
+                        logger.warning("Failed to delete orphaned event %s (%s): %s", item_id, effective_uid, e)
+
     # Process each event: insert or update
     for payload in events_to_sync:
         uid = payload["iCalUID"]
