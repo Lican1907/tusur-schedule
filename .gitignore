@@ -24,6 +24,7 @@ schedule.ics
 schedule*.ics
 schedule.json
 schedule*.json
+today*.json
 test_schedule.ics
 schedule_all.ics
 inspect_*.py
