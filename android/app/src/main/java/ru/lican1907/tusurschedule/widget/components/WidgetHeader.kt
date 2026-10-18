@@ -34,7 +34,8 @@ fun WidgetHeader(
     statusText: String,
     dateText: String,
     groupName: String,
-    selectedSubgroup: String = "ALL"
+    selectedSubgroup: String = "ALL",
+    isNarrow: Boolean = false
 ) {
     val chipText = if (selectedSubgroup.equals("ALL", ignoreCase = true) || selectedSubgroup.isBlank()) {
         groupName
@@ -54,7 +55,7 @@ fun WidgetHeader(
                 text = statusText,
                 style = TextStyle(
                     color = ColorProvider(ScheduleWidgetTheme.TextMuted),
-                    fontSize = ScheduleWidgetTheme.FontHeaderStatus,
+                    fontSize = if (isNarrow) 11.sp else ScheduleWidgetTheme.FontHeaderStatus,
                     fontWeight = FontWeight.Normal
                 ),
                 maxLines = 1
@@ -63,7 +64,7 @@ fun WidgetHeader(
                 text = dateText,
                 style = TextStyle(
                     color = ColorProvider(ScheduleWidgetTheme.TextPrimary),
-                    fontSize = ScheduleWidgetTheme.FontHeaderDate,
+                    fontSize = if (isNarrow) 15.sp else ScheduleWidgetTheme.FontHeaderDate,
                     fontWeight = FontWeight.Bold
                 ),
                 maxLines = 1
@@ -75,7 +76,7 @@ fun WidgetHeader(
             modifier = GlanceModifier
                 .background(ImageProvider(R.drawable.bg_chip_group))
                 .cornerRadius(ScheduleWidgetTheme.RadiusChip)
-                .padding(horizontal = 10.dp, vertical = 6.dp)
+                .padding(horizontal = if (isNarrow) 8.dp else 10.dp, vertical = if (isNarrow) 4.dp else 6.dp)
                 .clickable(actionStartActivity<MainActivity>()),
             contentAlignment = Alignment.Center
         ) {
@@ -83,21 +84,23 @@ fun WidgetHeader(
                 text = chipText,
                 style = TextStyle(
                     color = ColorProvider(ScheduleWidgetTheme.TextSecondary),
-                    fontSize = 12.sp,
+                    fontSize = if (isNarrow) 11.sp else 12.sp,
                     fontWeight = FontWeight.Bold
-                )
+                ),
+                maxLines = 1
             )
         }
 
-        Spacer(modifier = GlanceModifier.width(8.dp))
+        Spacer(modifier = GlanceModifier.width(if (isNarrow) 6.dp else 8.dp))
 
-        // Refresh 34dp circular button
+        // Refresh circular button
+        val btnSize = if (isNarrow) 30.dp else ScheduleWidgetTheme.ButtonRefreshSize
         Box(
             modifier = GlanceModifier
-                .width(ScheduleWidgetTheme.ButtonRefreshSize)
-                .height(ScheduleWidgetTheme.ButtonRefreshSize)
+                .width(btnSize)
+                .height(btnSize)
                 .background(ImageProvider(R.drawable.bg_btn_refresh_34))
-                .cornerRadius(17.dp)
+                .cornerRadius(btnSize / 2)
                 .clickable(actionRunCallback<RefreshAction>()),
             contentAlignment = Alignment.Center
         ) {
@@ -105,7 +108,7 @@ fun WidgetHeader(
                 text = "↻",
                 style = TextStyle(
                     color = ColorProvider(ScheduleWidgetTheme.TextPrimary),
-                    fontSize = 16.sp,
+                    fontSize = if (isNarrow) 14.sp else 16.sp,
                     fontWeight = FontWeight.Bold
                 )
             )

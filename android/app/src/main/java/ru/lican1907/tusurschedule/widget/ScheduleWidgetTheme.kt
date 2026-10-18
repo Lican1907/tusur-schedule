@@ -30,26 +30,26 @@ object ScheduleWidgetTheme {
     val ColorCancelled = Color(0xFF9CA3AF)    // Серый (Отмена)
 
     // Dimensions
-    val RadiusContainer = 30.dp
-    val RadiusHero = 22.dp
-    val RadiusCard = 16.dp
-    val RadiusChip = 12.dp
+    val RadiusContainer = 24.dp
+    val RadiusHero = 20.dp
+    val RadiusCard = 14.dp
+    val RadiusChip = 10.dp
     val RadiusBadge = 6.dp
     val ButtonRefreshSize = 34.dp
 
-    val PaddingHorizontal = 16.dp
-    val PaddingVertical = 14.dp
+    val PaddingHorizontal = 12.dp
+    val PaddingVertical = 12.dp
     val SpacingCards = 6.dp
-    val SpacingDays = 16.dp
-    val WidthTimeColumn = 48.dp
+    val SpacingDays = 14.dp
+    val WidthTimeColumn = 44.dp
     val WidthStripe = 3.dp
 
     // Font Sizes
     val FontHeaderStatus = 12.sp
-    val FontHeaderDate = 20.sp
-    val FontHeroTag = 12.sp
-    val FontHeroTitle = 22.sp
-    val FontHeroDetails = 13.sp
+    val FontHeaderDate = 18.sp
+    val FontHeroTag = 11.sp
+    val FontHeroTitle = 18.sp
+    val FontHeroDetails = 12.sp
     val FontDayTitle = 15.sp
     val FontDayCount = 12.sp
     val FontTimeStart = 15.sp

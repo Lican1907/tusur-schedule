@@ -145,7 +145,7 @@ private val RU_LOCALE: Locale = Locale.forLanguageTag("ru")
 fun formatHeaderDate(date: LocalDate): String {
     val dow = date.format(DateTimeFormatter.ofPattern("EEE", RU_LOCALE)).replaceFirstChar { it.uppercase() }
     val d = date.dayOfMonth
-    val m = date.format(DateTimeFormatter.ofPattern("MMMM", RU_LOCALE))
+    val m = date.format(DateTimeFormatter.ofPattern("MMM", RU_LOCALE)).removeSuffix(".")
     return "$dow, $d $m"
 }
 

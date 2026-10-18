@@ -204,9 +204,25 @@ fun PreviewWidget4x4() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .clip(RoundedCornerShape(30.dp))
+            .clip(RoundedCornerShape(24.dp))
             .background(Color(0xBD12141A))
-            .padding(16.dp)
+            .padding(12.dp)
+    ) {
+        Column {
+            PreviewWidget4x2()
+        }
+    }
+}
+
+@Preview(name = "Widget 2x4 Vertical", widthDp = 170, heightDp = 340)
+@Composable
+fun PreviewWidget2x4() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clip(RoundedCornerShape(24.dp))
+            .background(Color(0xBD12141A))
+            .padding(12.dp)
     ) {
         Column {
             PreviewWidget4x2()
