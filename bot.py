@@ -207,24 +207,36 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
         candidate_models: List[str] = []
         # If user explicitly specified a valid model, check it
         env_model = (os.getenv("GEMINI_MODEL") or "").strip().replace("models/", "")
-        if env_model and env_model in available_models and env_model not in ("gemini-2.5-flash", "gemini-2.5"):
+        if env_model and env_model in available_models and not any(bad in env_model for bad in ("2.5-flash", "2.5-pro", "pro-latest", "flash-latest")):
             candidate_models.append(env_model)
 
-        # Prioritize discovered models (prioritize 2.5-pro, pro-latest, flash-latest)
-        if available_models:
-            preferred_order = ["gemini-2.5-pro", "gemini-pro-latest", "gemini-flash-latest", "gemini-2.0-flash", "gemini-1.5-pro"]
-            for pref in preferred_order:
-                for av in available_models:
-                    if pref in av and av not in candidate_models:
-                        candidate_models.append(av)
-            # Add remaining discovered models (except known deprecated 2.5-flash)
+        # Blacklist models that we verified are 404/429/403 for this project
+        blacklist = {"gemini-2.5-flash", "gemini-2.5-pro", "gemini-pro-latest", "gemini-flash-latest", "gemini-flash-lite-latest"}
+
+        # Target active models prioritized by Google Cloud Quota (gemini-3.8-flash is the quota model!)
+        preferred_order = [
+            "gemini-3.8-flash",
+            "gemini-3.5-flash",
+            "gemini-3.1-flash-lite",
+            "gemini-2.5-flash-lite",
+            "gemini-3-flash-preview",
+            "gemini-3.7-flash",
+            "gemini-3.6-flash",
+            "gemini-3.5-flash-lite",
+        ]
+        for pref in preferred_order:
             for av in available_models:
-                if av not in candidate_models and av not in ("gemini-2.5-flash", "gemini-2.5"):
+                if pref == av and av not in candidate_models and av not in blacklist:
                     candidate_models.append(av)
+
+        # Add any other remaining usable models not in blacklist
+        for av in available_models:
+            if av not in candidate_models and av not in blacklist:
+                candidate_models.append(av)
 
         # Static fallbacks if discovery was empty
         if not candidate_models:
-            candidate_models = ["gemini-2.5-pro", "gemini-flash-latest", "gemini-pro-latest", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash"]
+            candidate_models = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-2.5-flash-lite"]
 
         response = None
         last_error = None
@@ -250,7 +262,7 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
                 logger.warning("Gemini model '%s' failed: %s (trying fallback if available)", m, e)
 
         if not response or not response.text:
-            err_msg = "Ошибки при вызове моделей:\n" + "\n".join(errors_summary[:4]) if errors_summary else str(last_error)
+            err_msg = "Ошибки при вызове моделей:\n" + "\n".join(errors_summary[:6]) if errors_summary else str(last_error)
             if available_models:
                 err_msg += f"\n\nВсе доступные модели в проекте:\n`{', '.join(available_models)}`"
             return None, err_msg
