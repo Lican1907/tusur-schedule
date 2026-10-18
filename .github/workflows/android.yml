@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/android-app
     paths:
       - 'android/**'
       - '.github/workflows/android.yml'
@@ -60,7 +61,7 @@ jobs:
 
       - name: Publish Latest APK Release
         uses: softprops/action-gh-release@v2
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/android-app'
         with:
           tag_name: latest-apk
           name: "📱 Android App & Widget (Latest APK)"

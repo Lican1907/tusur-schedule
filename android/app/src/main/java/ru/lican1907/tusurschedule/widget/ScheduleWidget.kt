@@ -43,6 +43,7 @@ import ru.lican1907.tusurschedule.R
 import ru.lican1907.tusurschedule.data.DaySchedule
 import ru.lican1907.tusurschedule.data.LessonItem
 import ru.lican1907.tusurschedule.data.ScheduleRepository
+import ru.lican1907.tusurschedule.data.normalizeSubgroup
 import ru.lican1907.tusurschedule.ui.MainActivity
 import java.time.Duration
 import java.time.LocalDate
@@ -76,6 +77,7 @@ class ScheduleWidget : GlanceAppWidget() {
         val schedule = repo.loadSchedule(forceRefresh = false).getOrNull()
         val selectedPeTeacher = repo.selectedPeTeacher
         val selectedEnglishTeacher = repo.selectedEnglishTeacher
+        val selectedSubgroup = repo.selectedSubgroup
         val groupName = repo.getSelectedGroup().name
 
         provideContent {
@@ -87,7 +89,10 @@ class ScheduleWidget : GlanceAppWidget() {
             val nowDateTime = LocalDateTime.now(ScheduleRepository.TOMSK_ZONE_ID)
 
             val allDays = schedule?.days ?: emptyList()
-            val todayDay = allDays.firstOrNull { it.date == today.toString() }
+            val filteredAllDays = allDays.map { day ->
+                day.copy(lessons = day.lessons.filter { it.matchesSubgroup(selectedSubgroup) })
+            }
+            val todayDay = filteredAllDays.firstOrNull { it.date == today.toString() }
 
             // Consolidated today lessons
             val todayRawLessons = todayDay?.lessons ?: emptyList()
@@ -103,14 +108,22 @@ class ScheduleWidget : GlanceAppWidget() {
                 }
             }
 
+            // Effective beer time for today based on student's active lessons
+            val effectiveBeerTime = todayRawLessons
+                .filter { !it.is_cancelled }
+                .mapNotNull {
+                    try { LocalTime.parse(it.time_end) } catch (_: Exception) { null }
+                }
+                .maxOrNull()?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: todayDay?.beer_time
+
             // Hero lesson detection
             val heroInfo = computeHeroInfo(
                 today = today,
                 todayLessons = todayMerged,
-                allDays = allDays,
+                allDays = filteredAllDays,
                 nowTime = nowTime,
                 nowDateTime = nowDateTime,
-                beerTime = todayDay?.beer_time
+                beerTime = effectiveBeerTime
             )
 
             // Header status string
@@ -124,7 +137,7 @@ class ScheduleWidget : GlanceAppWidget() {
 
             // Upcoming days (2-week window)
             val horizonEnd = today.plusDays(14)
-            val upcomingDays = allDays.filter { day ->
+            val upcomingDays = filteredAllDays.filter { day ->
                 try {
                     val d = LocalDate.parse(day.date)
                     d.isAfter(today) && !d.isAfter(horizonEnd) && day.lessons.isNotEmpty()
@@ -146,7 +159,8 @@ class ScheduleWidget : GlanceAppWidget() {
                     WidgetHeader(
                         statusText = headerStatus,
                         dateText = headerDateStr,
-                        groupName = groupName
+                        groupName = groupName,
+                        selectedSubgroup = selectedSubgroup
                     )
 
                     Spacer(modifier = GlanceModifier.height(10.dp))
@@ -178,7 +192,8 @@ class ScheduleWidget : GlanceAppWidget() {
                                     WidgetLessonCard(
                                         merged = merged,
                                         selectedPeTeacher = selectedPeTeacher,
-                                        selectedEnglishTeacher = selectedEnglishTeacher
+                                        selectedEnglishTeacher = selectedEnglishTeacher,
+                                        selectedSubgroup = selectedSubgroup
                                     )
                                     Spacer(modifier = GlanceModifier.height(ScheduleWidgetTheme.SpacingCards))
                                 }
@@ -203,7 +218,8 @@ class ScheduleWidget : GlanceAppWidget() {
                                     WidgetLessonCard(
                                         merged = merged,
                                         selectedPeTeacher = selectedPeTeacher,
-                                        selectedEnglishTeacher = selectedEnglishTeacher
+                                        selectedEnglishTeacher = selectedEnglishTeacher,
+                                        selectedSubgroup = selectedSubgroup
                                     )
                                     Spacer(modifier = GlanceModifier.height(ScheduleWidgetTheme.SpacingCards))
                                 }
@@ -223,8 +239,16 @@ class ScheduleWidget : GlanceAppWidget() {
     private fun WidgetHeader(
         statusText: String,
         dateText: String,
-        groupName: String
+        groupName: String,
+        selectedSubgroup: String = "ALL"
     ) {
+        val chipText = if (selectedSubgroup.equals("ALL", ignoreCase = true) || selectedSubgroup.isBlank()) {
+            groupName
+        } else {
+            val norm = normalizeSubgroup(selectedSubgroup).ifEmpty { selectedSubgroup }
+            "$groupName · п/г $norm"
+        }
+
         Row(
             modifier = GlanceModifier
                 .fillMaxWidth()
@@ -262,7 +286,7 @@ class ScheduleWidget : GlanceAppWidget() {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = groupName,
+                    text = chipText,
                     style = TextStyle(
                         color = ColorProvider(ScheduleWidgetTheme.TextSecondary),
                         fontSize = 12.sp,
@@ -473,7 +497,8 @@ class ScheduleWidget : GlanceAppWidget() {
     private fun WidgetLessonCard(
         merged: MergedLessonItem,
         selectedPeTeacher: String,
-        selectedEnglishTeacher: String = ""
+        selectedEnglishTeacher: String = "",
+        selectedSubgroup: String = "ALL"
     ) {
         val lesson = merged.lesson
         val typeColor = ScheduleWidgetTheme.getLessonTypeColor(lesson.type, lesson.is_cancelled)
@@ -559,6 +584,24 @@ class ScheduleWidget : GlanceAppWidget() {
                             ) {
                                 Text(
                                     text = "${merged.subgroupCount} подгруппы",
+                                    style = TextStyle(
+                                        color = ColorProvider(ScheduleWidgetTheme.ColorPractice),
+                                        fontSize = ScheduleWidgetTheme.FontBadge,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                            }
+                        } else if (!lesson.subgroup.isNullOrBlank() && (selectedSubgroup.equals("ALL", ignoreCase = true) || selectedSubgroup.isBlank())) {
+                            val subDisplay = normalizeSubgroup(lesson.subgroup).ifEmpty { lesson.subgroup!! }
+                            Spacer(modifier = GlanceModifier.width(6.dp))
+                            Box(
+                                modifier = GlanceModifier
+                                    .background(ImageProvider(R.drawable.bg_subgroup_badge))
+                                    .cornerRadius(ScheduleWidgetTheme.RadiusBadge)
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            ) {
+                                Text(
+                                    text = "п/г $subDisplay",
                                     style = TextStyle(
                                         color = ColorProvider(ScheduleWidgetTheme.ColorPractice),
                                         fontSize = ScheduleWidgetTheme.FontBadge,

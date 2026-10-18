@@ -9,6 +9,7 @@ data class ScheduleResponse(
     val group: String = "",
     val pe_teachers: List<String> = emptyList(),
     val english_teachers: List<String> = emptyList(),
+    val subgroups: List<String> = emptyList(),
     val days: List<DaySchedule> = emptyList()
 )
 
@@ -19,6 +20,15 @@ data class DaySchedule(
     val beer_time: String? = null,
     val lessons: List<LessonItem> = emptyList()
 )
+
+fun normalizeSubgroup(raw: String?): String {
+    if (raw.isNullOrBlank()) return ""
+    return raw.lowercase()
+        .replace("подгруппа", "")
+        .replace("п/г", "")
+        .replace("пг", "")
+        .trim()
+}
 
 @Serializable
 data class LessonItem(
@@ -33,6 +43,7 @@ data class LessonItem(
     val subject_full: String? = null,
     val location: String = "",
     val teacher: String = "",
+    val subgroup: String? = null,
     val color_hex: String = "#2EA043",
     val color_id: String = "10",
     val is_override: Boolean = false,
@@ -46,6 +57,17 @@ data class LessonItem(
             ?: subject_short?.ifEmpty { null }
             ?: subject_full?.ifEmpty { null }
             ?: "Занятие"
+
+    fun matchesSubgroup(selectedSubgroup: String): Boolean {
+        if (selectedSubgroup.isEmpty() || selectedSubgroup.equals("ALL", ignoreCase = true)) {
+            return true
+        }
+        // Если у занятия нет подгруппы — оно общее для всех студентов группы
+        if (subgroup.isNullOrBlank()) {
+            return true
+        }
+        return normalizeSubgroup(subgroup) == normalizeSubgroup(selectedSubgroup)
+    }
 
     fun isEnglishLesson(): Boolean {
         if (!english_rooms.isNullOrEmpty()) return true

@@ -857,6 +857,8 @@ def parse_cell(
 
         color_id = get_color_id_for_type(lesson_type or cell_kind)
         event.add("x-color-id", color_id)
+        if subgroup and str(subgroup).strip():
+            event.add("x-subgroup", str(subgroup).strip())
 
         day_num = day_date.weekday() + 1
         uid_id = lesson_id if lesson_id else f"{pair_num}-{day_num}"
@@ -887,6 +889,7 @@ def parse_cell(
             "subject_full": disc_name,
             "location": clean_loc,
             "teacher": teacher or "",
+            "subgroup": str(subgroup).strip() if (subgroup and str(subgroup).strip()) else None,
             "color_hex": color_hex,
             "is_override": False,
             "is_cancelled": False,
@@ -1216,6 +1219,8 @@ def apply_overrides(
                 new_ev.add("dtstamp", datetime.now(tz))
                 color_id = COLOR_ID_MAPPING.get(ov_type, "10")
                 new_ev.add("x-color-id", color_id)
+                if ov.get("subgroup"):
+                    new_ev.add("x-subgroup", str(ov["subgroup"]).strip())
                 new_uid = f"tusur-override-{ov_id}-{target_date.strftime('%Y%m%d')}@{TIMEZONE_STR}"
                 new_ev.add("uid", new_uid)
 
@@ -1239,6 +1244,7 @@ def apply_overrides(
                     "subject_full": cap_subject,
                     "location": loc.replace("📍", "").strip() if loc else "",
                     "teacher": pe_teacher,
+                    "subgroup": str(ov["subgroup"]).strip() if ov.get("subgroup") else None,
                     "color_hex": COLOR_HEX_MAPPING.get(ov_type, "#2EA043"),
                     "is_override": True,
                     "is_cancelled": False,
@@ -1394,7 +1400,17 @@ def get_event_lesson_data(
         return None
 
     if hasattr(ev, "_lesson_data") and isinstance(ev._lesson_data, dict):
-        return dict(ev._lesson_data)
+        data = dict(ev._lesson_data)
+        if "subgroup" not in data:
+            subgroup_prop = ev.get("x-subgroup")
+            subgroup = str(subgroup_prop).strip() if subgroup_prop else None
+            if not subgroup:
+                desc = str(ev.get("description", ""))
+                m_sub = re.search(r"Подгруппа:\s*(.+)", desc)
+                if m_sub:
+                    subgroup = m_sub.group(1).strip()
+            data["subgroup"] = subgroup.strip() if subgroup else None
+        return data
 
     dtstart_prop = ev.get("dtstart")
     dtend_prop = ev.get("dtend")
@@ -1413,6 +1429,14 @@ def get_event_lesson_data(
 
     location = str(ev.get("location", "")).replace("📍", "").strip()
     description = str(ev.get("description", ""))
+
+    subgroup_prop = ev.get("x-subgroup")
+    subgroup = str(subgroup_prop).strip() if subgroup_prop else None
+    if not subgroup:
+        m_sub = re.search(r"Подгруппа:\s*(.+)", description)
+        if m_sub:
+            subgroup = m_sub.group(1).strip()
+    subgroup_val = subgroup.strip() if subgroup else None
 
     is_cancelled = summary.startswith("❌") or str(ev.get("x-status", "")).upper() == "CANCELLED"
     is_override = summary.startswith("⚡")
@@ -1475,6 +1499,7 @@ def get_event_lesson_data(
         "subject_full": subj_full,
         "location": location,
         "teacher": teacher,
+        "subgroup": subgroup_val,
         "color_hex": color_hex,
         "is_override": is_override,
         "is_cancelled": is_cancelled,
@@ -1493,6 +1518,8 @@ def build_schedule_data(
     - generated_at: ISO-8601 string in Asia/Tomsk timezone
     - group: group name (e.g. '426топ-4')
     - pe_teachers: list of all 11 PE teachers from PE_ROOMS_SCHEDULE
+    - english_teachers: list of default English teachers
+    - subgroups: sorted list of all unique subgroups found in schedule
     - days: list of study days sorted by date YYYY-MM-DD
     """
     # 1. PE teachers list (all 11 teachers, maintaining appearance order)
@@ -1526,6 +1553,7 @@ def build_schedule_data(
             "subject_full": lesson_dict["subject_full"],
             "location": lesson_dict["location"],
             "teacher": lesson_dict["teacher"],
+            "subgroup": lesson_dict.get("subgroup"),
             "color_hex": lesson_dict["color_hex"],
             "is_override": bool(lesson_dict.get("is_override", False)),
             "is_cancelled": bool(lesson_dict.get("is_cancelled", False)),
@@ -1550,11 +1578,14 @@ def build_schedule_data(
             "lessons": day_lessons,
         })
 
+    subgroups = sorted(list({l["subgroup"] for d in days for l in d["lessons"] if l.get("subgroup")}))
+
     return {
         "generated_at": datetime.now(tz).isoformat(),
         "group": group_name,
         "pe_teachers": pe_teachers,
         "english_teachers": DEFAULT_ENGLISH_TEACHERS,
+        "subgroups": subgroups,
         "days": days,
     }
 

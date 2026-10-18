@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Translate
@@ -83,10 +84,12 @@ fun ScheduleScreen() {
     var selectedGroup by remember { mutableStateOf(repository.getSelectedGroup()) }
     var selectedPeTeacher by remember { mutableStateOf(repository.selectedPeTeacher) }
     var selectedEnglishTeacher by remember { mutableStateOf(repository.selectedEnglishTeacher) }
+    var selectedSubgroup by remember { mutableStateOf(repository.selectedSubgroup) }
 
     var groupDropdownExpanded by remember { mutableStateOf(false) }
     var peDropdownExpanded by remember { mutableStateOf(false) }
     var englishDropdownExpanded by remember { mutableStateOf(false) }
+    var subgroupDropdownExpanded by remember { mutableStateOf(false) }
 
     // In-App update state
     var availableUpdate by remember { mutableStateOf<AppUpdateInfo?>(null) }
@@ -139,6 +142,8 @@ fun ScheduleScreen() {
     } else {
         DEFAULT_ENGLISH_TEACHERS
     }
+    val rawSubgroups = scheduleResponse?.subgroups?.filter { it.isNotBlank() } ?: emptyList()
+    val availableSubgroups = if (rawSubgroups.isNotEmpty()) rawSubgroups else listOf("1", "2")
 
     Scaffold(
         topBar = {
@@ -149,65 +154,149 @@ fun ScheduleScreen() {
                     .border(BorderStroke(1.dp, DarkBorder))
                     .padding(horizontal = 16.dp, vertical = 10.dp)
             ) {
-                // Top Row: Group Selector + Refresh Button
+                // Top Row: Group Selector + Subgroup Selector + Refresh Button
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    // Group Selector Dropdown
-                    Box {
-                        Surface(
-                            onClick = { groupDropdownExpanded = true },
-                            shape = RoundedCornerShape(10.dp),
-                            color = DarkSurfaceVariant,
-                            border = BorderStroke(1.dp, DarkBorder)
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        // Group Selector Dropdown
+                        Box {
+                            Surface(
+                                onClick = { groupDropdownExpanded = true },
+                                shape = RoundedCornerShape(10.dp),
+                                color = DarkSurfaceVariant,
+                                border = BorderStroke(1.dp, DarkBorder)
                             ) {
-                                Icon(
-                                    Icons.Default.School,
-                                    contentDescription = null,
-                                    tint = AccentBlue,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    text = selectedGroup.name,
-                                    color = TextPrimary,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                                Icon(
-                                    Icons.Default.ArrowDropDown,
-                                    contentDescription = null,
-                                    tint = TextSecondary
-                                )
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        Icons.Default.School,
+                                        contentDescription = null,
+                                        tint = AccentBlue,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = selectedGroup.name,
+                                        color = TextPrimary,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                    Icon(
+                                        Icons.Default.ArrowDropDown,
+                                        contentDescription = null,
+                                        tint = TextSecondary
+                                    )
+                                }
+                            }
+
+                            DropdownMenu(
+                                expanded = groupDropdownExpanded,
+                                onDismissRequest = { groupDropdownExpanded = false },
+                                modifier = Modifier.background(DarkSurface)
+                            ) {
+                                SUPPORTED_GROUPS.forEach { grp ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(
+                                                text = grp.name,
+                                                color = if (grp.id == selectedGroup.id) AccentBlue else TextPrimary
+                                            )
+                                        },
+                                        onClick = {
+                                            selectedGroup = grp
+                                            repository.selectedGroupId = grp.id
+                                            groupDropdownExpanded = false
+                                            refreshSchedule(force = true)
+                                        }
+                                    )
+                                }
                             }
                         }
 
-                        DropdownMenu(
-                            expanded = groupDropdownExpanded,
-                            onDismissRequest = { groupDropdownExpanded = false },
-                            modifier = Modifier.background(DarkSurface)
-                        ) {
-                            SUPPORTED_GROUPS.forEach { grp ->
+                        // Subgroup Selector Dropdown
+                        Box {
+                            Surface(
+                                onClick = { subgroupDropdownExpanded = true },
+                                shape = RoundedCornerShape(10.dp),
+                                color = DarkSurfaceVariant,
+                                border = BorderStroke(1.dp, DarkBorder)
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        Icons.Default.Groups,
+                                        contentDescription = null,
+                                        tint = AccentPurple,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    val chipText = if (selectedSubgroup.equals("ALL", ignoreCase = true) || selectedSubgroup.isEmpty()) {
+                                        "Все п/г"
+                                    } else {
+                                        val norm = normalizeSubgroup(selectedSubgroup).ifEmpty { selectedSubgroup }
+                                        "п/г $norm"
+                                    }
+                                    Text(
+                                        text = chipText,
+                                        color = TextPrimary,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                    Icon(
+                                        Icons.Default.ArrowDropDown,
+                                        contentDescription = null,
+                                        tint = TextSecondary
+                                    )
+                                }
+                            }
+
+                            DropdownMenu(
+                                expanded = subgroupDropdownExpanded,
+                                onDismissRequest = { subgroupDropdownExpanded = false },
+                                modifier = Modifier.background(DarkSurface)
+                            ) {
                                 DropdownMenuItem(
                                     text = {
                                         Text(
-                                            text = grp.name,
-                                            color = if (grp.id == selectedGroup.id) AccentBlue else TextPrimary
+                                            text = "Все подгруппы",
+                                            color = if (selectedSubgroup.equals("ALL", ignoreCase = true) || selectedSubgroup.isEmpty()) AccentPurple else TextPrimary
                                         )
                                     },
                                     onClick = {
-                                        selectedGroup = grp
-                                        repository.selectedGroupId = grp.id
-                                        groupDropdownExpanded = false
-                                        refreshSchedule(force = true)
+                                        selectedSubgroup = "ALL"
+                                        repository.selectedSubgroup = "ALL"
+                                        subgroupDropdownExpanded = false
+                                        scope.launch { ScheduleWidget().updateAll(context) }
                                     }
                                 )
+                                availableSubgroups.forEach { sub ->
+                                    val norm = normalizeSubgroup(sub).ifEmpty { sub }
+                                    val isChosen = normalizeSubgroup(selectedSubgroup) == norm
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(
+                                                text = "Подгруппа $norm",
+                                                color = if (isChosen) AccentPurple else TextPrimary
+                                            )
+                                        },
+                                        onClick = {
+                                            selectedSubgroup = sub
+                                            repository.selectedSubgroup = sub
+                                            subgroupDropdownExpanded = false
+                                            scope.launch { ScheduleWidget().updateAll(context) }
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
@@ -435,9 +524,15 @@ fun ScheduleScreen() {
                 }
             }
 
+            val filteredLessons = currentDaySchedule?.lessons?.filter { it.matchesSubgroup(selectedSubgroup) } ?: emptyList()
+            val effectiveBeerTime = filteredLessons.filter { !it.is_cancelled }.mapNotNull {
+                try { LocalTime.parse(it.time_end) } catch (_: Exception) { null }
+            }.maxOrNull()?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: currentDaySchedule?.beer_time
+            val displayDaySchedule = currentDaySchedule?.copy(lessons = filteredLessons, beer_time = effectiveBeerTime)
+
             // Live Day Status Banner (Active Lesson Timer / Beer Banner)
-            if (currentDaySchedule != null) {
-                LiveDayBanner(day = currentDaySchedule)
+            if (displayDaySchedule != null) {
+                LiveDayBanner(day = displayDaySchedule)
             }
 
             // Lessons List
@@ -448,7 +543,7 @@ fun ScheduleScreen() {
                 ) {
                     CircularProgressIndicator(color = AccentPurple)
                 }
-            } else if (currentDaySchedule == null || currentDaySchedule.lessons.isEmpty()) {
+            } else if (displayDaySchedule == null || displayDaySchedule.lessons.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -489,12 +584,13 @@ fun ScheduleScreen() {
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     contentPadding = PaddingValues(bottom = 24.dp)
                 ) {
-                    items(currentDaySchedule.lessons) { lesson ->
+                    items(displayDaySchedule.lessons) { lesson ->
                         LessonCard(
                             lesson = lesson,
                             selectedPeTeacher = selectedPeTeacher,
                             selectedEnglishTeacher = selectedEnglishTeacher,
-                            dateStr = selectedDateStr
+                            dateStr = selectedDateStr,
+                            showSubgroupBadge = selectedSubgroup.equals("ALL", ignoreCase = true)
                         )
                     }
                 }
@@ -709,7 +805,8 @@ fun LessonCard(
     lesson: LessonItem,
     selectedPeTeacher: String?,
     selectedEnglishTeacher: String? = null,
-    dateStr: String? = null
+    dateStr: String? = null,
+    showSubgroupBadge: Boolean = false
 ) {
     val (cardBrush, cardBorderColor) = getLessonBrushAndBorder(lesson)
     val resolvedAud = lesson.getResolvedLocation(selectedPeTeacher, selectedEnglishTeacher, dateStr)
@@ -781,19 +878,40 @@ fun LessonCard(
                         modifier = Modifier.weight(1f, fill = false)
                     )
 
-                    if (lesson.is_shifted_time) {
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = Color(0x33D29922)
-                        ) {
-                            Text(
-                                text = "⚠️ Сдвиг 12:30",
-                                color = AccentAmber,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (!lesson.subgroup.isNullOrBlank() && showSubgroupBadge) {
+                            val subDisplay = normalizeSubgroup(lesson.subgroup).ifEmpty { lesson.subgroup!! }
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = Color(0x3358A6FF),
+                                border = BorderStroke(1.dp, Color(0x6658A6FF))
+                            ) {
+                                Text(
+                                    text = "п/г $subDisplay",
+                                    color = AccentBlue,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+
+                        if (lesson.is_shifted_time) {
+                            Surface(
+                                shape = RoundedCornerShape(6.dp),
+                                color = Color(0x33D29922)
+                            ) {
+                                Text(
+                                    text = "⚠️ Сдвиг 12:30",
+                                    color = AccentAmber,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
                         }
                     }
                 }
