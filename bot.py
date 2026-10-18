@@ -13,8 +13,10 @@ import logging
 import os
 import re
 import sys
+import threading
 import uuid
 from datetime import datetime
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Any, Dict, List, Optional
 from zoneinfo import ZoneInfo
 
@@ -652,9 +654,49 @@ async def callback_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
 
 # ---------------------------------------------------------------------------
+# Cloud / Render Health Check HTTP Server
+# ---------------------------------------------------------------------------
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    """Simple HTTP handler responding 200 OK to keep Render/cloud services alive."""
+
+    def do_GET(self) -> None:
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.end_headers()
+        self.wfile.write(b'{"status":"ok","service":"tusur-schedule-bot"}\n')
+
+    def do_HEAD(self) -> None:
+        self.send_response(200)
+        self.end_headers()
+
+    def log_message(self, format: str, *args: Any) -> None:
+        # Suppress routine health check log noise
+        pass
+
+
+def start_health_check_server(port: int) -> None:
+    """Spawns background HTTP server on specified port for cloud health checks."""
+    try:
+        server = HTTPServer(("0.0.0.0", port), HealthCheckHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        logger.info("Health-check server running on 0.0.0.0:%d (Render / Cloud)", port)
+    except Exception as e:
+        logger.warning("Failed to start health-check server on port %d: %s", port, e)
+
+
+# ---------------------------------------------------------------------------
 # Bot Startup
 # ---------------------------------------------------------------------------
 def main() -> None:
+    # If running in cloud environment (Render, Railway, Fly.io) with assigned PORT
+    port_env = os.getenv("PORT")
+    if port_env:
+        try:
+            start_health_check_server(int(port_env))
+        except ValueError:
+            logger.warning("Invalid PORT environment variable: %s", port_env)
+
     token = os.getenv("TELEGRAM_BOT_TOKEN")
     if not token:
         logger.error("TELEGRAM_BOT_TOKEN environment variable is not set!")
