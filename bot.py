@@ -194,42 +194,37 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
             for item in client.models.list():
                 actions = getattr(item, "supported_actions", None) or []
                 m_name = (item.name or "").replace("models/", "")
+                # Exclude audio/TTS, computer-use preview, image generation, embeddings
+                if any(bad in m_name.lower() for bad in ["tts", "computer-use", "imagen", "embed", "aqa"]):
+                    continue
                 if not actions or "generateContent" in actions:
                     if "gemini" in m_name.lower():
                         available_models.append(m_name)
-            logger.info("Found %d models supporting generateContent: %s", len(available_models), available_models)
+            logger.info("Usable models discovered in project: %s", available_models)
         except Exception as e:
             logger.warning("Could not list models via client.models.list(): %s", e)
 
         candidate_models: List[str] = []
-        # If user explicitly specified a valid model, put it first
+        # If user explicitly specified a valid model, check it
         env_model = (os.getenv("GEMINI_MODEL") or "").strip().replace("models/", "")
-        if env_model and env_model not in ("gemini-2.5-flash", "gemini-2.5"):
+        if env_model and env_model in available_models and env_model not in ("gemini-2.5-flash", "gemini-2.5"):
             candidate_models.append(env_model)
 
-        # Prioritize discovered models with flash/pro
+        # Prioritize discovered models (prioritize 2.5-pro, pro-latest, flash-latest)
         if available_models:
-            preferred_order = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-1.5-pro"]
+            preferred_order = ["gemini-2.5-pro", "gemini-pro-latest", "gemini-flash-latest", "gemini-2.0-flash", "gemini-1.5-pro"]
             for pref in preferred_order:
                 for av in available_models:
                     if pref in av and av not in candidate_models:
                         candidate_models.append(av)
+            # Add remaining discovered models (except known deprecated 2.5-flash)
             for av in available_models:
-                if av not in candidate_models:
+                if av not in candidate_models and av not in ("gemini-2.5-flash", "gemini-2.5"):
                     candidate_models.append(av)
 
         # Static fallbacks if discovery was empty
-        for fallback in [
-            "gemini-2.0-flash",
-            "gemini-2.0-flash-exp",
-            "gemini-1.5-flash-latest",
-            "gemini-1.5-flash-002",
-            "gemini-1.5-flash-001",
-            "gemini-1.5-flash",
-            "gemini-1.5-pro",
-        ]:
-            if fallback not in candidate_models:
-                candidate_models.append(fallback)
+        if not candidate_models:
+            candidate_models = ["gemini-2.5-pro", "gemini-flash-latest", "gemini-pro-latest", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash"]
 
         response = None
         last_error = None
@@ -251,13 +246,13 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
                     break
             except Exception as e:
                 last_error = e
-                errors_summary.append(f"{m}: {e}")
+                errors_summary.append(f"• `{m}`: {str(e)[:160]}")
                 logger.warning("Gemini model '%s' failed: %s (trying fallback if available)", m, e)
 
         if not response or not response.text:
-            err_msg = str(last_error) if last_error else "Пустой ответ от Gemini API"
+            err_msg = "Ошибки при вызове моделей:\n" + "\n".join(errors_summary[:4]) if errors_summary else str(last_error)
             if available_models:
-                err_msg += f"\n\nДоступные в проекте модели: {', '.join(available_models[:8])}"
+                err_msg += f"\n\nВсе доступные модели в проекте:\n`{', '.join(available_models)}`"
             return None, err_msg
 
         raw_json = response.text
@@ -578,9 +573,9 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 "Проверьте, что ключ скопирован полностью и без лишних кавычек или пробелов."
             )
 
-        clean_err = (err_msg or "Неизвестная ошибка")[:400]
+        clean_err = (err_msg or "Неизвестная ошибка")[:1500]
         await progress_msg.edit_text(
-            f"❌ *Ошибка при обращении к Gemini API:*\n`{clean_err}`{help_tip}",
+            f"❌ *Ошибка при обращении к Gemini API:*\n{clean_err}{help_tip}",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
