@@ -188,19 +188,52 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
 5. Игнорируй постороннюю информацию: оценки, результаты тестов, дедлайны домашних заданий, вопросы студентов. Если в сообщении нет изменений расписания, ставь has_changes = false.
 """
 
-        preferred_model = (os.getenv("GEMINI_MODEL") or "gemini-3.8-flash").strip()
-        # Automatically migrate deprecated model names
-        if preferred_model in ("gemini-2.5-flash", "gemini-2.5", "gemini-2.5-flash-latest"):
-            preferred_model = "gemini-3.8-flash"
+        # Dynamically discover available models from user's Google AI project
+        available_models: List[str] = []
+        try:
+            for item in client.models.list():
+                actions = getattr(item, "supported_actions", None) or []
+                m_name = (item.name or "").replace("models/", "")
+                if not actions or "generateContent" in actions:
+                    if "gemini" in m_name.lower():
+                        available_models.append(m_name)
+            logger.info("Found %d models supporting generateContent: %s", len(available_models), available_models)
+        except Exception as e:
+            logger.warning("Could not list models via client.models.list(): %s", e)
 
-        candidate_models = [preferred_model]
-        for fallback in ["gemini-3.8-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
+        candidate_models: List[str] = []
+        # If user explicitly specified a valid model, put it first
+        env_model = (os.getenv("GEMINI_MODEL") or "").strip().replace("models/", "")
+        if env_model and env_model not in ("gemini-2.5-flash", "gemini-2.5"):
+            candidate_models.append(env_model)
+
+        # Prioritize discovered models with flash/pro
+        if available_models:
+            preferred_order = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-1.5-pro"]
+            for pref in preferred_order:
+                for av in available_models:
+                    if pref in av and av not in candidate_models:
+                        candidate_models.append(av)
+            for av in available_models:
+                if av not in candidate_models:
+                    candidate_models.append(av)
+
+        # Static fallbacks if discovery was empty
+        for fallback in [
+            "gemini-2.0-flash",
+            "gemini-2.0-flash-exp",
+            "gemini-1.5-flash-latest",
+            "gemini-1.5-flash-002",
+            "gemini-1.5-flash-001",
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
+        ]:
             if fallback not in candidate_models:
                 candidate_models.append(fallback)
 
         response = None
         last_error = None
-        errors_summary = []
+        errors_summary: List[str] = []
         for m in candidate_models:
             try:
                 response = client.models.generate_content(
@@ -223,6 +256,8 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
 
         if not response or not response.text:
             err_msg = str(last_error) if last_error else "Пустой ответ от Gemini API"
+            if available_models:
+                err_msg += f"\n\nДоступные в проекте модели: {', '.join(available_models[:8])}"
             return None, err_msg
 
         raw_json = response.text
