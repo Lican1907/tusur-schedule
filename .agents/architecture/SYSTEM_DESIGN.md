@@ -62,6 +62,33 @@ flowchart TD
 | **Android App** | `android/` | Kotlin, Jetpack Compose, Glance Widget, WorkManager | `schedule-*.json` по сети | Мобильное отображение, интерактивный виджет на рабочем столе, автообновление |
 | **CI/CD** | `.github/workflows/` | GitHub Actions | Git, Python, Gradle | Периодический парсинг по cron и релизные сборки APK |
 
+### 3.1. Компонентная структура Android-клиента (`android/app/.../`)
+
+Для обеспечения быстродействия AI-агентов монолитные файлы декомпозированы на независимые слои:
+* **`data/`**:
+  - `ScheduleModels.kt`: модели данных (строго синхронизированы с `schedule.json`).
+  - `ScheduleRepository.kt`: сетевой клиент, кэширование в `filesDir`, выбор групп и подгрупп.
+  - `AppUpdateManager.kt`: проверка обновлений APK через GitHub Releases.
+* **`worker/`**:
+  - `ScheduleSyncWorker.kt`: периодический воркер WorkManager для фонового обновления расписания и виджета.
+* **`ui/` (Jetpack Compose)**:
+  - `MainActivity.kt`: точка входа (`ComponentActivity`), настройка темы и старт воркера.
+  - `ScheduleScreen.kt`: верхнеуровневый экран с управлением состоянием и координацией запросов.
+  - `components/ScheduleTopBar.kt`: верхняя панель (селектор группы, подгруппы, преподавателей, кнопка обновления).
+  - `components/DateStrip.kt`: горизонтальный селектор дней недели.
+  - `components/LiveDayBanner.kt`: баннер текущей пары с таймером и прогрессом / статус завершения дня (пиво).
+  - `components/LessonCard.kt`: карточка пары с градиентами, аудиторией, бейджем подгруппы и оверрайдами.
+  - `components/UpdateDialog.kt`: диалог предложения обновления APK и прогресс скачивания.
+* **`widget/` (Jetpack Glance)**:
+  - `ScheduleWidget.kt`: GlanceAppWidget и GlanceAppWidgetReceiver.
+  - `ScheduleWidgetModels.kt`: внутренние модели состояния виджета (`HeroInfo`, `MergedLessonItem`).
+  - `ScheduleWidgetUtils.kt`: чистые функции форматирования и калькуляции (статусы, hero-пара, объединение подгрупп).
+  - `components/WidgetHeader.kt`: заголовок виджета (статус, дата, чип группы, кнопка обновления).
+  - `components/WidgetHeroCard.kt`: главная карточка идущей пары или отдыха.
+  - `components/WidgetDayHeader.kt`: плашка предстоящего дня.
+  - `components/WidgetLessonCard.kt`: карточка отдельного занятия.
+
+
 ---
 
 ## 4. Контракты данных (Data Contracts)
