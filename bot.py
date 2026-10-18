@@ -145,7 +145,10 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
         from google import genai
         from google.genai import types
 
-        client = genai.Client(api_key=api_key)
+        client = genai.Client(
+            api_key=api_key,
+            http_options=types.HttpOptions(timeout=20.0),
+        )
         now_tomsk = datetime.now(TIMEZONE)
         today_str = now_tomsk.strftime("%Y-%m-%d")
         weekday_name = DAYS_RU[now_tomsk.weekday()]
@@ -205,12 +208,6 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
             logger.warning("Could not list models via client.models.list(): %s", e)
 
         candidate_models: List[str] = []
-        # If user explicitly specified a valid model, check it
-        env_model = (os.getenv("GEMINI_MODEL") or "").strip().replace("models/", "")
-        if env_model and env_model in available_models and not any(bad in env_model for bad in ("2.5-flash", "2.5-pro", "pro-latest", "flash-latest")):
-            candidate_models.append(env_model)
-
-        # Blacklist models that we verified are 404/429/403 for this project
         blacklist = {"gemini-2.5-flash", "gemini-2.5-pro", "gemini-pro-latest", "gemini-flash-latest", "gemini-flash-lite-latest"}
 
         # Target active models prioritized by Google Cloud Quota (gemini-3.8-flash is the quota model!)
@@ -221,22 +218,19 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
             "gemini-2.5-flash-lite",
             "gemini-3-flash-preview",
             "gemini-3.7-flash",
-            "gemini-3.6-flash",
-            "gemini-3.5-flash-lite",
         ]
         for pref in preferred_order:
             for av in available_models:
                 if pref == av and av not in candidate_models and av not in blacklist:
                     candidate_models.append(av)
-
-        # Add any other remaining usable models not in blacklist
-        for av in available_models:
-            if av not in candidate_models and av not in blacklist:
-                candidate_models.append(av)
+                    if len(candidate_models) >= 3:
+                        break
+            if len(candidate_models) >= 3:
+                break
 
         # Static fallbacks if discovery was empty
         if not candidate_models:
-            candidate_models = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-2.5-flash-lite"]
+            candidate_models = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite"]
 
         response = None
         last_error = None
@@ -566,7 +560,7 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     progress_msg = await update.effective_message.reply_text("🧠 Анализирую сообщение через Gemini API...")
 
-    analysis, err_msg = analyze_message_with_gemini(text)
+    analysis, err_msg = await asyncio.to_thread(analyze_message_with_gemini, text)
     if not analysis:
         help_tip = ""
         if err_msg and ("disabled" in err_msg.lower() or "has not been used" in err_msg.lower() or "PERMISSION_DENIED" in err_msg):
@@ -586,11 +580,24 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             )
 
         clean_err = (err_msg or "Неизвестная ошибка")[:1500]
-        await progress_msg.edit_text(
-            f"❌ *Ошибка при обращении к Gemini API:*\n{clean_err}{help_tip}",
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True,
-        )
+        try:
+            await progress_msg.edit_text(
+                f"❌ *Ошибка при обращении к Gemini API:*\n```\n{clean_err}\n```{help_tip}",
+                parse_mode=ParseMode.MARKDOWN,
+                disable_web_page_preview=True,
+            )
+        except Exception as edit_err:
+            logger.warning("Failed to edit with markdown, falling back to plain text: %s", edit_err)
+            try:
+                await progress_msg.edit_text(
+                    f"❌ Ошибка при обращении к Gemini API:\n\n{clean_err}\n\n{help_tip}",
+                    parse_mode=None,
+                )
+            except Exception:
+                await update.effective_message.reply_text(
+                    f"❌ Ошибка при обращении к Gemini API:\n\n{clean_err}",
+                    parse_mode=None,
+                )
         return
 
     if not analysis.has_changes or not analysis.overrides:
