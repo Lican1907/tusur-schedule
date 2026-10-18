@@ -133,12 +133,13 @@ async def reject_unauthorized(update: Update) -> None:
 # ---------------------------------------------------------------------------
 # Gemini AI Analysis
 # ---------------------------------------------------------------------------
-def analyze_message_with_gemini(text: str) -> Optional[TeacherMessageAnalysis]:
-    """Analyzes teacher message text using Gemini 2.5 Flash Structured Outputs."""
-    api_key = os.getenv("GEMINI_API_KEY")
+def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnalysis], Optional[str]]:
+    """Analyzes teacher message text using Gemini Structured Outputs. Returns (analysis, error_message)."""
+    raw_api_key = os.getenv("GEMINI_API_KEY")
+    api_key = (raw_api_key or "").strip().strip('"').strip("'")
     if not api_key:
         logger.error("GEMINI_API_KEY is not set in environment")
-        return None
+        return None, "GEMINI_API_KEY не задан в переменных окружения."
 
     try:
         from google import genai
@@ -175,9 +176,10 @@ def analyze_message_with_gemini(text: str) -> Optional[TeacherMessageAnalysis]:
 - История России -> История
 - Математика -> Математика
 - Информатика -> Информатика
+- Основы искусственного интеллекта / ОИИ -> ОИИ
 
 Правила извлечения:
-1. Вычисляй точные даты YYYY-MM-DD для относительных выражений: "сегодня", "завтра", "в эту среду", "в четверг 15-го" относительно {today_str}.
+1. Вычисляй точные даты YYYY-MM-DD для относительных выражений: "сегодня", "завтра", "в эту среду", "в четверг 15-го", "18.10" относительно {today_str}.
 2. Если занятие отменено: action = "cancel". Если время не указано, time_start = null.
 3. Если пара заменяется на другую:
    - Создай action = "set" для новой пары.
@@ -186,9 +188,9 @@ def analyze_message_with_gemini(text: str) -> Optional[TeacherMessageAnalysis]:
 5. Игнорируй постороннюю информацию: оценки, результаты тестов, дедлайны домашних заданий, вопросы студентов. Если в сообщении нет изменений расписания, ставь has_changes = false.
 """
 
-        preferred_model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+        preferred_model = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
         candidate_models = [preferred_model]
-        for fallback in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
+        for fallback in ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.5-flash"]:
             if fallback not in candidate_models:
                 candidate_models.append(fallback)
 
@@ -214,17 +216,16 @@ def analyze_message_with_gemini(text: str) -> Optional[TeacherMessageAnalysis]:
                 logger.warning("Gemini model '%s' failed: %s (trying fallback if available)", m, e)
 
         if not response or not response.text:
-            if last_error:
-                raise last_error
-            return None
+            err_msg = str(last_error) if last_error else "Пустой ответ от Gemini API"
+            return None, err_msg
 
         raw_json = response.text
         data = json.loads(raw_json)
         analysis = TeacherMessageAnalysis(**data)
-        return analysis
+        return analysis, None
     except Exception as e:
         logger.exception("Failed to analyze message with Gemini: %s", e)
-        return None
+        return None, str(e)
 
 
 # ---------------------------------------------------------------------------
@@ -517,9 +518,31 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     progress_msg = await update.effective_message.reply_text("🧠 Анализирую сообщение через Gemini API...")
 
-    analysis = analyze_message_with_gemini(text)
+    analysis, err_msg = analyze_message_with_gemini(text)
     if not analysis:
-        await progress_msg.edit_text("❌ Ошибка при обращении к Gemini API. Проверьте логи бота.")
+        help_tip = ""
+        if err_msg and ("disabled" in err_msg.lower() or "has not been used" in err_msg.lower() or "PERMISSION_DENIED" in err_msg):
+            help_tip = (
+                "\n\n🔑 *Как исправить:*\n"
+                "В вашем Google Cloud проекте не включен *Generative Language API*.\n"
+                "1. Откройте страницу [Включить Generative Language API](https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com)\n"
+                "2. Убедитесь, что выбран ваш проект в шапке.\n"
+                "3. Нажмите синюю кнопку **«Включить» (Enable)**.\n"
+                "4. После включения повторите отправку сообщения."
+            )
+        elif err_msg and ("API_KEY_INVALID" in err_msg or "API key not valid" in err_msg):
+            help_tip = (
+                "\n\n🔑 *Как исправить:*\n"
+                "Указан недействительный `GEMINI_API_KEY` в переменных окружения Render.\n"
+                "Проверьте, что ключ скопирован полностью и без лишних кавычек или пробелов."
+            )
+
+        clean_err = (err_msg or "Неизвестная ошибка")[:400]
+        await progress_msg.edit_text(
+            f"❌ *Ошибка при обращении к Gemini API:*\n`{clean_err}`{help_tip}",
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
         return
 
     if not analysis.has_changes or not analysis.overrides:
