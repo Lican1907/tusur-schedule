@@ -137,11 +137,7 @@ fun ScheduleScreen() {
     val days = scheduleResponse?.days ?: emptyList()
     val currentDaySchedule = days.firstOrNull { it.date == selectedDateStr }
     val peTeachers = scheduleResponse?.pe_teachers ?: emptyList()
-    val englishTeachers = if (scheduleResponse?.english_teachers?.isNotEmpty() == true) {
-        scheduleResponse.english_teachers
-    } else {
-        DEFAULT_ENGLISH_TEACHERS
-    }
+    val englishTeachers = scheduleResponse?.english_teachers?.takeIf { it.isNotEmpty() } ?: DEFAULT_ENGLISH_TEACHERS
     val rawSubgroups = scheduleResponse?.subgroups?.filter { it.isNotBlank() } ?: emptyList()
     val availableSubgroups = if (rawSubgroups.isNotEmpty()) rawSubgroups else listOf("1", "2")
 
