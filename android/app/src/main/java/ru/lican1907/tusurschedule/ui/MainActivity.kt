@@ -449,7 +449,6 @@ fun ScheduleScreen() {
                     }
                 }
             }
-        }
         },
         containerColor = DarkBackground
     ) { innerPadding ->
