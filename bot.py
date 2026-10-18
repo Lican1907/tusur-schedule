@@ -188,14 +188,19 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
 5. Игнорируй постороннюю информацию: оценки, результаты тестов, дедлайны домашних заданий, вопросы студентов. Если в сообщении нет изменений расписания, ставь has_changes = false.
 """
 
-        preferred_model = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+        preferred_model = (os.getenv("GEMINI_MODEL") or "gemini-3.8-flash").strip()
+        # Automatically migrate deprecated model names
+        if preferred_model in ("gemini-2.5-flash", "gemini-2.5", "gemini-2.5-flash-latest"):
+            preferred_model = "gemini-3.8-flash"
+
         candidate_models = [preferred_model]
-        for fallback in ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.5-flash"]:
+        for fallback in ["gemini-3.8-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
             if fallback not in candidate_models:
                 candidate_models.append(fallback)
 
         response = None
         last_error = None
+        errors_summary = []
         for m in candidate_models:
             try:
                 response = client.models.generate_content(
@@ -213,6 +218,7 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
                     break
             except Exception as e:
                 last_error = e
+                errors_summary.append(f"{m}: {e}")
                 logger.warning("Gemini model '%s' failed: %s (trying fallback if available)", m, e)
 
         if not response or not response.text:
