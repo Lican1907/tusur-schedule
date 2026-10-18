@@ -147,7 +147,7 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
 
         client = genai.Client(
             api_key=api_key,
-            http_options=types.HttpOptions(timeout=20.0),
+            http_options=types.HttpOptions(timeout=60.0),
         )
         now_tomsk = datetime.now(TIMEZONE)
         today_str = now_tomsk.strftime("%Y-%m-%d")
@@ -191,46 +191,21 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
 5. Игнорируй постороннюю информацию: оценки, результаты тестов, дедлайны домашних заданий, вопросы студентов. Если в сообщении нет изменений расписания, ставь has_changes = false.
 """
 
-        # Dynamically discover available models from user's Google AI project
-        available_models: List[str] = []
+        # Primary quota model verified in Google Cloud Console
+        candidate_models = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite"]
+
+        # Build config with thinking_budget=0 for instant response (no 20s thinking delay)
+        config_kwargs: Dict[str, Any] = {
+            "response_mime_type": "application/json",
+            "response_schema": TeacherMessageAnalysis,
+            "system_instruction": system_instruction,
+            "temperature": 0.1,
+        }
         try:
-            for item in client.models.list():
-                actions = getattr(item, "supported_actions", None) or []
-                m_name = (item.name or "").replace("models/", "")
-                # Exclude audio/TTS, computer-use preview, image generation, embeddings
-                if any(bad in m_name.lower() for bad in ["tts", "computer-use", "imagen", "embed", "aqa"]):
-                    continue
-                if not actions or "generateContent" in actions:
-                    if "gemini" in m_name.lower():
-                        available_models.append(m_name)
-            logger.info("Usable models discovered in project: %s", available_models)
-        except Exception as e:
-            logger.warning("Could not list models via client.models.list(): %s", e)
-
-        candidate_models: List[str] = []
-        blacklist = {"gemini-2.5-flash", "gemini-2.5-pro", "gemini-pro-latest", "gemini-flash-latest", "gemini-flash-lite-latest"}
-
-        # Target active models prioritized by Google Cloud Quota (gemini-3.8-flash is the quota model!)
-        preferred_order = [
-            "gemini-3.8-flash",
-            "gemini-3.5-flash",
-            "gemini-3.1-flash-lite",
-            "gemini-2.5-flash-lite",
-            "gemini-3-flash-preview",
-            "gemini-3.7-flash",
-        ]
-        for pref in preferred_order:
-            for av in available_models:
-                if pref == av and av not in candidate_models and av not in blacklist:
-                    candidate_models.append(av)
-                    if len(candidate_models) >= 3:
-                        break
-            if len(candidate_models) >= 3:
-                break
-
-        # Static fallbacks if discovery was empty
-        if not candidate_models:
-            candidate_models = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-3.1-flash-lite"]
+            config_kwargs["thinking_config"] = types.ThinkingConfig(thinking_budget=0)
+        except Exception:
+            pass
+        gen_config = types.GenerateContentConfig(**config_kwargs)
 
         response = None
         last_error = None
@@ -240,12 +215,7 @@ def analyze_message_with_gemini(text: str) -> tuple[Optional[TeacherMessageAnaly
                 response = client.models.generate_content(
                     model=m,
                     contents=text,
-                    config=types.GenerateContentConfig(
-                        response_mime_type="application/json",
-                        response_schema=TeacherMessageAnalysis,
-                        system_instruction=system_instruction,
-                        temperature=0.1,
-                    ),
+                    config=gen_config,
                 )
                 if response and response.text:
                     logger.info("Successfully analyzed message using Gemini model: %s", m)
