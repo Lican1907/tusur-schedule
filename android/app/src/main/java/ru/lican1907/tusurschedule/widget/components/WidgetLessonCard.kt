@@ -120,7 +120,7 @@ fun WidgetLessonCard(
                             Text(
                                 text = "${item.subgroupCount} подгруппы",
                                 style = TextStyle(
-                                    color = ColorProvider(ScheduleWidgetTheme.ColorPractice),
+                                    color = ColorProvider(ScheduleWidgetTheme.TextSecondary),
                                     fontSize = ScheduleWidgetTheme.FontBadge,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -138,7 +138,7 @@ fun WidgetLessonCard(
                             Text(
                                 text = "п/г $subDisplay",
                                 style = TextStyle(
-                                    color = ColorProvider(ScheduleWidgetTheme.ColorPractice),
+                                    color = ColorProvider(ScheduleWidgetTheme.TextSecondary),
                                     fontSize = ScheduleWidgetTheme.FontBadge,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -149,21 +149,33 @@ fun WidgetLessonCard(
 
                 Spacer(modifier = GlanceModifier.height(2.dp))
 
-                val detailsStr = buildString {
-                    append(typeFullName)
+                Row(
+                    modifier = GlanceModifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = typeFullName,
+                        style = TextStyle(
+                            color = ColorProvider(typeColor),
+                            fontSize = ScheduleWidgetTheme.FontDetails,
+                            fontWeight = FontWeight.Medium
+                        ),
+                        maxLines = 1
+                    )
+
                     if (resolvedLoc.isNotEmpty()) {
-                        append("  •  📍 $resolvedLoc")
+                        Spacer(modifier = GlanceModifier.width(8.dp))
+                        Text(
+                            text = "📍 $resolvedLoc",
+                            style = TextStyle(
+                                color = ColorProvider(ScheduleWidgetTheme.TextMuted),
+                                fontSize = ScheduleWidgetTheme.FontDetails,
+                                fontWeight = FontWeight.Normal
+                            ),
+                            maxLines = 1
+                        )
                     }
                 }
-
-                Text(
-                    text = detailsStr,
-                    style = TextStyle(
-                        color = ColorProvider(ScheduleWidgetTheme.TextSecondary),
-                        fontSize = ScheduleWidgetTheme.FontDetails
-                    ),
-                    maxLines = 1
-                )
             }
         }
     }

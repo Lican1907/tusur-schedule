@@ -125,13 +125,13 @@ fun WidgetHeroCard(
 
             Spacer(modifier = GlanceModifier.height(4.dp))
 
-            // Line 3: Details (Time • Location • Type)
+            // Line 3: Details (Time   Location   Type)
             val details = buildString {
-                append("${lesson.time_start}–${lesson.time_end}")
+                append("🕒 ${lesson.time_start}–${lesson.time_end}")
                 if (resolvedLoc.isNotEmpty()) {
-                    append("  •  📍 $resolvedLoc")
+                    append("   📍 $resolvedLoc")
                 }
-                append("  •  $typeFullName")
+                append("   $typeFullName")
             }
 
             Text(

@@ -26,6 +26,7 @@ import androidx.glance.layout.padding
 import ru.lican1907.tusurschedule.R
 import ru.lican1907.tusurschedule.data.ScheduleRepository
 import ru.lican1907.tusurschedule.widget.components.WidgetDayHeader
+import ru.lican1907.tusurschedule.widget.components.WidgetEmptyDayCard
 import ru.lican1907.tusurschedule.widget.components.WidgetHeader
 import ru.lican1907.tusurschedule.widget.components.WidgetHeroCard
 import ru.lican1907.tusurschedule.widget.components.WidgetLessonCard
@@ -61,21 +62,17 @@ class ScheduleWidget : GlanceAppWidget() {
             }
             val todayDay = filteredAllDays.firstOrNull { it.date == today.toString() }
 
-            // Consolidated today lessons
             val todayRawLessons = todayDay?.lessons ?: emptyList()
             val todayMerged = consolidateLessons(todayRawLessons)
 
-            // Remaining lessons today
             val todayRemaining = todayMerged.filter { item ->
                 runCatching { LocalTime.parse(item.lesson.time_end) }.map { nowTime.isBefore(it) }.getOrDefault(true)
             }
 
-            // Effective beer time for today based on student's active lessons
             val effectiveBeerTime = todayRawLessons.filter { !it.is_cancelled }
                 .mapNotNull { runCatching { LocalTime.parse(it.time_end) }.getOrNull() }
                 .maxOrNull()?.format(DateTimeFormatter.ofPattern("HH:mm")) ?: todayDay?.beer_time
 
-            // Hero lesson detection
             val heroInfo = computeHeroInfo(
                 today = today,
                 todayLessons = todayMerged,
@@ -85,11 +82,9 @@ class ScheduleWidget : GlanceAppWidget() {
                 beerTime = effectiveBeerTime
             )
 
-            // Header status string
             val headerStatus = computeHeaderStatus(heroInfo, todayMerged, todayRemaining)
             val headerDateStr = formatHeaderDate(today)
 
-            // Upcoming days (2-week window)
             val horizonEnd = today.plusDays(14)
             val upcomingDays = filteredAllDays.filter { day ->
                 val d = runCatching { LocalDate.parse(day.date) }.getOrNull()
@@ -97,8 +92,8 @@ class ScheduleWidget : GlanceAppWidget() {
             }
 
             val showSubgroupBadge = selectedSubgroup.equals("ALL", ignoreCase = true) || selectedSubgroup.isBlank()
+            val todaySubtitle = formatDaySubtitle(today, isRelative = true)
 
-            // Main Glass Container
             Box(
                 modifier = GlanceModifier
                     .fillMaxSize()
@@ -107,23 +102,19 @@ class ScheduleWidget : GlanceAppWidget() {
                     .padding(horizontal = ScheduleWidgetTheme.PaddingHorizontal, vertical = ScheduleWidgetTheme.PaddingVertical)
             ) {
                 Column(modifier = GlanceModifier.fillMaxSize()) {
-                    // 1. Header (pinned at top)
                     WidgetHeader(headerStatus, headerDateStr, groupName, selectedSubgroup, isNarrow = isNarrow)
                     Spacer(modifier = GlanceModifier.height(8.dp))
 
                     if (!isVeryCompact) {
-                        // 2. Continuous Scrollable Schedule List (Google Calendar style)
                         LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
-                            // 2.1 Hero Card at top of agenda
                             item {
                                 WidgetHeroCard(heroInfo, selectedPeTeacher, selectedEnglishTeacher)
                                 Spacer(modifier = GlanceModifier.height(10.dp))
                             }
 
-                            // 2.2 Remaining today pairs
                             if (todayRemaining.isNotEmpty()) {
                                 item {
-                                    WidgetDayHeader("Сегодня", formatDayDate(today), formatPairCount(todayRemaining.size))
+                                    WidgetDayHeader("Сегодня", todaySubtitle, formatPairCount(todayRemaining.size))
                                     Spacer(modifier = GlanceModifier.height(6.dp))
                                 }
 
@@ -131,16 +122,27 @@ class ScheduleWidget : GlanceAppWidget() {
                                     WidgetLessonCard(merged, selectedPeTeacher, selectedEnglishTeacher, showSubgroupBadge)
                                     Spacer(modifier = GlanceModifier.height(ScheduleWidgetTheme.SpacingCards))
                                 }
+                            } else {
+                                item {
+                                    WidgetDayHeader("Сегодня", todaySubtitle, null)
+                                    Spacer(modifier = GlanceModifier.height(6.dp))
+                                    WidgetEmptyDayCard(hasHadLessons = todayRawLessons.isNotEmpty())
+                                    Spacer(modifier = GlanceModifier.height(ScheduleWidgetTheme.SpacingCards))
+                                }
                             }
 
-                            // 2.3 Upcoming days
                             upcomingDays.forEach { day ->
                                 val dayDate = runCatching { LocalDate.parse(day.date) }.getOrNull() ?: return@forEach
                                 val dayMerged = consolidateLessons(day.lessons)
+                                val isRelative = (dayDate == today.plusDays(1))
 
                                 item {
                                     Spacer(modifier = GlanceModifier.height(10.dp))
-                                    WidgetDayHeader(formatRelativeDayTitle(dayDate, today), formatDayDate(dayDate), formatPairCount(dayMerged.size))
+                                    WidgetDayHeader(
+                                        formatRelativeDayTitle(dayDate, today),
+                                        formatDaySubtitle(dayDate, isRelative),
+                                        formatPairCount(dayMerged.size)
+                                    )
                                     Spacer(modifier = GlanceModifier.height(6.dp))
                                 }
 
@@ -153,7 +155,6 @@ class ScheduleWidget : GlanceAppWidget() {
                             item { Spacer(modifier = GlanceModifier.height(8.dp)) }
                         }
                     } else {
-                        // In ultra-compact mode (height < 110dp), only show Hero Card
                         WidgetHeroCard(heroInfo, selectedPeTeacher, selectedEnglishTeacher)
                     }
                 }
@@ -164,8 +165,7 @@ class ScheduleWidget : GlanceAppWidget() {
 
 class RefreshAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        val repo = ScheduleRepository(context)
-        repo.loadSchedule(forceRefresh = true)
+        ScheduleRepository(context).loadSchedule(forceRefresh = true)
         ScheduleWidget().updateAll(context)
     }
 }

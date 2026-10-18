@@ -15,6 +15,21 @@ import java.time.LocalTime
 class ScheduleWidgetUtilsTest {
 
     @Test
+    fun testFormatHeaderDate() {
+        val date = LocalDate.of(2026, 10, 15) // Thursday
+        assertEquals("Чт, 15 октября", formatHeaderDate(date))
+    }
+
+    @Test
+    fun testFormatDaySubtitle() {
+        val dateRelative = LocalDate.of(2026, 10, 15) // Thursday
+        assertEquals("чт, 15 окт", formatDaySubtitle(dateRelative, isRelative = true))
+
+        val dateNonRelative = LocalDate.of(2026, 10, 17) // Saturday
+        assertEquals("17 окт", formatDaySubtitle(dateNonRelative, isRelative = false))
+    }
+
+    @Test
     fun testPluralizePairs() {
         assertEquals("пар", pluralizePairs(0))
         assertEquals("пара", pluralizePairs(1))
@@ -53,10 +68,11 @@ class ScheduleWidgetUtilsTest {
 
     @Test
     fun testFormatRelativeDayTitle() {
-        val today = LocalDate.of(2026, 10, 18)
+        val today = LocalDate.of(2026, 10, 15) // Thursday
         assertEquals("Сегодня", formatRelativeDayTitle(today, today))
         assertEquals("Завтра", formatRelativeDayTitle(today.plusDays(1), today))
-        // Tuesday
+        val saturday = LocalDate.of(2026, 10, 17)
+        assertEquals("Суббота", formatRelativeDayTitle(saturday, today))
         val tuesday = LocalDate.of(2026, 10, 20)
         assertEquals("Вторник", formatRelativeDayTitle(tuesday, today))
     }
@@ -65,14 +81,19 @@ class ScheduleWidgetUtilsTest {
     fun testComputeHeaderStatus() {
         val heroLive = HeroInfo(lesson = LessonItem(subject = "Math"), isLive = true)
         val statusLive = computeHeaderStatus(heroLive, emptyList(), emptyList())
-        assertEquals("Сейчас идёт: Math", statusLive)
+        assertEquals("Сейчас · идёт пара", statusLive)
 
         val heroUpcoming = HeroInfo(lesson = LessonItem(subject = "Physics"), isLive = false)
-        val remaining = listOf(MergedLessonItem(LessonItem(subject = "Physics")))
-        val statusRemaining = computeHeaderStatus(heroUpcoming, remaining, remaining)
-        assertEquals("1 пара сегодня", statusRemaining)
+        val remaining1 = listOf(MergedLessonItem(LessonItem(subject = "Physics")))
+        assertEquals("Сегодня · 1 пара", computeHeaderStatus(heroUpcoming, remaining1, remaining1))
 
-        val statusDone = computeHeaderStatus(HeroInfo(lesson = null, isRest = true), remaining, emptyList())
+        val remaining2 = listOf(
+            MergedLessonItem(LessonItem(subject = "Physics")),
+            MergedLessonItem(LessonItem(subject = "Math"))
+        )
+        assertEquals("Сегодня · 2 пары", computeHeaderStatus(heroUpcoming, remaining2, remaining2))
+
+        val statusDone = computeHeaderStatus(HeroInfo(lesson = null, isRest = true), remaining1, emptyList())
         assertEquals("Сегодня · пар больше нет", statusDone)
 
         val statusEmpty = computeHeaderStatus(HeroInfo(lesson = null, isRest = true), emptyList(), emptyList())
@@ -97,8 +118,8 @@ class ScheduleWidgetUtilsTest {
         )
 
         assertTrue(hero.isLive)
-        assertEquals("СЕЙЧАС ИДЁТ", hero.tag)
-        assertEquals("ОСТАЛОСЬ 60 МИН", hero.countdown)
+        assertEquals("СЕЙЧАС · ИДЁТ", hero.tag)
+        assertEquals("осталось 60 мин", hero.countdown)
         assertEquals("Math", hero.lesson?.displaySubject)
     }
 
@@ -120,9 +141,90 @@ class ScheduleWidgetUtilsTest {
         )
 
         assertFalse(hero.isLive)
-        assertEquals("СЛЕДУЮЩАЯ", hero.tag)
-        assertEquals("ЧЕРЕЗ 1 Ч 30 МИН", hero.countdown)
+        assertEquals("СЛЕДУЮЩАЯ · СЕГОДНЯ", hero.tag)
+        assertEquals("через 1 ч 30 мин", hero.countdown)
         assertEquals("English", hero.lesson?.displaySubject)
+    }
+
+    @Test
+    fun testComputeHeroInfoUpcomingTomorrow() {
+        val today = LocalDate.of(2026, 10, 15)
+        val tomorrow = today.plusDays(1)
+        val tomorrowLesson = LessonItem(time_start = "10:40", time_end = "12:10", subject = "History")
+        val days = listOf(
+            DaySchedule(date = tomorrow.toString(), weekday = 5, lessons = listOf(tomorrowLesson))
+        )
+        // Now is 12:00 today. Until tomorrow 10:40 is 22 hours 40 minutes.
+        val nowTime = LocalTime.of(12, 0)
+        val nowDateTime = LocalDateTime.of(today, nowTime)
+
+        val hero = computeHeroInfo(
+            today = today,
+            todayLessons = emptyList(),
+            allDays = days,
+            nowTime = nowTime,
+            nowDateTime = nowDateTime,
+            beerTime = null
+        )
+
+        assertFalse(hero.isLive)
+        assertEquals("СЛЕДУЮЩАЯ · ЗАВТРА", hero.tag)
+        assertEquals("через 22 ч 40 мин", hero.countdown)
+        assertEquals("History", hero.lesson?.displaySubject)
+    }
+
+    @Test
+    fun testComputeHeroInfoUpcomingTomorrowMoreThanDay() {
+        val sunday = LocalDate.of(2026, 10, 18)
+        val monday = sunday.plusDays(1)
+        val mondayLesson = LessonItem(time_start = "16:00", time_end = "17:30", subject = "Physics")
+        val days = listOf(
+            DaySchedule(date = monday.toString(), weekday = 1, lessons = listOf(mondayLesson))
+        )
+        // Sunday 12:00 to Monday 16:00 is 1 day 4 hours. Monday is tomorrow for Sunday.
+        val nowTime = LocalTime.of(12, 0)
+        val nowDateTime = LocalDateTime.of(sunday, nowTime)
+
+        val hero = computeHeroInfo(
+            today = sunday,
+            todayLessons = emptyList(),
+            allDays = days,
+            nowTime = nowTime,
+            nowDateTime = nowDateTime,
+            beerTime = null
+        )
+
+        assertFalse(hero.isLive)
+        assertEquals("СЛЕДУЮЩАЯ · ЗАВТРА", hero.tag)
+        assertEquals("через 1 дн 4 ч", hero.countdown)
+        assertEquals("Physics", hero.lesson?.displaySubject)
+    }
+
+    @Test
+    fun testComputeHeroInfoUpcomingFutureDays() {
+        val saturday = LocalDate.of(2026, 10, 17) // Saturday
+        val monday = saturday.plusDays(2) // Monday
+        val mondayLesson = LessonItem(time_start = "16:00", time_end = "17:30", subject = "Physics")
+        val days = listOf(
+            DaySchedule(date = monday.toString(), weekday = 1, lessons = listOf(mondayLesson))
+        )
+        // Saturday 12:00 to Monday 16:00 is 2 days 4 hours.
+        val nowTime = LocalTime.of(12, 0)
+        val nowDateTime = LocalDateTime.of(saturday, nowTime)
+
+        val hero = computeHeroInfo(
+            today = saturday,
+            todayLessons = emptyList(),
+            allDays = days,
+            nowTime = nowTime,
+            nowDateTime = nowDateTime,
+            beerTime = null
+        )
+
+        assertFalse(hero.isLive)
+        assertEquals("СЛЕДУЮЩАЯ · ПОНЕДЕЛЬНИК", hero.tag)
+        assertEquals("через 2 дн 4 ч", hero.countdown)
+        assertEquals("Physics", hero.lesson?.displaySubject)
     }
 
     @Test
@@ -149,6 +251,8 @@ class ScheduleWidgetUtilsTest {
         @JvmStatic
         fun main(args: Array<String>) {
             val test = ScheduleWidgetUtilsTest()
+            test.testFormatHeaderDate()
+            test.testFormatDaySubtitle()
             test.testPluralizePairs()
             test.testFormatPairCount()
             test.testConsolidateLessons()
@@ -156,6 +260,9 @@ class ScheduleWidgetUtilsTest {
             test.testComputeHeaderStatus()
             test.testComputeHeroInfoLive()
             test.testComputeHeroInfoUpcomingToday()
+            test.testComputeHeroInfoUpcomingTomorrow()
+            test.testComputeHeroInfoUpcomingTomorrowMoreThanDay()
+            test.testComputeHeroInfoUpcomingFutureDays()
             test.testComputeHeroInfoRestWithBeerTime()
             println("ALL SCHEDULE WIDGET UTILS TESTS PASSED SUCCESSFULLY!")
         }

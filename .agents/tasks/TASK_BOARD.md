@@ -15,6 +15,7 @@
 | `TS-005` | Декомпозиция монолита MainActivity.kt | Android | `Contractor-Android` | `Done` | `task-accelerator`, `android-compose-architecture` | [TS-005](backlog/TS-005-android-ui-decomposition.md) |
 | `TS-006` | Декомпозиция монолита ScheduleWidget.kt | Android | `Contractor-Android` | `Done` | `task-accelerator`, `android-glance-widget` | [TS-006](backlog/TS-006-android-widget-decomposition.md) |
 | `TS-007` | Синтез скилла по архитектуре Compose UI | Управление | `Skill-Engineer` | `Done` | `task-accelerator`, `skill-creator-meta` | [TS-007](backlog/TS-007-android-architecture-skills.md) |
+| `TS-008` | Редизайн Glance-виджета по концепту | Android | `Contractor-Android` | `Done` | `task-accelerator`, `android-glance-widget` | [TS-008](backlog/TS-008-widget-concept-redesign.md) |
 
 ---
 
@@ -24,12 +25,13 @@
 * [TS-001-audit-contracts.md](backlog/TS-001-audit-contracts.md) — Первичная верификация соответствия полей `schedule.json` моделям `ScheduleModels.kt`.
 
 ### ⚙️ 2. In Progress (В работе у Подрядчиков)
-*(Задачи в активной разработке)*
+*(Нет активных задач в разработке)*
 
 ### 🔍 3. Review (На проверке у Куратора)
-*(Задачи, проходящие проверку линтерами, компиляцией Gradle и dry-run тестами)*
+*(Нет задач на проверке)*
 
 ### ✅ 4. Done (Завершено и принято)
+* [TS-008-widget-concept-redesign.md](backlog/TS-008-widget-concept-redesign.md) — Редизайн виджета расписания по концепту (`Contractor-Android`).
 * [TS-002-parser-subgroups.md](backlog/TS-002-parser-subgroups.md) — Извлечение подгрупп занятий в `parser.py` и экспорт поля `subgroup` в JSON (`Contractor-Python`).
 * [TS-003-android-subgroup-ui.md](backlog/TS-003-android-subgroup-ui.md) — Обновление моделей `ScheduleModels.kt`, `ScheduleRepository.kt` и UI в `MainActivity.kt` (`Contractor-Android`).
 * [TS-004-widget-subgroup-filter.md](backlog/TS-004-widget-subgroup-filter.md) — Фильтрация занятий в Hero-карточке, списках и отображение чипа в `ScheduleWidget.kt` (`Contractor-Android`).

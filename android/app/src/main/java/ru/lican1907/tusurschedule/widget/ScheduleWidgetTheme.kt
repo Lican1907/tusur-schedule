@@ -46,16 +46,17 @@ object ScheduleWidgetTheme {
 
     // Font Sizes
     val FontHeaderStatus = 12.sp
-    val FontHeaderDate = 18.sp
+    val FontHeaderDate = 20.sp
     val FontHeroTag = 11.sp
-    val FontHeroTitle = 18.sp
+    val FontHeroTitle = 22.sp
     val FontHeroDetails = 12.sp
-    val FontDayTitle = 15.sp
+    val FontDayTitle = 14.sp
+    val FontDaySubtitle = 13.sp
     val FontDayCount = 12.sp
-    val FontTimeStart = 15.sp
-    val FontTimeEnd = 12.sp
-    val FontSubject = 15.sp
-    val FontDetails = 13.sp
+    val FontTimeStart = 14.sp
+    val FontTimeEnd = 11.sp
+    val FontSubject = 14.sp
+    val FontDetails = 12.sp
     val FontBadge = 11.sp
 
     fun getLessonTypeColor(type: String, isCancelled: Boolean = false): Color {

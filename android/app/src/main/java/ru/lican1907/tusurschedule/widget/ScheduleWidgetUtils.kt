@@ -59,8 +59,8 @@ fun computeHeroInfo(
                 return HeroInfo(
                     lesson = les,
                     isLive = true,
-                    tag = "СЕЙЧАС ИДЁТ",
-                    countdown = "ОСТАЛОСЬ ${leftMinutes} МИН",
+                    tag = "СЕЙЧАС · ИДЁТ",
+                    countdown = "осталось $leftMinutes мин",
                     progress = progress
                 )
             }
@@ -76,14 +76,16 @@ fun computeHeroInfo(
             if (nowTime.isBefore(start)) {
                 val untilMinutes = Duration.between(nowTime, start).toMinutes()
                 val countdownStr = if (untilMinutes >= 60) {
-                    "ЧЕРЕЗ ${untilMinutes / 60} Ч ${untilMinutes % 60} МИН"
+                    val h = untilMinutes / 60
+                    val m = untilMinutes % 60
+                    if (m > 0) "через $h ч $m мин" else "через $h ч"
                 } else {
-                    "ЧЕРЕЗ $untilMinutes МИН"
+                    "через $untilMinutes мин"
                 }
                 return HeroInfo(
                     lesson = les,
                     isLive = false,
-                    tag = "СЛЕДУЮЩАЯ",
+                    tag = "СЛЕДУЮЩАЯ · СЕГОДНЯ",
                     countdown = countdownStr
                 )
             }
@@ -104,13 +106,21 @@ fun computeHeroInfo(
             try {
                 val start = LocalTime.parse(les.time_start)
                 val lessonDateTime = LocalDateTime.of(targetDate, start)
-                val tag = if (targetDate == today.plusDays(1)) "ЗАВТРА" else formatWeekday(targetDate).uppercase()
-                val daysUntil = Duration.between(nowDateTime, lessonDateTime).toDays()
-                val hoursUntil = Duration.between(nowDateTime, lessonDateTime).toHours() % 24
-                val countdownStr = if (daysUntil > 0) {
-                    "ЧЕРЕЗ $daysUntil ДН. $hoursUntil Ч."
+                val tag = if (targetDate == today.plusDays(1)) {
+                    "СЛЕДУЮЩАЯ · ЗАВТРА"
                 } else {
-                    "ЧЕРЕЗ $hoursUntil Ч."
+                    "СЛЕДУЮЩАЯ · ${formatWeekday(targetDate).uppercase()}"
+                }
+                val totalMinutes = Duration.between(nowDateTime, lessonDateTime).toMinutes().coerceAtLeast(0)
+                val daysUntil = totalMinutes / (24 * 60)
+                val remainingMinutes = totalMinutes % (24 * 60)
+                val hoursUntil = remainingMinutes / 60
+                val minsUntil = remainingMinutes % 60
+                val countdownStr = when {
+                    daysUntil > 0 -> if (hoursUntil > 0) "через $daysUntil дн $hoursUntil ч" else "через $daysUntil дн"
+                    hoursUntil > 0 && minsUntil > 0 -> "через $hoursUntil ч $minsUntil мин"
+                    hoursUntil > 0 -> "через $hoursUntil ч"
+                    else -> "через $minsUntil мин"
                 }
                 return HeroInfo(
                     lesson = les,
@@ -133,8 +143,8 @@ fun computeHeaderStatus(
     todayRemaining: List<MergedLessonItem>
 ): String {
     return when {
-        heroInfo.isLive && heroInfo.lesson != null -> "Сейчас идёт: ${heroInfo.lesson.displaySubject}"
-        todayRemaining.isNotEmpty() -> "${todayRemaining.size} ${pluralizePairs(todayRemaining.size)} сегодня"
+        heroInfo.isLive && heroInfo.lesson != null -> "Сейчас · идёт пара"
+        todayRemaining.isNotEmpty() -> "Сегодня · ${todayRemaining.size} ${pluralizePairs(todayRemaining.size)}"
         todayLessons.isNotEmpty() -> "Сегодня · пар больше нет"
         else -> "Сегодня · пар нет"
     }
@@ -145,14 +155,25 @@ private val RU_LOCALE: Locale = Locale.forLanguageTag("ru")
 fun formatHeaderDate(date: LocalDate): String {
     val dow = date.format(DateTimeFormatter.ofPattern("EEE", RU_LOCALE)).replaceFirstChar { it.uppercase() }
     val d = date.dayOfMonth
-    val m = date.format(DateTimeFormatter.ofPattern("MMM", RU_LOCALE)).removeSuffix(".")
+    val m = date.format(DateTimeFormatter.ofPattern("MMMM", RU_LOCALE))
     return "$dow, $d $m"
+}
+
+fun formatDaySubtitle(date: LocalDate, isRelative: Boolean): String {
+    val d = date.dayOfMonth
+    val m = date.format(DateTimeFormatter.ofPattern("MMM", RU_LOCALE)).lowercase().removeSuffix(".")
+    return if (isRelative) {
+        val dow = date.format(DateTimeFormatter.ofPattern("EEE", RU_LOCALE)).lowercase().removeSuffix(".")
+        "$dow, $d $m"
+    } else {
+        "$d $m"
+    }
 }
 
 fun formatDayDate(date: LocalDate): String {
     val d = date.dayOfMonth
-    val m = date.format(DateTimeFormatter.ofPattern("MMM", RU_LOCALE)).removeSuffix(".")
-    return "$d $m."
+    val m = date.format(DateTimeFormatter.ofPattern("MMM", RU_LOCALE)).lowercase().removeSuffix(".")
+    return "$d $m"
 }
 
 fun formatRelativeDayTitle(date: LocalDate, today: LocalDate): String {
