@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T02:01:36.482515+07:00",
+  "generated_at": "2026-10-22T02:11:18.604460+07:00",
   "group": "426топ-1",
   "total_lessons": 139,
   "total_days": 43,
@@ -2188,26 +2188,26 @@
         "summary": "ЛЕК 🟢 История",
         "subgroup": "",
         "uid": "tusur-673946-20261027@timetable.tusur.ru"
-      },
+      }
+    ],
+    "2026-10-28": [
       {
-        "pair_num": 4,
-        "time_start": "15:00",
-        "time_end": "16:35",
+        "pair_num": 1,
+        "time_start": "08:50",
+        "time_end": "10:25",
         "subject": "Математика",
         "short_subject": "Математика",
         "lesson_type": "Практика",
         "teacher": "Ельцова Тамара Александровна",
-        "room": "413",
-        "building": "ГК",
-        "location": "📍 ГК 413",
+        "room": "129",
+        "building": "ФЭТ",
+        "location": "📍 ФЭТ 129",
         "status": "ACTIVE",
         "color_id": "9",
         "summary": "ПРАК 🔵 Математика",
         "subgroup": "",
-        "uid": "tusur-673947-20261027@timetable.tusur.ru"
-      }
-    ],
-    "2026-10-28": [
+        "uid": "tusur-683914-20261028@timetable.tusur.ru"
+      },
       {
         "pair_num": 2,
         "time_start": "10:40",
