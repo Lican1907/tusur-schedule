@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-29T03:12:38.305463+07:00",
+  "generated_at": "2026-10-30T03:10:38.099563+07:00",
   "group": "426-3",
-  "total_lessons": 314,
+  "total_lessons": 310,
   "total_days": 103,
   "days": {
     "2026-09-01": [
@@ -3246,6 +3246,74 @@
         "summary": "ЛЕК 🟢 Информатика",
         "subgroup": "",
         "uid": "tusur-681733-20261107@timetable.tusur.ru"
+      },
+      {
+        "pair_num": 3,
+        "time_start": "13:15",
+        "time_end": "14:50",
+        "subject": "Проектирование индивидуальной траектории развития",
+        "short_subject": "ПИТР",
+        "lesson_type": "Практика",
+        "teacher": "Малаховская Елена Константиновна",
+        "room": "",
+        "building": "",
+        "location": "",
+        "status": "ACTIVE",
+        "color_id": "9",
+        "summary": "ПРАК 🔵 ПИТР",
+        "subgroup": "СБИ ауд.106",
+        "uid": "tusur-688580-20261107@timetable.tusur.ru"
+      },
+      {
+        "pair_num": 4,
+        "time_start": "15:00",
+        "time_end": "16:35",
+        "subject": "Проектирование индивидуальной траектории развития",
+        "short_subject": "ПИТР",
+        "lesson_type": "Практика",
+        "teacher": "Малаховская Елена Константиновна",
+        "room": "",
+        "building": "",
+        "location": "",
+        "status": "ACTIVE",
+        "color_id": "9",
+        "summary": "ПРАК 🔵 ПИТР",
+        "subgroup": "СБИ ауд.106",
+        "uid": "tusur-688581-20261107@timetable.tusur.ru"
+      },
+      {
+        "pair_num": 5,
+        "time_start": "16:45",
+        "time_end": "18:20",
+        "subject": "Проектирование индивидуальной траектории развития",
+        "short_subject": "ПИТР",
+        "lesson_type": "Практика",
+        "teacher": "Малаховская Елена Константиновна",
+        "room": "",
+        "building": "",
+        "location": "",
+        "status": "ACTIVE",
+        "color_id": "9",
+        "summary": "ПРАК 🔵 ПИТР",
+        "subgroup": "СБИ ауд.106",
+        "uid": "tusur-688582-20261107@timetable.tusur.ru"
+      },
+      {
+        "pair_num": 6,
+        "time_start": "18:30",
+        "time_end": "20:05",
+        "subject": "Проектирование индивидуальной траектории развития",
+        "short_subject": "ПИТР",
+        "lesson_type": "Практика",
+        "teacher": "Малаховская Елена Константиновна",
+        "room": "",
+        "building": "",
+        "location": "",
+        "status": "ACTIVE",
+        "color_id": "9",
+        "summary": "ПРАК 🔵 ПИТР",
+        "subgroup": "СБИ ауд.106",
+        "uid": "tusur-688583-20261107@timetable.tusur.ru"
       }
     ],
     "2026-11-09": [
@@ -3439,23 +3507,6 @@
         "summary": "ПРАК 🔵 ПИТР",
         "subgroup": "",
         "uid": "tusur-681723-20261111@timetable.tusur.ru"
-      },
-      {
-        "pair_num": 4,
-        "time_start": "15:00",
-        "time_end": "16:35",
-        "subject": "Проектирование индивидуальной траектории развития",
-        "short_subject": "ПИТР",
-        "lesson_type": "Практика",
-        "teacher": "Малаховская Елена Константиновна",
-        "room": "419",
-        "building": "РК",
-        "location": "📍 РК 419",
-        "status": "ACTIVE",
-        "color_id": "9",
-        "summary": "ПРАК 🔵 ПИТР",
-        "subgroup": "",
-        "uid": "tusur-681725-20261111@timetable.tusur.ru"
       }
     ],
     "2026-11-12": [
@@ -3774,23 +3825,6 @@
         "summary": "ПРАК 🔵 ОРГ",
         "subgroup": "",
         "uid": "tusur-681726-20261118@timetable.tusur.ru"
-      },
-      {
-        "pair_num": 4,
-        "time_start": "15:00",
-        "time_end": "16:35",
-        "subject": "Проектирование индивидуальной траектории развития",
-        "short_subject": "ПИТР",
-        "lesson_type": "Практика",
-        "teacher": "Малаховская Елена Константиновна",
-        "room": "304",
-        "building": "РК",
-        "location": "📍 РК 304",
-        "status": "ACTIVE",
-        "color_id": "9",
-        "summary": "ПРАК 🔵 ПИТР",
-        "subgroup": "",
-        "uid": "tusur-681724-20261118@timetable.tusur.ru"
       }
     ],
     "2026-11-19": [
@@ -4126,40 +4160,6 @@
         "summary": "ПРАК 🔵 ОРГ",
         "subgroup": "",
         "uid": "tusur-681727-20261125@timetable.tusur.ru"
-      },
-      {
-        "pair_num": 4,
-        "time_start": "15:00",
-        "time_end": "16:35",
-        "subject": "Проектирование индивидуальной траектории развития",
-        "short_subject": "ПИТР",
-        "lesson_type": "Практика",
-        "teacher": "Малаховская Елена Константиновна",
-        "room": "428",
-        "building": "ФЭТ",
-        "location": "📍 ФЭТ 428",
-        "status": "ACTIVE",
-        "color_id": "9",
-        "summary": "ПРАК 🔵 ПИТР",
-        "subgroup": "",
-        "uid": "tusur-681723-20261125@timetable.tusur.ru"
-      },
-      {
-        "pair_num": 4,
-        "time_start": "15:00",
-        "time_end": "16:35",
-        "subject": "Проектирование индивидуальной траектории развития",
-        "short_subject": "ПИТР",
-        "lesson_type": "Практика",
-        "teacher": "Малаховская Елена Константиновна",
-        "room": "419",
-        "building": "РК",
-        "location": "📍 РК 419",
-        "status": "ACTIVE",
-        "color_id": "9",
-        "summary": "ПРАК 🔵 ПИТР",
-        "subgroup": "",
-        "uid": "tusur-681725-20261125@timetable.tusur.ru"
       }
     ],
     "2026-11-26": [
@@ -4427,23 +4427,6 @@
         "summary": "ПРАК 🔵 ОРГ",
         "subgroup": "",
         "uid": "tusur-681726-20261202@timetable.tusur.ru"
-      },
-      {
-        "pair_num": 4,
-        "time_start": "15:00",
-        "time_end": "16:35",
-        "subject": "Проектирование индивидуальной траектории развития",
-        "short_subject": "ПИТР",
-        "lesson_type": "Практика",
-        "teacher": "Малаховская Елена Константиновна",
-        "room": "304",
-        "building": "РК",
-        "location": "📍 РК 304",
-        "status": "ACTIVE",
-        "color_id": "9",
-        "summary": "ПРАК 🔵 ПИТР",
-        "subgroup": "",
-        "uid": "tusur-681724-20261202@timetable.tusur.ru"
       }
     ],
     "2026-12-03": [
@@ -4779,40 +4762,6 @@
         "summary": "ПРАК 🔵 ОРГ",
         "subgroup": "",
         "uid": "tusur-681727-20261209@timetable.tusur.ru"
-      },
-      {
-        "pair_num": 4,
-        "time_start": "15:00",
-        "time_end": "16:35",
-        "subject": "Проектирование индивидуальной траектории развития",
-        "short_subject": "ПИТР",
-        "lesson_type": "Практика",
-        "teacher": "Малаховская Елена Константиновна",
-        "room": "428",
-        "building": "ФЭТ",
-        "location": "📍 ФЭТ 428",
-        "status": "ACTIVE",
-        "color_id": "9",
-        "summary": "ПРАК 🔵 ПИТР",
-        "subgroup": "",
-        "uid": "tusur-681723-20261209@timetable.tusur.ru"
-      },
-      {
-        "pair_num": 4,
-        "time_start": "15:00",
-        "time_end": "16:35",
-        "subject": "Проектирование индивидуальной траектории развития",
-        "short_subject": "ПИТР",
-        "lesson_type": "Практика",
-        "teacher": "Малаховская Елена Константиновна",
-        "room": "419",
-        "building": "РК",
-        "location": "📍 РК 419",
-        "status": "ACTIVE",
-        "color_id": "9",
-        "summary": "ПРАК 🔵 ПИТР",
-        "subgroup": "",
-        "uid": "tusur-681725-20261209@timetable.tusur.ru"
       }
     ],
     "2026-12-10": [
@@ -5330,23 +5279,6 @@
         "summary": "ПРАК 🔵 ПИТР",
         "subgroup": "",
         "uid": "tusur-681723-20261223@timetable.tusur.ru"
-      },
-      {
-        "pair_num": 4,
-        "time_start": "15:00",
-        "time_end": "16:35",
-        "subject": "Проектирование индивидуальной траектории развития",
-        "short_subject": "ПИТР",
-        "lesson_type": "Практика",
-        "teacher": "Малаховская Елена Константиновна",
-        "room": "419",
-        "building": "РК",
-        "location": "📍 РК 419",
-        "status": "ACTIVE",
-        "color_id": "9",
-        "summary": "ПРАК 🔵 ПИТР",
-        "subgroup": "",
-        "uid": "tusur-681725-20261223@timetable.tusur.ru"
       }
     ],
     "2026-12-24": [
