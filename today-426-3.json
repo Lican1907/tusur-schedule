@@ -1,15 +1,57 @@
 {
-  "generated_at": "2026-11-01T02:13:20.049033+07:00",
-  "date": "2026-11-01",
-  "weekday": 7,
+  "generated_at": "2026-11-02T02:29:43.845354+07:00",
+  "date": "2026-11-02",
+  "weekday": 1,
   "group": "426-3",
-  "is_weekend": true,
+  "is_weekend": false,
   "pair_status": "before_classes",
   "current_pair": null,
   "next_pair": 1,
   "minutes_left_in_pair": null,
-  "minutes_until_next_pair": 397,
-  "total_lessons_today": 0,
-  "lessons": [],
-  "beer_event": null
+  "minutes_until_next_pair": 381,
+  "total_lessons_today": 2,
+  "lessons": [
+    {
+      "pair_num": 2,
+      "time_start": "10:40",
+      "time_end": "12:15",
+      "subject": "Математика",
+      "short_subject": "Математика",
+      "lesson_type": "Практика",
+      "teacher": "Ельцова Тамара Александровна",
+      "room": "338",
+      "building": "РК",
+      "location": "📍 РК 338",
+      "status": "ACTIVE",
+      "color_id": "9",
+      "summary": "ПРАК 🔵 Математика",
+      "subgroup": "",
+      "uid": "tusur-681735-20261102@timetable.tusur.ru"
+    },
+    {
+      "pair_num": 3,
+      "time_start": "13:15",
+      "time_end": "14:50",
+      "subject": "Иностранный язык",
+      "short_subject": "Английский",
+      "lesson_type": "Практика",
+      "teacher": "Космодемьянская Наталья Иннокентьевна",
+      "room": "325",
+      "building": "РК",
+      "location": "📍 РК 325",
+      "status": "ACTIVE",
+      "color_id": "9",
+      "summary": "ПРАК 🔵 Английский",
+      "subgroup": "",
+      "uid": "tusur-681715-20261102@timetable.tusur.ru"
+    }
+  ],
+  "beer_event": {
+    "summary": "🍺 Можно пить пиво!",
+    "location": "🎉 Свобода",
+    "time_start": "14:50",
+    "time_end": "16:50",
+    "description": "Все пары на сегодня закончились. Время заслуженного отдыха.",
+    "color_id": "5"
+  }
 }
