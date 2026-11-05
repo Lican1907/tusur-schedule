@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T04:10:48.755840+07:00",
+  "generated_at": "2026-11-06T04:26:36.134278+07:00",
   "group": "426-3",
   "total_lessons": 310,
   "total_days": 103,
@@ -3683,6 +3683,23 @@
         "summary": "ЛЕК 🟢 Информатика",
         "subgroup": "",
         "uid": "tusur-681734-20261114@timetable.tusur.ru"
+      },
+      {
+        "pair_num": 5,
+        "time_start": "16:45",
+        "time_end": "18:20",
+        "subject": "Основы российской государственности",
+        "short_subject": "ОРГ",
+        "lesson_type": "Лекция",
+        "teacher": "Пустоварова Анна Олеговна",
+        "room": "",
+        "building": "",
+        "location": "",
+        "status": "ACTIVE",
+        "color_id": "10",
+        "summary": "ЛЕК 🟢 ОРГ",
+        "subgroup": "реализуется в эиос",
+        "uid": "tusur-688958-20261114@timetable.tusur.ru"
       }
     ],
     "2026-11-16": [
@@ -5209,23 +5226,6 @@
         "summary": "ЛЕК 🟢 Деловые коммуникации",
         "subgroup": "",
         "uid": "tusur-681722-20261222@timetable.tusur.ru"
-      },
-      {
-        "pair_num": 2,
-        "time_start": "10:40",
-        "time_end": "12:15",
-        "subject": "Основы российской государственности",
-        "short_subject": "ОРГ",
-        "lesson_type": "Лекция",
-        "teacher": "Пустоварова Анна Олеговна",
-        "room": "322",
-        "building": "ГК",
-        "location": "📍 ГК 322",
-        "status": "ACTIVE",
-        "color_id": "10",
-        "summary": "ЛЕК 🟢 ОРГ",
-        "subgroup": "",
-        "uid": "tusur-681631-20261222@timetable.tusur.ru"
       }
     ],
     "2026-12-23": [
