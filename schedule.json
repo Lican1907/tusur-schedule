@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T02:24:45.814240+07:00",
+  "generated_at": "2026-11-10T06:44:19.373376+07:00",
   "group": "426топ-4",
   "total_lessons": 283,
   "total_days": 85,
@@ -3262,20 +3262,20 @@
       },
       {
         "pair_num": 4,
-        "time_start": "15:00",
-        "time_end": "16:35",
+        "time_start": "15:15",
+        "time_end": "16:50",
         "subject": "Проектирование индивидуальной траектории развития в сфере ИТ",
         "short_subject": "ПИТР",
         "lesson_type": "Практика",
         "teacher": "Ехлаков Юрий Поликарпович Сенченко Павел Васильевич",
-        "room": "412",
-        "building": "ФЭТ",
-        "location": "📍 ФЭТ 412",
+        "room": "",
+        "building": "",
+        "location": "",
         "status": "ACTIVE",
         "color_id": "9",
         "summary": "ПРАК 🔵 ПИТР",
-        "subgroup": "",
-        "uid": "tusur-681828-20261116@timetable.tusur.ru"
+        "subgroup": "с 15:15 в 201 УЛК (ИТ-Академия)",
+        "uid": "tusur-689145-20261116@timetable.tusur.ru"
       }
     ],
     "2026-11-17": [
