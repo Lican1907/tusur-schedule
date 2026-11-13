@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-13T04:49:34.610747+07:00",
+  "generated_at": "2026-11-14T04:17:59.283293+07:00",
   "group": "426топ-2",
   "total_lessons": 278,
   "total_days": 84,
@@ -3681,6 +3681,23 @@
         "summary": "ПРАК 🔵 ПИТР",
         "subgroup": "",
         "uid": "tusur-681833-20261125@timetable.tusur.ru"
+      },
+      {
+        "pair_num": 6,
+        "time_start": "18:30",
+        "time_end": "20:05",
+        "subject": "Проектирование индивидуальной траектории развития в сфере ИТ",
+        "short_subject": "ПИТР",
+        "lesson_type": "Практика",
+        "teacher": "Шишанина Мария Александровна",
+        "room": "418",
+        "building": "ФЭТ",
+        "location": "📍 ФЭТ 418",
+        "status": "ACTIVE",
+        "color_id": "9",
+        "summary": "ПРАК 🔵 ПИТР",
+        "subgroup": "",
+        "uid": "tusur-689651-20261125@timetable.tusur.ru"
       }
     ],
     "2026-11-26": [
@@ -4334,23 +4351,6 @@
         "summary": "ПРАК 🔵 Дискретка",
         "subgroup": "",
         "uid": "tusur-681825-20261209@timetable.tusur.ru"
-      },
-      {
-        "pair_num": 5,
-        "time_start": "16:45",
-        "time_end": "18:20",
-        "subject": "Проектирование индивидуальной траектории развития в сфере ИТ",
-        "short_subject": "ПИТР",
-        "lesson_type": "Практика",
-        "teacher": "Шишанина Мария Александровна",
-        "room": "129",
-        "building": "ФЭТ",
-        "location": "📍 ФЭТ 129",
-        "status": "ACTIVE",
-        "color_id": "9",
-        "summary": "ПРАК 🔵 ПИТР",
-        "subgroup": "",
-        "uid": "tusur-681833-20261209@timetable.tusur.ru"
       }
     ],
     "2026-12-10": [

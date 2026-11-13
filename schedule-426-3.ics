@@ -20,7 +20,7 @@ BEGIN:VEVENT
 SUMMARY:СРС ⚪ Математика
 DTSTART;TZID=Asia/Tomsk:20261109T085000
 DTEND;TZID=Asia/Tomsk:20261109T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681801-20261109@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Самостоя
  тельная работа\nПреподаватель: Ельцова Т
@@ -34,7 +34,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261110T085000
 DTEND;TZID=Asia/Tomsk:20261110T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681722-20261110@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Лекция\nПреподаватель: Крыгина Мария В
@@ -47,7 +47,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20261111T085000
 DTEND;TZID=Asia/Tomsk:20261111T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681718-20261111@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -61,7 +61,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261112T085000
 DTEND;TZID=Asia/Tomsk:20261112T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681745-20261112@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -75,7 +75,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261113T085000
 DTEND;TZID=Asia/Tomsk:20261113T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681623-20261113@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -89,7 +89,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261114T085000
 DTEND;TZID=Asia/Tomsk:20261114T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681717-20261114@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -103,7 +103,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261109T104000
 DTEND;TZID=Asia/Tomsk:20261109T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681743-20261109@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -117,7 +117,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261110T104000
 DTEND;TZID=Asia/Tomsk:20261110T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681631-20261110@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Лекция\nПреподаватель: 
@@ -132,7 +132,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261111T104000
 DTEND;TZID=Asia/Tomsk:20261111T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681747-20261111@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -146,7 +146,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261112T104000
 DTEND;TZID=Asia/Tomsk:20261112T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681742-20261112@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -160,7 +160,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261113T104000
 DTEND;TZID=Asia/Tomsk:20261113T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681738-20261113@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -173,7 +173,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20261114T104000
 DTEND;TZID=Asia/Tomsk:20261114T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681734-20261114@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -187,7 +187,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261109T131500
 DTEND;TZID=Asia/Tomsk:20261109T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681714-20261109@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -201,7 +201,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261110T131500
 DTEND;TZID=Asia/Tomsk:20261110T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681739-20261110@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -214,7 +214,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261111T131500
 DTEND;TZID=Asia/Tomsk:20261111T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681727-20261111@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -228,7 +228,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20261112T131500
 DTEND;TZID=Asia/Tomsk:20261112T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-682002-20261112@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Практика\nПреподаватель: Гужов 
@@ -242,7 +242,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261113T131500
 DTEND;TZID=Asia/Tomsk:20261113T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681731-20261113@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -256,7 +256,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261109T150000
 DTEND;TZID=Asia/Tomsk:20261109T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681749-20261109@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Практика\nПреподаватель: Ехлаков Юрий П
@@ -269,7 +269,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20261111T150000
 DTEND;TZID=Asia/Tomsk:20261111T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681723-20261111@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -283,7 +283,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261112T150000
 DTEND;TZID=Asia/Tomsk:20261112T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-682009-20261112@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Лекция\nПреподаватель: Ехлаков Юрий Пол
@@ -296,7 +296,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261113T150000
 DTEND;TZID=Asia/Tomsk:20261113T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681730-20261113@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -310,7 +310,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261114T164500
 DTEND;TZID=Asia/Tomsk:20261114T182000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-688958-20261114@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Лекция\nПреподаватель: 
@@ -323,7 +323,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20260901T085000
 DTEND;TZID=Asia/Tomsk:20260901T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673944-20260901@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Лекция\nПреподаватель: Крыгина Мария В
@@ -337,7 +337,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20260902T085000
 DTEND;TZID=Asia/Tomsk:20260902T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-670251-20260902@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -350,7 +350,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20260903T085000
 DTEND;TZID=Asia/Tomsk:20260903T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667982-20260903@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -364,7 +364,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20260904T085000
 DTEND;TZID=Asia/Tomsk:20260904T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668010-20260904@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -378,7 +378,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20260905T085000
 DTEND;TZID=Asia/Tomsk:20260905T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668024-20260905@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Белкина Дина Алек
@@ -395,7 +395,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 ОРГ
 DTSTART;TZID=Asia/Tomsk:20260901T104000
 DTEND;TZID=Asia/Tomsk:20260901T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667927-20260901@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Лекция\nПреподаватель: 
@@ -409,7 +409,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20260902T104000
 DTEND;TZID=Asia/Tomsk:20260902T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-670252-20260902@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -423,7 +423,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20260903T104000
 DTEND;TZID=Asia/Tomsk:20260903T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667981-20260903@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -436,7 +436,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20260904T104000
 DTEND;TZID=Asia/Tomsk:20260904T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668009-20260904@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -449,7 +449,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20260905T104000
 DTEND;TZID=Asia/Tomsk:20260905T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668025-20260905@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -462,7 +462,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20260901T124500
 DTEND;TZID=Asia/Tomsk:20260901T142000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667930-20260901@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -476,7 +476,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20260902T131500
 DTEND;TZID=Asia/Tomsk:20260902T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667952-20260902@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -490,7 +490,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20260903T131500
 DTEND;TZID=Asia/Tomsk:20260903T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667985-20260903@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Лекция\nПреподаватель: Гужов Фе
@@ -503,7 +503,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20260904T131500
 DTEND;TZID=Asia/Tomsk:20260904T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668011-20260904@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -517,7 +517,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20260902T150000
 DTEND;TZID=Asia/Tomsk:20260902T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667953-20260902@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -531,7 +531,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20260904T150000
 DTEND;TZID=Asia/Tomsk:20260904T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668148-20260904@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -545,7 +545,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Информатика
 DTSTART;TZID=Asia/Tomsk:20260908T085000
 DTEND;TZID=Asia/Tomsk:20260908T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668094-20260908@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Практик
  а\nПреподаватель: Кульшин Роман Сергееви
@@ -558,7 +558,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20260909T085000
 DTEND;TZID=Asia/Tomsk:20260909T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668098-20260909@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -572,7 +572,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20260910T085000
 DTEND;TZID=Asia/Tomsk:20260910T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668132-20260910@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -586,7 +586,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20260911T085000
 DTEND;TZID=Asia/Tomsk:20260911T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668143-20260911@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -600,7 +600,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20260912T085000
 DTEND;TZID=Asia/Tomsk:20260912T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668042-20260912@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Белкина Дина Алек
@@ -617,7 +617,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20260908T104000
 DTEND;TZID=Asia/Tomsk:20260908T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668095-20260908@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Практика\nПреподаватель: Крыгина Мари
@@ -630,7 +630,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20260909T104000
 DTEND;TZID=Asia/Tomsk:20260909T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668099-20260909@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -644,7 +644,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20260910T104000
 DTEND;TZID=Asia/Tomsk:20260910T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668129-20260910@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -657,7 +657,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20260911T104000
 DTEND;TZID=Asia/Tomsk:20260911T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668147-20260911@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -670,7 +670,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20260912T104000
 DTEND;TZID=Asia/Tomsk:20260912T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668043-20260912@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -683,7 +683,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20260907T131500
 DTEND;TZID=Asia/Tomsk:20260907T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668063-20260907@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Белкина Дина Алек
@@ -700,7 +700,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20260908T131500
 DTEND;TZID=Asia/Tomsk:20260908T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668082-20260908@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -713,7 +713,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20260909T131500
 DTEND;TZID=Asia/Tomsk:20260909T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668111-20260909@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -727,7 +727,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20260910T131500
 DTEND;TZID=Asia/Tomsk:20260910T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667989-20260910@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Лекция\nПреподаватель: Гужов Фе
@@ -740,7 +740,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20260911T131500
 DTEND;TZID=Asia/Tomsk:20260911T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668165-20260911@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -754,7 +754,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20260909T150000
 DTEND;TZID=Asia/Tomsk:20260909T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668106-20260909@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -768,7 +768,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20260911T150000
 DTEND;TZID=Asia/Tomsk:20260911T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668166-20260911@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -782,7 +782,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20260908T164500
 DTEND;TZID=Asia/Tomsk:20260908T182000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-672902-20260908@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -795,7 +795,7 @@ BEGIN:VEVENT
 SUMMARY:СРС ⚪ Математика
 DTSTART;TZID=Asia/Tomsk:20260914T085000
 DTEND;TZID=Asia/Tomsk:20260914T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673936-20260914@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Самостоя
  тельная работа\nПреподаватель: Ельцова Т
@@ -809,7 +809,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20260915T085000
 DTEND;TZID=Asia/Tomsk:20260915T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673945-20260915@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Лекция\nПреподаватель: Крыгина Мария В
@@ -822,7 +822,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20260916T085000
 DTEND;TZID=Asia/Tomsk:20260916T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667945-20260916@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -836,7 +836,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20260917T085000
 DTEND;TZID=Asia/Tomsk:20260917T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667982-20260917@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -850,7 +850,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20260918T085000
 DTEND;TZID=Asia/Tomsk:20260918T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673991-20260918@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -864,7 +864,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20260919T085000
 DTEND;TZID=Asia/Tomsk:20260919T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674215-20260919@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -878,7 +878,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20260914T104000
 DTEND;TZID=Asia/Tomsk:20260914T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667894-20260914@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -892,7 +892,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 ОРГ
 DTSTART;TZID=Asia/Tomsk:20260915T104000
 DTEND;TZID=Asia/Tomsk:20260915T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673939-20260915@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Лекция\nПреподаватель: 
@@ -907,7 +907,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20260916T104000
 DTEND;TZID=Asia/Tomsk:20260916T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673949-20260916@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -921,7 +921,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20260917T104000
 DTEND;TZID=Asia/Tomsk:20260917T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673965-20260917@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -935,7 +935,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20260918T104000
 DTEND;TZID=Asia/Tomsk:20260918T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668009-20260918@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -948,7 +948,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20260919T104000
 DTEND;TZID=Asia/Tomsk:20260919T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673997-20260919@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -962,7 +962,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20260914T131500
 DTEND;TZID=Asia/Tomsk:20260914T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674224-20260914@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -976,7 +976,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20260915T124500
 DTEND;TZID=Asia/Tomsk:20260915T142000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667930-20260915@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -990,7 +990,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20260916T131500
 DTEND;TZID=Asia/Tomsk:20260916T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667952-20260916@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -1004,7 +1004,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20260917T131500
 DTEND;TZID=Asia/Tomsk:20260917T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673969-20260917@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Лекция\nПреподаватель: Гужов Фе
@@ -1025,7 +1025,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20260918T131500
 DTEND;TZID=Asia/Tomsk:20260918T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668011-20260918@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -1039,7 +1039,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20260914T150000
 DTEND;TZID=Asia/Tomsk:20260914T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667897-20260914@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Лекция\nПреподаватель: Ехлаков Юрий Пол
@@ -1052,7 +1052,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20260916T150000
 DTEND;TZID=Asia/Tomsk:20260916T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667953-20260916@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -1066,7 +1066,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20260918T150000
 DTEND;TZID=Asia/Tomsk:20260918T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668148-20260918@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -1080,7 +1080,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Информатика
 DTSTART;TZID=Asia/Tomsk:20260922T085000
 DTEND;TZID=Asia/Tomsk:20260922T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668094-20260922@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Практик
  а\nПреподаватель: Кульшин Роман Сергееви
@@ -1093,7 +1093,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20260923T085000
 DTEND;TZID=Asia/Tomsk:20260923T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668098-20260923@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -1107,7 +1107,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20260924T085000
 DTEND;TZID=Asia/Tomsk:20260924T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668132-20260924@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -1121,7 +1121,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20260925T085000
 DTEND;TZID=Asia/Tomsk:20260925T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674050-20260925@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -1135,7 +1135,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20260926T085000
 DTEND;TZID=Asia/Tomsk:20260926T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674217-20260926@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -1149,7 +1149,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20260921T104000
 DTEND;TZID=Asia/Tomsk:20260921T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674004-20260921@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -1163,7 +1163,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20260922T104000
 DTEND;TZID=Asia/Tomsk:20260922T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668095-20260922@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Практика\nПреподаватель: Крыгина Мари
@@ -1176,7 +1176,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20260923T104000
 DTEND;TZID=Asia/Tomsk:20260923T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674019-20260923@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -1190,7 +1190,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20260924T104000
 DTEND;TZID=Asia/Tomsk:20260924T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674035-20260924@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -1204,7 +1204,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20260925T104000
 DTEND;TZID=Asia/Tomsk:20260925T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668147-20260925@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -1217,7 +1217,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20260926T104000
 DTEND;TZID=Asia/Tomsk:20260926T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674059-20260926@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -1231,7 +1231,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20260921T131500
 DTEND;TZID=Asia/Tomsk:20260921T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674218-20260921@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -1245,7 +1245,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20260922T131500
 DTEND;TZID=Asia/Tomsk:20260922T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668082-20260922@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -1258,7 +1258,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20260923T131500
 DTEND;TZID=Asia/Tomsk:20260923T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668111-20260923@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -1272,7 +1272,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20260924T131500
 DTEND;TZID=Asia/Tomsk:20260924T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667988-20260924@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Практика\nПреподаватель: Гужов 
@@ -1293,7 +1293,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20260925T131500
 DTEND;TZID=Asia/Tomsk:20260925T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668165-20260925@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -1307,7 +1307,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20260923T150000
 DTEND;TZID=Asia/Tomsk:20260923T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668106-20260923@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -1321,7 +1321,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20260924T150000
 DTEND;TZID=Asia/Tomsk:20260924T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674042-20260924@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Лекция\nПреподаватель: Ехлаков Юрий Пол
@@ -1334,7 +1334,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20260925T150000
 DTEND;TZID=Asia/Tomsk:20260925T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668166-20260925@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -1348,7 +1348,7 @@ BEGIN:VEVENT
 SUMMARY:СРС ⚪ Математика
 DTSTART;TZID=Asia/Tomsk:20260928T085000
 DTEND;TZID=Asia/Tomsk:20260928T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673936-20260928@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Самостоя
  тельная работа\nПреподаватель: Ельцова Т
@@ -1362,7 +1362,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20260929T085000
 DTEND;TZID=Asia/Tomsk:20260929T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673945-20260929@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Лекция\nПреподаватель: Крыгина Мария В
@@ -1375,7 +1375,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20260930T085000
 DTEND;TZID=Asia/Tomsk:20260930T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667945-20260930@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -1389,7 +1389,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261001T085000
 DTEND;TZID=Asia/Tomsk:20261001T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667982-20261001@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -1403,7 +1403,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261002T085000
 DTEND;TZID=Asia/Tomsk:20261002T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673991-20261002@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -1417,7 +1417,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261003T085000
 DTEND;TZID=Asia/Tomsk:20261003T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674215-20261003@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -1431,7 +1431,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20260928T104000
 DTEND;TZID=Asia/Tomsk:20260928T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667894-20260928@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -1445,7 +1445,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 ОРГ
 DTSTART;TZID=Asia/Tomsk:20260929T104000
 DTEND;TZID=Asia/Tomsk:20260929T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673939-20260929@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Лекция\nПреподаватель: 
@@ -1460,7 +1460,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20260930T104000
 DTEND;TZID=Asia/Tomsk:20260930T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673949-20260930@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -1474,7 +1474,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261001T104000
 DTEND;TZID=Asia/Tomsk:20261001T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673965-20261001@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -1488,7 +1488,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261002T104000
 DTEND;TZID=Asia/Tomsk:20261002T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668009-20261002@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -1501,7 +1501,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20261003T104000
 DTEND;TZID=Asia/Tomsk:20261003T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673997-20261003@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -1515,7 +1515,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20260928T131500
 DTEND;TZID=Asia/Tomsk:20260928T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674224-20260928@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -1529,7 +1529,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20260929T124500
 DTEND;TZID=Asia/Tomsk:20260929T142000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667930-20260929@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -1543,7 +1543,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20260930T131500
 DTEND;TZID=Asia/Tomsk:20260930T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667952-20260930@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -1557,7 +1557,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261002T131500
 DTEND;TZID=Asia/Tomsk:20261002T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668011-20261002@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -1571,7 +1571,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20260928T150000
 DTEND;TZID=Asia/Tomsk:20260928T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667897-20260928@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Лекция\nПреподаватель: Ехлаков Юрий Пол
@@ -1584,7 +1584,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20260930T150000
 DTEND;TZID=Asia/Tomsk:20260930T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667953-20260930@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -1598,7 +1598,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261002T150000
 DTEND;TZID=Asia/Tomsk:20261002T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668148-20261002@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -1612,7 +1612,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Информатика
 DTSTART;TZID=Asia/Tomsk:20261006T085000
 DTEND;TZID=Asia/Tomsk:20261006T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668094-20261006@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Практик
  а\nПреподаватель: Кульшин Роман Сергееви
@@ -1625,7 +1625,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20261007T085000
 DTEND;TZID=Asia/Tomsk:20261007T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668098-20261007@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -1639,7 +1639,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261008T085000
 DTEND;TZID=Asia/Tomsk:20261008T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668132-20261008@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -1653,7 +1653,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261009T085000
 DTEND;TZID=Asia/Tomsk:20261009T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674050-20261009@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -1667,7 +1667,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261010T085000
 DTEND;TZID=Asia/Tomsk:20261010T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674217-20261010@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -1681,7 +1681,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261005T104000
 DTEND;TZID=Asia/Tomsk:20261005T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674004-20261005@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -1695,7 +1695,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261006T104000
 DTEND;TZID=Asia/Tomsk:20261006T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668095-20261006@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Практика\nПреподаватель: Крыгина Мари
@@ -1708,7 +1708,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261007T104000
 DTEND;TZID=Asia/Tomsk:20261007T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674019-20261007@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -1722,7 +1722,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261008T104000
 DTEND;TZID=Asia/Tomsk:20261008T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674035-20261008@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -1736,7 +1736,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261009T104000
 DTEND;TZID=Asia/Tomsk:20261009T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668147-20261009@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -1749,7 +1749,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20261010T104000
 DTEND;TZID=Asia/Tomsk:20261010T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674059-20261010@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -1763,7 +1763,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261005T131500
 DTEND;TZID=Asia/Tomsk:20261005T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674218-20261005@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -1777,7 +1777,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261006T131500
 DTEND;TZID=Asia/Tomsk:20261006T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668082-20261006@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -1790,7 +1790,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261007T131500
 DTEND;TZID=Asia/Tomsk:20261007T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668111-20261007@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -1804,7 +1804,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20261008T131500
 DTEND;TZID=Asia/Tomsk:20261008T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667988-20261008@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Практика\nПреподаватель: Гужов 
@@ -1825,7 +1825,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261009T131500
 DTEND;TZID=Asia/Tomsk:20261009T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668165-20261009@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -1839,7 +1839,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20261007T150000
 DTEND;TZID=Asia/Tomsk:20261007T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668106-20261007@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -1853,7 +1853,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261008T150000
 DTEND;TZID=Asia/Tomsk:20261008T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674042-20261008@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Лекция\nПреподаватель: Ехлаков Юрий Пол
@@ -1866,7 +1866,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261009T150000
 DTEND;TZID=Asia/Tomsk:20261009T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668166-20261009@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -1880,7 +1880,7 @@ BEGIN:VEVENT
 SUMMARY:СРС ⚪ Математика
 DTSTART;TZID=Asia/Tomsk:20261012T085000
 DTEND;TZID=Asia/Tomsk:20261012T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673936-20261012@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Самостоя
  тельная работа\nПреподаватель: Ельцова Т
@@ -1894,7 +1894,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261013T085000
 DTEND;TZID=Asia/Tomsk:20261013T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673945-20261013@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Лекция\nПреподаватель: Крыгина Мария В
@@ -1907,7 +1907,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20261014T085000
 DTEND;TZID=Asia/Tomsk:20261014T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667945-20261014@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -1921,7 +1921,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261015T085000
 DTEND;TZID=Asia/Tomsk:20261015T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667982-20261015@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -1935,7 +1935,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261016T085000
 DTEND;TZID=Asia/Tomsk:20261016T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673991-20261016@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -1949,7 +1949,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261017T085000
 DTEND;TZID=Asia/Tomsk:20261017T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674215-20261017@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -1963,7 +1963,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261012T104000
 DTEND;TZID=Asia/Tomsk:20261012T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667894-20261012@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -1977,7 +1977,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261013T104000
 DTEND;TZID=Asia/Tomsk:20261013T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673939-20261013@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Лекция\nПреподаватель: 
@@ -1992,7 +1992,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261014T104000
 DTEND;TZID=Asia/Tomsk:20261014T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673949-20261014@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -2006,7 +2006,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261015T104000
 DTEND;TZID=Asia/Tomsk:20261015T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673965-20261015@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -2020,7 +2020,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261016T104000
 DTEND;TZID=Asia/Tomsk:20261016T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668009-20261016@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -2033,7 +2033,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20261017T104000
 DTEND;TZID=Asia/Tomsk:20261017T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673997-20261017@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -2047,7 +2047,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261012T131500
 DTEND;TZID=Asia/Tomsk:20261012T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674224-20261012@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -2061,7 +2061,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261013T124500
 DTEND;TZID=Asia/Tomsk:20261013T142000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667930-20261013@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -2075,7 +2075,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261014T131500
 DTEND;TZID=Asia/Tomsk:20261014T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667952-20261014@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -2089,7 +2089,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261016T131500
 DTEND;TZID=Asia/Tomsk:20261016T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668011-20261016@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -2103,7 +2103,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261012T150000
 DTEND;TZID=Asia/Tomsk:20261012T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667897-20261012@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Лекция\nПреподаватель: Ехлаков Юрий Пол
@@ -2116,7 +2116,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20261014T150000
 DTEND;TZID=Asia/Tomsk:20261014T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674654-20261014@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -2129,7 +2129,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261016T150000
 DTEND;TZID=Asia/Tomsk:20261016T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668148-20261016@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -2143,7 +2143,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261019T085000
 DTEND;TZID=Asia/Tomsk:20261019T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674380-20261019@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -2157,7 +2157,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Информатика
 DTSTART;TZID=Asia/Tomsk:20261020T085000
 DTEND;TZID=Asia/Tomsk:20261020T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668094-20261020@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Практик
  а\nПреподаватель: Кульшин Роман Сергееви
@@ -2170,7 +2170,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20261021T085000
 DTEND;TZID=Asia/Tomsk:20261021T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668098-20261021@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -2184,7 +2184,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261022T085000
 DTEND;TZID=Asia/Tomsk:20261022T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668132-20261022@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -2198,7 +2198,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261023T085000
 DTEND;TZID=Asia/Tomsk:20261023T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674050-20261023@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -2212,7 +2212,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261024T085000
 DTEND;TZID=Asia/Tomsk:20261024T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674217-20261024@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -2226,7 +2226,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261019T104000
 DTEND;TZID=Asia/Tomsk:20261019T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674004-20261019@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -2240,7 +2240,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261020T104000
 DTEND;TZID=Asia/Tomsk:20261020T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668095-20261020@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Практика\nПреподаватель: Крыгина Мари
@@ -2253,7 +2253,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261021T104000
 DTEND;TZID=Asia/Tomsk:20261021T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674019-20261021@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -2267,7 +2267,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261023T104000
 DTEND;TZID=Asia/Tomsk:20261023T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668147-20261023@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -2280,7 +2280,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20261024T104000
 DTEND;TZID=Asia/Tomsk:20261024T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674059-20261024@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -2294,7 +2294,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261019T131500
 DTEND;TZID=Asia/Tomsk:20261019T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674218-20261019@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -2308,7 +2308,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261020T131500
 DTEND;TZID=Asia/Tomsk:20261020T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668082-20261020@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -2321,7 +2321,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261021T131500
 DTEND;TZID=Asia/Tomsk:20261021T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668111-20261021@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -2335,7 +2335,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20261022T131500
 DTEND;TZID=Asia/Tomsk:20261022T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667988-20261022@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Практика\nПреподаватель: Гужов 
@@ -2356,7 +2356,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261023T131500
 DTEND;TZID=Asia/Tomsk:20261023T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668165-20261023@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -2370,7 +2370,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20261021T150000
 DTEND;TZID=Asia/Tomsk:20261021T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668106-20261021@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -2384,7 +2384,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261022T150000
 DTEND;TZID=Asia/Tomsk:20261022T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674042-20261022@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Лекция\nПреподаватель: Ехлаков Юрий Пол
@@ -2397,7 +2397,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261023T150000
 DTEND;TZID=Asia/Tomsk:20261023T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668166-20261023@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -2411,7 +2411,7 @@ BEGIN:VEVENT
 SUMMARY:СРС ⚪ Математика
 DTSTART;TZID=Asia/Tomsk:20261026T085000
 DTEND;TZID=Asia/Tomsk:20261026T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673936-20261026@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Самостоя
  тельная работа\nПреподаватель: Ельцова Т
@@ -2425,7 +2425,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261027T085000
 DTEND;TZID=Asia/Tomsk:20261027T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673945-20261027@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Лекция\nПреподаватель: Крыгина Мария В
@@ -2438,7 +2438,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20261028T085000
 DTEND;TZID=Asia/Tomsk:20261028T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667945-20261028@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -2452,7 +2452,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261029T085000
 DTEND;TZID=Asia/Tomsk:20261029T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667982-20261029@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -2466,7 +2466,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261030T085000
 DTEND;TZID=Asia/Tomsk:20261030T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673991-20261030@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -2480,7 +2480,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261031T085000
 DTEND;TZID=Asia/Tomsk:20261031T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674215-20261031@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -2494,7 +2494,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261026T104000
 DTEND;TZID=Asia/Tomsk:20261026T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667894-20261026@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -2508,7 +2508,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261027T104000
 DTEND;TZID=Asia/Tomsk:20261027T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673939-20261027@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Лекция\nПреподаватель: 
@@ -2523,7 +2523,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261028T104000
 DTEND;TZID=Asia/Tomsk:20261028T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673949-20261028@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -2537,7 +2537,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261029T104000
 DTEND;TZID=Asia/Tomsk:20261029T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673965-20261029@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -2551,7 +2551,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261030T104000
 DTEND;TZID=Asia/Tomsk:20261030T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668009-20261030@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -2564,7 +2564,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20261031T104000
 DTEND;TZID=Asia/Tomsk:20261031T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-673997-20261031@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -2578,7 +2578,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261026T131500
 DTEND;TZID=Asia/Tomsk:20261026T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-674224-20261026@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -2592,7 +2592,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261027T124500
 DTEND;TZID=Asia/Tomsk:20261027T142000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667930-20261027@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -2606,7 +2606,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261028T131500
 DTEND;TZID=Asia/Tomsk:20261028T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667952-20261028@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -2620,7 +2620,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261030T131500
 DTEND;TZID=Asia/Tomsk:20261030T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668011-20261030@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -2634,7 +2634,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261026T150000
 DTEND;TZID=Asia/Tomsk:20261026T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667897-20261026@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Лекция\nПреподаватель: Ехлаков Юрий Пол
@@ -2647,7 +2647,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20261028T150000
 DTEND;TZID=Asia/Tomsk:20261028T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-667953-20261028@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -2661,7 +2661,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261030T150000
 DTEND;TZID=Asia/Tomsk:20261030T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-668148-20261030@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -2675,7 +2675,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Информатика
 DTSTART;TZID=Asia/Tomsk:20261103T085000
 DTEND;TZID=Asia/Tomsk:20261103T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681732-20261103@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Практик
  а\nПреподаватель: Кульшин Роман Сергееви
@@ -2688,7 +2688,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261105T085000
 DTEND;TZID=Asia/Tomsk:20261105T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681744-20261105@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -2702,7 +2702,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261106T085000
 DTEND;TZID=Asia/Tomsk:20261106T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681622-20261106@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -2716,7 +2716,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261107T085000
 DTEND;TZID=Asia/Tomsk:20261107T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681716-20261107@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -2730,7 +2730,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261102T104000
 DTEND;TZID=Asia/Tomsk:20261102T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681735-20261102@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -2744,7 +2744,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261103T104000
 DTEND;TZID=Asia/Tomsk:20261103T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681721-20261103@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Практика\nПреподаватель: Крыгина Мари
@@ -2757,7 +2757,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261105T104000
 DTEND;TZID=Asia/Tomsk:20261105T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681740-20261105@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -2771,7 +2771,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261106T104000
 DTEND;TZID=Asia/Tomsk:20261106T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681736-20261106@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -2784,7 +2784,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20261107T104000
 DTEND;TZID=Asia/Tomsk:20261107T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681733-20261107@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -2798,7 +2798,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261102T131500
 DTEND;TZID=Asia/Tomsk:20261102T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681715-20261102@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -2812,7 +2812,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261103T131500
 DTEND;TZID=Asia/Tomsk:20261103T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681737-20261103@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -2825,7 +2825,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20261105T131500
 DTEND;TZID=Asia/Tomsk:20261105T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-682005-20261105@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Практика\nПреподаватель: Гужов 
@@ -2846,7 +2846,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261106T131500
 DTEND;TZID=Asia/Tomsk:20261106T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681729-20261106@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -2860,7 +2860,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20261107T131500
 DTEND;TZID=Asia/Tomsk:20261107T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-688580-20261107@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -2873,7 +2873,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261105T150000
 DTEND;TZID=Asia/Tomsk:20261105T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681748-20261105@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Практика\nПреподаватель: Ехлаков Юрий П
@@ -2886,7 +2886,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261106T150000
 DTEND;TZID=Asia/Tomsk:20261106T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681728-20261106@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -2900,7 +2900,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20261107T150000
 DTEND;TZID=Asia/Tomsk:20261107T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-688581-20261107@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -2913,7 +2913,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261105T164500
 DTEND;TZID=Asia/Tomsk:20261105T182000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-683197-20261105@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Лекция\nПреподаватель: Ехлаков Юрий Пол
@@ -2926,7 +2926,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20261107T164500
 DTEND;TZID=Asia/Tomsk:20261107T182000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-688582-20261107@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -2939,7 +2939,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20261107T183000
 DTEND;TZID=Asia/Tomsk:20261107T200500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-688583-20261107@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -2952,7 +2952,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Информатика
 DTSTART;TZID=Asia/Tomsk:20261117T085000
 DTEND;TZID=Asia/Tomsk:20261117T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681732-20261117@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Практик
  а\nПреподаватель: Кульшин Роман Сергееви
@@ -2965,7 +2965,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20261118T085000
 DTEND;TZID=Asia/Tomsk:20261118T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681719-20261118@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -2979,7 +2979,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261119T085000
 DTEND;TZID=Asia/Tomsk:20261119T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681744-20261119@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -2993,7 +2993,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261120T085000
 DTEND;TZID=Asia/Tomsk:20261120T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681622-20261120@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -3007,7 +3007,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261121T085000
 DTEND;TZID=Asia/Tomsk:20261121T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681716-20261121@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -3021,7 +3021,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261116T104000
 DTEND;TZID=Asia/Tomsk:20261116T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681735-20261116@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -3035,7 +3035,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261117T104000
 DTEND;TZID=Asia/Tomsk:20261117T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681721-20261117@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Практика\nПреподаватель: Крыгина Мари
@@ -3048,7 +3048,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261118T104000
 DTEND;TZID=Asia/Tomsk:20261118T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681746-20261118@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -3062,7 +3062,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261119T104000
 DTEND;TZID=Asia/Tomsk:20261119T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681740-20261119@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -3076,7 +3076,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261120T104000
 DTEND;TZID=Asia/Tomsk:20261120T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681736-20261120@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -3089,7 +3089,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20261121T104000
 DTEND;TZID=Asia/Tomsk:20261121T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681733-20261121@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -3103,7 +3103,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261116T131500
 DTEND;TZID=Asia/Tomsk:20261116T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681715-20261116@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -3117,7 +3117,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261117T131500
 DTEND;TZID=Asia/Tomsk:20261117T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681737-20261117@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -3130,7 +3130,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261118T131500
 DTEND;TZID=Asia/Tomsk:20261118T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681726-20261118@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -3144,7 +3144,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20261119T131500
 DTEND;TZID=Asia/Tomsk:20261119T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-682005-20261119@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Практика\nПреподаватель: Гужов 
@@ -3158,7 +3158,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261120T131500
 DTEND;TZID=Asia/Tomsk:20261120T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681729-20261120@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -3172,7 +3172,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261119T150000
 DTEND;TZID=Asia/Tomsk:20261119T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681748-20261119@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Практика\nПреподаватель: Ехлаков Юрий П
@@ -3185,7 +3185,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261120T150000
 DTEND;TZID=Asia/Tomsk:20261120T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681728-20261120@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -3199,7 +3199,7 @@ BEGIN:VEVENT
 SUMMARY:СРС ⚪ Математика
 DTSTART;TZID=Asia/Tomsk:20261123T085000
 DTEND;TZID=Asia/Tomsk:20261123T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681801-20261123@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Самостоя
  тельная работа\nПреподаватель: Ельцова Т
@@ -3213,7 +3213,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261124T085000
 DTEND;TZID=Asia/Tomsk:20261124T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681722-20261124@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Лекция\nПреподаватель: Крыгина Мария В
@@ -3226,7 +3226,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261126T085000
 DTEND;TZID=Asia/Tomsk:20261126T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681745-20261126@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -3240,7 +3240,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261127T085000
 DTEND;TZID=Asia/Tomsk:20261127T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681623-20261127@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -3254,7 +3254,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261128T085000
 DTEND;TZID=Asia/Tomsk:20261128T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681717-20261128@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -3268,7 +3268,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261123T104000
 DTEND;TZID=Asia/Tomsk:20261123T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681743-20261123@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -3282,7 +3282,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261124T104000
 DTEND;TZID=Asia/Tomsk:20261124T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681631-20261124@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Лекция\nПреподаватель: 
@@ -3297,7 +3297,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20261125T104000
 DTEND;TZID=Asia/Tomsk:20261125T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681985-20261125@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -3311,7 +3311,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261126T104000
 DTEND;TZID=Asia/Tomsk:20261126T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681742-20261126@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -3325,7 +3325,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261127T104000
 DTEND;TZID=Asia/Tomsk:20261127T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681738-20261127@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -3338,7 +3338,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261123T131500
 DTEND;TZID=Asia/Tomsk:20261123T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681714-20261123@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -3352,7 +3352,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261124T131500
 DTEND;TZID=Asia/Tomsk:20261124T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681739-20261124@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -3365,7 +3365,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261125T131500
 DTEND;TZID=Asia/Tomsk:20261125T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681727-20261125@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -3379,7 +3379,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20261126T131500
 DTEND;TZID=Asia/Tomsk:20261126T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-682002-20261126@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Практика\nПреподаватель: Гужов 
@@ -3393,7 +3393,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261127T131500
 DTEND;TZID=Asia/Tomsk:20261127T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681731-20261127@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -3407,7 +3407,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261123T150000
 DTEND;TZID=Asia/Tomsk:20261123T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681749-20261123@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Практика\nПреподаватель: Ехлаков Юрий П
@@ -3420,7 +3420,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261127T150000
 DTEND;TZID=Asia/Tomsk:20261127T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681730-20261127@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -3434,7 +3434,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Информатика
 DTSTART;TZID=Asia/Tomsk:20261201T085000
 DTEND;TZID=Asia/Tomsk:20261201T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681732-20261201@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Практик
  а\nПреподаватель: Кульшин Роман Сергееви
@@ -3447,7 +3447,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20261202T085000
 DTEND;TZID=Asia/Tomsk:20261202T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681719-20261202@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -3461,7 +3461,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261203T085000
 DTEND;TZID=Asia/Tomsk:20261203T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681744-20261203@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -3475,7 +3475,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261204T085000
 DTEND;TZID=Asia/Tomsk:20261204T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681622-20261204@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -3489,7 +3489,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261205T085000
 DTEND;TZID=Asia/Tomsk:20261205T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681716-20261205@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -3503,7 +3503,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261201T104000
 DTEND;TZID=Asia/Tomsk:20261201T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681721-20261201@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Практика\nПреподаватель: Крыгина Мари
@@ -3516,7 +3516,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261202T104000
 DTEND;TZID=Asia/Tomsk:20261202T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681746-20261202@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -3530,7 +3530,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261203T104000
 DTEND;TZID=Asia/Tomsk:20261203T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681740-20261203@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -3544,7 +3544,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261204T104000
 DTEND;TZID=Asia/Tomsk:20261204T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681736-20261204@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -3557,7 +3557,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20261205T104000
 DTEND;TZID=Asia/Tomsk:20261205T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681733-20261205@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -3571,7 +3571,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261130T131500
 DTEND;TZID=Asia/Tomsk:20261130T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681715-20261130@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -3585,7 +3585,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261201T131500
 DTEND;TZID=Asia/Tomsk:20261201T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681737-20261201@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -3598,7 +3598,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261202T131500
 DTEND;TZID=Asia/Tomsk:20261202T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681726-20261202@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -3612,7 +3612,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20261203T131500
 DTEND;TZID=Asia/Tomsk:20261203T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-682005-20261203@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Практика\nПреподаватель: Гужов 
@@ -3626,7 +3626,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261204T131500
 DTEND;TZID=Asia/Tomsk:20261204T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681729-20261204@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -3640,7 +3640,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261203T150000
 DTEND;TZID=Asia/Tomsk:20261203T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681748-20261203@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Практика\nПреподаватель: Ехлаков Юрий П
@@ -3653,7 +3653,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261204T150000
 DTEND;TZID=Asia/Tomsk:20261204T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681728-20261204@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -3667,7 +3667,7 @@ BEGIN:VEVENT
 SUMMARY:СРС ⚪ Математика
 DTSTART;TZID=Asia/Tomsk:20261207T085000
 DTEND;TZID=Asia/Tomsk:20261207T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681801-20261207@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Самостоя
  тельная работа\nПреподаватель: Ельцова Т
@@ -3681,7 +3681,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261208T085000
 DTEND;TZID=Asia/Tomsk:20261208T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681722-20261208@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Лекция\nПреподаватель: Крыгина Мария В
@@ -3694,7 +3694,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261210T085000
 DTEND;TZID=Asia/Tomsk:20261210T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681745-20261210@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -3708,7 +3708,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261211T085000
 DTEND;TZID=Asia/Tomsk:20261211T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681623-20261211@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -3722,7 +3722,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261212T085000
 DTEND;TZID=Asia/Tomsk:20261212T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681717-20261212@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -3736,7 +3736,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261207T104000
 DTEND;TZID=Asia/Tomsk:20261207T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681743-20261207@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -3750,7 +3750,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261208T104000
 DTEND;TZID=Asia/Tomsk:20261208T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681631-20261208@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Лекция\nПреподаватель: 
@@ -3765,7 +3765,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20261209T104000
 DTEND;TZID=Asia/Tomsk:20261209T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681985-20261209@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -3779,7 +3779,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Математика
 DTSTART;TZID=Asia/Tomsk:20261210T104000
 DTEND;TZID=Asia/Tomsk:20261210T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681742-20261210@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Лекция\nП
  реподаватель: Ельцова Тамара Александро
@@ -3793,7 +3793,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261211T104000
 DTEND;TZID=Asia/Tomsk:20261211T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681738-20261211@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -3806,7 +3806,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261207T131500
 DTEND;TZID=Asia/Tomsk:20261207T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681714-20261207@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -3820,7 +3820,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Математика
 DTSTART;TZID=Asia/Tomsk:20261208T131500
 DTEND;TZID=Asia/Tomsk:20261208T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681739-20261208@timetable.tusur.ru
 DESCRIPTION:Предмет: Математика\nВид: Практика
  \nПреподаватель: Ельцова Тамара Александ
@@ -3833,7 +3833,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261209T131500
 DTEND;TZID=Asia/Tomsk:20261209T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681727-20261209@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -3847,7 +3847,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20261210T131500
 DTEND;TZID=Asia/Tomsk:20261210T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-682002-20261210@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Практика\nПреподаватель: Гужов 
@@ -3861,7 +3861,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261211T131500
 DTEND;TZID=Asia/Tomsk:20261211T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681731-20261211@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -3875,7 +3875,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261207T150000
 DTEND;TZID=Asia/Tomsk:20261207T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681749-20261207@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Практика\nПреподаватель: Ехлаков Юрий П
@@ -3888,7 +3888,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261211T150000
 DTEND;TZID=Asia/Tomsk:20261211T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681730-20261211@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -3902,7 +3902,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Информатика
 DTSTART;TZID=Asia/Tomsk:20261215T085000
 DTEND;TZID=Asia/Tomsk:20261215T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681732-20261215@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Практик
  а\nПреподаватель: Кульшин Роман Сергееви
@@ -3915,7 +3915,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20261216T085000
 DTEND;TZID=Asia/Tomsk:20261216T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681719-20261216@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -3929,7 +3929,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261217T085000
 DTEND;TZID=Asia/Tomsk:20261217T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681744-20261217@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -3943,7 +3943,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261218T085000
 DTEND;TZID=Asia/Tomsk:20261218T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681622-20261218@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -3957,7 +3957,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261219T085000
 DTEND;TZID=Asia/Tomsk:20261219T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681716-20261219@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -3971,7 +3971,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261215T104000
 DTEND;TZID=Asia/Tomsk:20261215T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681721-20261215@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Практика\nПреподаватель: Крыгина Мари
@@ -3984,7 +3984,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261216T104000
 DTEND;TZID=Asia/Tomsk:20261216T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681746-20261216@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Лекция\nПреподаватель: Синчинова Люд
@@ -3998,7 +3998,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Информатика
 DTSTART;TZID=Asia/Tomsk:20261219T104000
 DTEND;TZID=Asia/Tomsk:20261219T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681733-20261219@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лекция\n
  Преподаватель: Пермякова Наталья Виктор
@@ -4012,7 +4012,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261214T131500
 DTEND;TZID=Asia/Tomsk:20261214T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681715-20261214@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -4026,7 +4026,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261216T131500
 DTEND;TZID=Asia/Tomsk:20261216T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681726-20261216@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -4040,7 +4040,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Физ-ра
 DTSTART;TZID=Asia/Tomsk:20261217T131500
 DTEND;TZID=Asia/Tomsk:20261217T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-682005-20261217@timetable.tusur.ru
 DESCRIPTION:Предмет: Физическая культура и сп
  орт\nВид: Практика\nПреподаватель: Гужов 
@@ -4054,7 +4054,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261218T131500
 DTEND;TZID=Asia/Tomsk:20261218T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681729-20261218@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -4068,7 +4068,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20261216T150000
 DTEND;TZID=Asia/Tomsk:20261216T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681724-20261216@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -4082,7 +4082,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261217T150000
 DTEND;TZID=Asia/Tomsk:20261217T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681748-20261217@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Практика\nПреподаватель: Ехлаков Юрий П
@@ -4095,7 +4095,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261218T150000
 DTEND;TZID=Asia/Tomsk:20261218T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681728-20261218@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -4109,7 +4109,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261222T085000
 DTEND;TZID=Asia/Tomsk:20261222T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681722-20261222@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Лекция\nПреподаватель: Крыгина Мария В
@@ -4122,7 +4122,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Дискретка
 DTSTART;TZID=Asia/Tomsk:20261224T085000
 DTEND;TZID=Asia/Tomsk:20261224T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681745-20261224@timetable.tusur.ru
 DESCRIPTION:Предмет: Дискретная математика\nВ
  ид: Практика\nПреподаватель: Синчинова Л
@@ -4136,7 +4136,7 @@ BEGIN:VEVENT
 SUMMARY:ЛЕК 🟢 История
 DTSTART;TZID=Asia/Tomsk:20261225T085000
 DTEND;TZID=Asia/Tomsk:20261225T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681623-20261225@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Лекц
  ия\nПреподаватель: Афанасьев Александр Л
@@ -4150,7 +4150,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261226T085000
 DTEND;TZID=Asia/Tomsk:20261226T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681717-20261226@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -4164,7 +4164,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20261223T104000
 DTEND;TZID=Asia/Tomsk:20261223T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681985-20261223@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -4178,7 +4178,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Английский
 DTSTART;TZID=Asia/Tomsk:20261221T131500
 DTEND;TZID=Asia/Tomsk:20261221T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681714-20261221@timetable.tusur.ru
 DESCRIPTION:Предмет: Иностранный язык\nВид: Пр
  актика\nПреподаватель: Космодемьянская 
@@ -4192,7 +4192,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261223T131500
 DTEND;TZID=Asia/Tomsk:20261223T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681727-20261223@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -4206,7 +4206,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261225T131500
 DTEND;TZID=Asia/Tomsk:20261225T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681731-20261225@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -4220,7 +4220,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20261223T150000
 DTEND;TZID=Asia/Tomsk:20261223T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681723-20261223@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -4234,7 +4234,7 @@ BEGIN:VEVENT
 SUMMARY:ЛАБ 🟣 Информатика
 DTSTART;TZID=Asia/Tomsk:20261225T150000
 DTEND;TZID=Asia/Tomsk:20261225T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681730-20261225@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Лаборат
  орная работа\nПреподаватель: Кульшин Ром
@@ -4248,7 +4248,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Информатика
 DTSTART;TZID=Asia/Tomsk:20261229T085000
 DTEND;TZID=Asia/Tomsk:20261229T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681732-20261229@timetable.tusur.ru
 DESCRIPTION:Предмет: Информатика\nВид: Практик
  а\nПреподаватель: Кульшин Роман Сергееви
@@ -4261,7 +4261,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 История
 DTSTART;TZID=Asia/Tomsk:20261230T085000
 DTEND;TZID=Asia/Tomsk:20261230T102500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681719-20261230@timetable.tusur.ru
 DESCRIPTION:Предмет: История России\nВид: Прак
  тика\nПреподаватель: Пищулин Дмитрий Вла
@@ -4275,7 +4275,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Деловые коммуникации
 DTSTART;TZID=Asia/Tomsk:20261229T104000
 DTEND;TZID=Asia/Tomsk:20261229T121500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681721-20261229@timetable.tusur.ru
 DESCRIPTION:Предмет: Деловые коммуникации\nВи
  д: Практика\nПреподаватель: Крыгина Мари
@@ -4288,7 +4288,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ОРГ
 DTSTART;TZID=Asia/Tomsk:20261230T131500
 DTEND;TZID=Asia/Tomsk:20261230T145000
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681726-20261230@timetable.tusur.ru
 DESCRIPTION:Предмет: Основы российской госуда
  рственности\nВид: Практика\nПреподавател
@@ -4302,7 +4302,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 ПИТР
 DTSTART;TZID=Asia/Tomsk:20261230T150000
 DTEND;TZID=Asia/Tomsk:20261230T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681724-20261230@timetable.tusur.ru
 DESCRIPTION:Предмет: Проектирование индивиду
  альной траектории развития\nВид: Практик
@@ -4316,7 +4316,7 @@ BEGIN:VEVENT
 SUMMARY:ПРАК 🔵 Введение в профессию
 DTSTART;TZID=Asia/Tomsk:20261231T150000
 DTEND;TZID=Asia/Tomsk:20261231T163500
-DTSTAMP:20261112T215048Z
+DTSTAMP:20261113T211920Z
 UID:tusur-681748-20261231@timetable.tusur.ru
 DESCRIPTION:Предмет: Введение в профессию\nВид
  : Практика\nПреподаватель: Ехлаков Юрий П
@@ -4327,10 +4327,10 @@ X-COLOR-ID:9
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:🍺 Можно пить пиво!
-DTSTART;TZID=Asia/Tomsk:20261113T163500
-DTEND;TZID=Asia/Tomsk:20261113T183500
-DTSTAMP:20261112T215048Z
-UID:beer_20261113@tusur
+DTSTART;TZID=Asia/Tomsk:20261114T182000
+DTEND;TZID=Asia/Tomsk:20261114T202000
+DTSTAMP:20261113T211920Z
+UID:beer_20261114@tusur
 DESCRIPTION:Все пары на сегодня закончились. В
  ремя заслуженного отдыха.
 LOCATION:🎉 Свобода
