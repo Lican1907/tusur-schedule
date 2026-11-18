@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-18T05:51:44.903024+07:00",
+  "generated_at": "2026-11-19T05:33:28.391224+07:00",
   "group": "426топ-2",
   "total_lessons": 280,
   "total_days": 84,
@@ -3725,7 +3725,7 @@
         "subject": "Информатика",
         "short_subject": "Информатика",
         "lesson_type": "Лабораторная работа",
-        "teacher": "Кульшин Роман Сергеевич",
+        "teacher": "Шишанина Мария Александровна",
         "room": "428",
         "building": "ФЭТ",
         "location": "📍 ФЭТ 428",
@@ -3733,7 +3733,7 @@
         "color_id": "3",
         "summary": "ЛАБ 🟣 Информатика",
         "subgroup": "подгруппа а",
-        "uid": "tusur-681821-20261126@timetable.tusur.ru"
+        "uid": "tusur-690539-20261126@timetable.tusur.ru"
       },
       {
         "pair_num": 5,
@@ -3742,7 +3742,7 @@
         "subject": "Информатика",
         "short_subject": "Информатика",
         "lesson_type": "Лабораторная работа",
-        "teacher": "Кульшин Роман Сергеевич",
+        "teacher": "Шишанина Мария Александровна",
         "room": "428",
         "building": "ФЭТ",
         "location": "📍 ФЭТ 428",
@@ -3750,7 +3750,7 @@
         "color_id": "3",
         "summary": "ЛАБ 🟣 Информатика",
         "subgroup": "подгруппа а",
-        "uid": "tusur-681820-20261126@timetable.tusur.ru"
+        "uid": "tusur-690550-20261126@timetable.tusur.ru"
       }
     ],
     "2026-11-27": [
