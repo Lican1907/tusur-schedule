@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T05:38:22.267738+07:00",
+  "generated_at": "2026-11-21T05:11:10.964402+07:00",
   "group": "426топ-1",
   "total_lessons": 280,
   "total_days": 84,
@@ -4659,9 +4659,9 @@
         "short_subject": "Математика",
         "lesson_type": "Самостоятельная работа",
         "teacher": "Ельцова Тамара Александровна",
-        "room": "413",
-        "building": "ГК",
-        "location": "📍 ГК 413",
+        "room": "418",
+        "building": "ФЭТ",
+        "location": "📍 ФЭТ 418",
         "status": "ACTIVE",
         "color_id": "8",
         "summary": "СРС ⚪ Математика",
@@ -4741,9 +4741,9 @@
     ],
     "2026-12-17": [
       {
-        "pair_num": 1,
-        "time_start": "08:50",
-        "time_end": "10:25",
+        "pair_num": 2,
+        "time_start": "10:40",
+        "time_end": "12:15",
         "subject": "Математика",
         "short_subject": "Математика",
         "lesson_type": "Самостоятельная работа",
@@ -4755,7 +4755,7 @@
         "color_id": "8",
         "summary": "СРС ⚪ Математика",
         "subgroup": "",
-        "uid": "tusur-689846-20261217@timetable.tusur.ru"
+        "uid": "tusur-691206-20261217@timetable.tusur.ru"
       },
       {
         "pair_num": 3,
