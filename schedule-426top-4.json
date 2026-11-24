@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-11-23T03:58:10.899942+07:00",
+  "generated_at": "2026-11-24T09:03:20.091414+07:00",
   "group": "426топ-4",
-  "total_lessons": 284,
+  "total_lessons": 283,
   "total_days": 85,
   "days": {
     "2026-09-07": [
@@ -3081,7 +3081,7 @@
         "status": "ACTIVE",
         "color_id": "3",
         "summary": "ЛАБ 🟣 Информатика",
-        "subgroup": "подгруппа а",
+        "subgroup": "подгруппа б",
         "uid": "tusur-681847-20261112@timetable.tusur.ru"
       },
       {
@@ -3098,7 +3098,7 @@
         "status": "ACTIVE",
         "color_id": "3",
         "summary": "ЛАБ 🟣 Информатика",
-        "subgroup": "подгруппа а",
+        "subgroup": "подгруппа б",
         "uid": "tusur-681846-20261112@timetable.tusur.ru"
       }
     ],
@@ -3853,7 +3853,7 @@
         "status": "ACTIVE",
         "color_id": "3",
         "summary": "ЛАБ 🟣 Информатика",
-        "subgroup": "подгруппа а",
+        "subgroup": "подгруппа б",
         "uid": "tusur-681847-20261126@timetable.tusur.ru"
       },
       {
@@ -3870,7 +3870,7 @@
         "status": "ACTIVE",
         "color_id": "3",
         "summary": "ЛАБ 🟣 Информатика",
-        "subgroup": "подгруппа а",
+        "subgroup": "подгруппа б",
         "uid": "tusur-681846-20261126@timetable.tusur.ru"
       }
     ],
@@ -4436,23 +4436,6 @@
         "summary": "ЛЕК 🟢 История",
         "subgroup": "",
         "uid": "tusur-681483-20261208@timetable.tusur.ru"
-      },
-      {
-        "pair_num": 5,
-        "time_start": "16:45",
-        "time_end": "18:20",
-        "subject": "Информатика",
-        "short_subject": "Информатика",
-        "lesson_type": "Практика",
-        "teacher": "Пермякова Наталья Викторовна",
-        "room": "428",
-        "building": "ФЭТ",
-        "location": "📍 ФЭТ 428",
-        "status": "ACTIVE",
-        "color_id": "9",
-        "summary": "ПРАК 🔵 Информатика",
-        "subgroup": "",
-        "uid": "tusur-681848-20261208@timetable.tusur.ru"
       }
     ],
     "2026-12-09": [
@@ -4557,7 +4540,7 @@
         "status": "ACTIVE",
         "color_id": "3",
         "summary": "ЛАБ 🟣 Информатика",
-        "subgroup": "подгруппа а",
+        "subgroup": "подгруппа б",
         "uid": "tusur-681847-20261210@timetable.tusur.ru"
       },
       {
@@ -4574,7 +4557,7 @@
         "status": "ACTIVE",
         "color_id": "3",
         "summary": "ЛАБ 🟣 Информатика",
-        "subgroup": "подгруппа а",
+        "subgroup": "подгруппа б",
         "uid": "tusur-681846-20261210@timetable.tusur.ru"
       }
     ],
